@@ -1,0 +1,27 @@
+Plan
+- hills, mountains, forests
+- terrain generation
+- enter gates
+- units
+- player controlled unit
+- animated unit movement
+
+* Landscape
+- different types of terrain
+- geometry on the edges depends on the 2 neighbouring tiles
+
+
+* Move between planets
+- next planet
+
+* More tiles
+- truncated icosahedron sphere tiling
+
+* UI
+- Global drag to panel drag
+
+* Beautify
+- sun lens flare and bloom
+
+
+Ideas

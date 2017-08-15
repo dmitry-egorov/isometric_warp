@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{50A126F4-46C4-4748-BDDF-F9EAAAFD3E12}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WarpSpace</RootNamespace>
+    <AssemblyName>WarpSpace</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Warp_UnityProject\Assets\Scripts</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Warp_UnityProject\Assets\Scripts</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\lib\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Planet\Tiles\MeshTransformer.cs" />
+    <Compile Include="Planet\Tiles\TilePartsHolder.cs" />
+    <Compile Include="Planet\Tiles\TilesGenerator.cs" />
+    <Compile Include="Planet\Tiles\TilesGenerator2.cs" />
+    <Compile Include="Planet\Tiles\TileTransformer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lanski.Behaviours\Lanski.Behaviours.csproj">
+      <Project>{062EC63A-CE31-4FB1-BF65-0F65A1B3E6FB}</Project>
+      <Name>Lanski.Behaviours</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.Geometry\Lanski.Geometry.csproj">
+      <Project>{D581D1F2-8332-44D4-8799-0C0E1690635C}</Project>
+      <Name>Lanski.Geometry</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.Linq\Lanski.Linq.csproj">
+      <Project>{044D53C7-AFD3-4FD0-9E0D-63FF7CD1DFC0}</Project>
+      <Name>Lanski.Linq</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.Maths\Lanski.Maths.csproj">
+      <Project>{1B27FC2D-E60E-4503-9EA7-0B655BBBAF41}</Project>
+      <Name>Lanski.Maths</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.Reactive\Lanski.Reactive.csproj">
+      <Project>{227702C3-257D-432F-9AE9-7D49A34EBBDF}</Project>
+      <Name>Lanski.Reactive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
+      <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>
+      <Name>Lanski.Structures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.UnityExtensions\Lanski.UnityExtensions.csproj">
+      <Project>{56177DAE-76CF-4796-A02D-F4C0833CF22C}</Project>
+      <Name>Lanski.UnityExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnityEditor.Expose\UnityEditor.Expose.csproj">
+      <Project>{97420AF8-F6A9-428F-AD26-802FAD489D7B}</Project>
+      <Name>UnityEditor.Expose</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

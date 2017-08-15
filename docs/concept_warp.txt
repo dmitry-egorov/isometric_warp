@@ -1,0 +1,138 @@
+Warp
+
+The player commands a land-based mothership on a journey from destroyed homeplanet to the center of the galaxy. 
+The player visits several star systems along the way.
+In each star system the player moves from the outer planet to the ones closer to the star.
+Each planet has an enter/exit gates. The final planet in a system has an interstellar gate and a "boss" battle.
+Player can retreat through an enter gate and choose another path or retry a planet. But at the cost of losing time.
+Some planets have the gates combined. Those are usually pure reward planets, for a chance to gather more resources for the journey.
+The stars are being drained by the invaders. Over time the planets get colder and are eventually captured, starting from the outer ones. 
+Visiting a captured planet makes the ship suffer damage over time.
+
+
+Battle
+* Attack types
+Plasma Pulsar, Plasma Cannon, Missile, Gauss Artillery
+* Chassy types
+Tank, wheels, hower, spider, plane, ship
+* Body types
+Small, Cruiser, Mothership
+Planet Types:
+- desert, terran, ice, rock, vulcanic, swamp?, ocean?
+
+
+
+
+Ideas
+- warp tunels are huge antennas pointing to the sky. Upon entering a tunnel camera rises up.
+- air units can be deployed at a tile and then move once before retreating. Air unit can ether move or shoot at a tile.
+- shooting over a mountain: target receives a defence bonus
+- heat adds a cooldown penalty (+1 turn cd, but doesn't stack): burning forests, desert, volcanic
+- stealth
+- a tile can be sinked by an explosion or a strong weapon
+- earthquake weapon -- shock wave in a circle
+- laser weapons shoot in a line
+
+
+
+
+Units:
+* Default attributes
+  - mountains and water are impassable
+  - hills and forests take all remaining mov
+  - gain defense in forests and hills
+  - single target shot
+
+* Tank
+  2 mov
+  3 hp
+  cannon - single target
+  2 shots
+  1 cd
+  1 range
+  1 dps
+  1 vision
+
+* Hover Tank
+  3 mov
+  2 hp
+  cannon - single target
+  1 shot
+  1 cd
+  1 range
+  1 dps
+  1 vision
+  can pass water
+
+* Spider
+  2 mov
+  3 hp
+  laser - straight line 3 tiles
+  1 shot
+  2 cd
+  1 range
+  1 dps
+  1 vision
+  can move on mountains (drains all mov and can't shoot)
+  ignores terrain penalty
+  immune to stomp
+  
+* Artillery
+  1 mov
+  2 hp
+  artillery - 2x2 area
+  2 cd
+  3 range
+  1 dps
+  1 vision
+  shot drains remaining mov
+
+* Missle Artillery
+  1 mov
+  2 hp
+  missle - 3x1 perpendicular to the unit (including diagonal)
+  2 cd
+  3 range
+  1 dps
+  1 vision
+  shot drains remaining mov
+  
+* Earthshaker
+  1 mov
+  4 hp
+  stomper - everyone around
+  3 cd
+  0 range
+  1 dps
+  1 vision
+  shot drains remaining mov
+
+* Repair Support
+  2 mov
+  2 hp
+  repair - 1 hp everyone around
+  2 cd?
+  0 range
+  1 vision
+  ability drains remaining mov
+  
+* Ammo Support
+  2 mov
+  2 hp
+  recharge - reset cooldowns around (won't reset on other supports)
+  3 cd
+  1 vision
+  ability drains remaining mov  
+  
+* Shield Support
+  2 mov
+  2 hp
+  1 vision
+  passive shield - everyone around gets +1 hp
+  
+* Radar support
+  2 mov
+  2 hp
+  2 vision
+  
+  
