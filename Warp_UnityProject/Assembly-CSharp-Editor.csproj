@@ -121,11 +121,26 @@
  <Reference Include="UnityEditor.OSXStandalone.Extensions">
  <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
  </Reference>
+ <Reference Include="Lanski.Reactive">
+ <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Editor/Lanski.Reactive.dll</HintPath>
+ </Reference>
+ <Reference Include="Lanski.Reflection">
+ <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Editor/Lanski.Reflection.dll</HintPath>
+ </Reference>
+ <Reference Include="Lanski.Sharp7">
+ <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Editor/Lanski.Sharp7.dll</HintPath>
+ </Reference>
+ <Reference Include="Lanski.Structures">
+ <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Editor/Lanski.Structures.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEditor.Expose">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Editor/UnityEditor.Expose.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.ExposeEditor">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Editor/UnityEditor.ExposeEditor.dll</HintPath>
+ </Reference>
+ <Reference Include="WarpSpace.Editors">
+ <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Editor/WarpSpace.Editors.dll</HintPath>
  </Reference>
  <Reference Include="Core.Structures">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/Core.Structures.dll</HintPath>
@@ -144,6 +159,9 @@
  </Reference>
  <Reference Include="Lanski.Reactive">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/Lanski.Reactive.dll</HintPath>
+ </Reference>
+ <Reference Include="Lanski.Sharp7">
+ <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/Lanski.Sharp7.dll</HintPath>
  </Reference>
  <Reference Include="Lanski.Structures">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/Lanski.Structures.dll</HintPath>

@@ -7,8 +7,7 @@ namespace Core.Structures
     {
         public static TValue GetOrCreate<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TValue> factory)
         {
-            TValue result;
-            return dict.TryGetValue(key, out result) ? result : dict[key] = factory();
+            return dict.TryGetValue(key, out TValue result) ? result : dict[key] = factory();
         }
     }
 }

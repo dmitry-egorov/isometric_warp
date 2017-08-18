@@ -1,101 +1,73 @@
 ﻿using System;
 using System.Linq;
-using Lanski.Geometry;
+using Lanski.Structures;
 using Lanski.UnityExtensions;
-using UnityEditor.Expose;
 using UnityEngine;
+using WarpSpace.World.Board;
 using static Lanski.Maths.Mathe;
 using static UnityEngine.Mathf;
-using Random = UnityEngine.Random;
 
 namespace WarpSpace.Planet.Tiles
 {
     public class TilesGenerator2: MonoBehaviour
     {
-        [SerializeField] GameObject _tileCellPrefab;
-        [SerializeField] TileSpecification[] _tileSpecifications; 
-        
-        [SerializeField, Range(1, 64)] int _rows; 
-        [SerializeField, Range(1, 64)] int _columns;
-        [SerializeField] private float _falloff;
-        [SerializeField] private float _crossHeightProportion;
+        [SerializeField] GameObject _tilePrefab;
+        [SerializeField] GameObject _entrancePrefab;
+        [SerializeField] LandscapeTileSpecification _mountainSpec;
+        [SerializeField] LandscapeTileSpecification _hillSpec;
+        [SerializeField] LandscapeTileSpecification _flatlandSpec;
+        [SerializeField] LandscapeTileSpecification _waterSpec;
 
-        void Start()
+        public void RecreateTiles(Map map)
         {
-            RecreateTiles();
+            this.DestroyChildren();
+            CreateTiles(map);
         }
 
-        [ExposeMethodInEditor]
-        private void RecreateTiles()
+        private void CreateTiles(Map map)
         {
-            DestroyTiles();
+            var tiles = map.Tiles;
+            var d = tiles.GetDimensions();
+            var entrance = map.MapObjects.First(o => o.Type == MapObjectType.Entrance);
 
-            CreateTiles();
-        }
-
-        [ExposeMethodInEditor]
-        private void DestroyTiles()
-        {
-            var children = transform
-                .Cast<Transform>()
-                .Select(x => x.gameObject)
-                .ToArray();
-            
-            foreach (var child in children)
+            foreach (var t in tiles.EnumerateWithIndex())
             {
-                DestroyImmediate(child);
-            }
-        }
-
-        private void CreateTiles()
-        {
-            var tiles = GenerateTileGrid();
-            
-            for (var x = 0; x < tiles.GetLength(0); x++)
-            for (var z = 0; z < tiles.GetLength(1); z++)
-            {
-                var t = tiles[x, z];
-                var spec = t.Specification;
+                var i = t.index;
+                var spec = GetSpec(t.element.Type);
                 
-                var cell = CreateTileCell(t);
+                var cell = TileCreation.CreateTile(_tilePrefab, i, d, transform);
 
                 var parts = cell.GetComponent<TilePartsHolder>();
 
-                var meshPrototype = spec.TerrainMeshes.RandomElement();
+                var meshPrototype = spec.TerrainMeshes[i.Row % spec.TerrainMeshes.Length];
 
-                var elevations = CalculateElevations(tiles, x, z);
-                var transformedMesh = MeshTransformer.Transform(meshPrototype, RandomRotation(), elevations, spec.Falloff);
-
-                parts.SetMesh(transformedMesh);
-                parts.SetWaterRotation(RandomRotation());
+                var elevations = CalculateElevations(tiles, i);
+                var transformedMesh = MeshTransformer.Transform(meshPrototype, TileCreation.GetDirection(i), elevations, spec.Falloff);
+                
+                parts.Init(transformedMesh, i == entrance.Index ? _entrancePrefab : null );
             }
         }
 
-        private static RotationsBy90 RandomRotation()
+        private MeshTransformer.Elevations CalculateElevations(Tile[,] tiles, Index2D i)
         {
-            return (RotationsBy90)Random.Range(0, 4);
-        }
+            var self = GetTypeAt(tiles, i);
 
-        private MeshTransformer.Elevations CalculateElevations(Tile[,] tiles, int x, int y)
-        {
-            var self = tiles[x, y];
-
-            var l = GetTileAt(tiles, x - 1, y    );
-            var u = GetTileAt(tiles, x    , y + 1);
-            var r = GetTileAt(tiles, x + 1, y    );
-            var d = GetTileAt(tiles, x    , y - 1);
+            var l = GetTypeAt(tiles, i.Left());
+            var u = GetTypeAt(tiles, i.Up());
+            var r = GetTypeAt(tiles, i.Right());
+            var d = GetTypeAt(tiles, i.Down());
             
-            var lu = GetTileAt(tiles, x - 1, y + 1);
-            var ru = GetTileAt(tiles, x + 1, y + 1);
-            var rd = GetTileAt(tiles, x + 1, y - 1);
-            var ld = GetTileAt(tiles, x - 1, y - 1);
+            var lu = GetTypeAt(tiles, i.Left().Up());
+            var ru = GetTypeAt(tiles, i.Right().Up());
+            var rd = GetTypeAt(tiles, i.Right().Down());
+            var ld = GetTypeAt(tiles, i.Left().Down());
             
             return new MeshTransformer.Elevations
             {
-                L = GetAdjacentOffset(self, l),
-                U = GetAdjacentOffset(self, u),
-                R = GetAdjacentOffset(self, r),
-                D = GetAdjacentOffset(self, d),
+                L = CalculateAdjacentOffset(self, l),
+                U = CalculateAdjacentOffset(self, u),
+                R = CalculateAdjacentOffset(self, r),
+                D = CalculateAdjacentOffset(self, d),
                 
                 LU = CalculateCrossOffset(l, u, lu, self),
                 RU = CalculateCrossOffset(r, u, ru, self),
@@ -104,94 +76,65 @@ namespace WarpSpace.Planet.Tiles
             };
         }
 
-        private static float GetAdjacentOffset(Tile t1, Tile t2)
+        private float CalculateAdjacentOffset(LandscapeType t1, LandscapeType t2)
         {
-            if (t1.Type == t2.Type) 
-                return t1.Specification.SameTypeHeight;
+            if (t1 == t2) 
+                return GetSpec(t1).SameTypeHeight;
             
-            var s1 = t1.Specification;
-            var s2 = t2.Specification;
+            var s1 = GetHeight(t1);
+            var s2 = GetHeight(t2);
 
-            return Min(s1.OwnHeight, s2.OwnHeight);
+            return Min(s1, s2);
         }
 
-        private float CalculateCrossOffset(Tile ld, Tile ru, Tile lu, Tile rd)
+        private float GetHeight(LandscapeType t1)
         {
-            if (ld.Type == ru.Type && ru.Type == lu.Type && lu.Type == rd.Type)
-                return ld.Specification.SameTypeHeight * _crossHeightProportion;
+            return GetSpec(t1).OwnHeight;
+        }
+
+        private float CalculateCrossOffset(LandscapeType ld, LandscapeType ru, LandscapeType lu, LandscapeType rd)
+        {
+            if (ld == ru && ru == lu && lu == rd)
+                return GetSpec(ld).SameTypeHeightCross;
             
-            var ldh = ld.Specification.OwnHeight;
-            var ruh = ru.Specification.OwnHeight;
-            var luh = lu.Specification.OwnHeight;
-            var rdh = rd.Specification.OwnHeight;
+            var ldh = GetHeight(ld);
+            var ruh = GetHeight(ru);
+            var luh = GetHeight(lu);
+            var rdh = GetHeight(rd);
             
-            return Avg(Min(ldh, ruh), Min(luh, rdh)) * _crossHeightProportion;
+            return Avg(Min(ldh, ruh), Min(luh, rdh));
         }
 
-        private Tile GetTileAt(Tile[,] tiles, int x, int y)
+        private LandscapeTileSpecification GetSpec(LandscapeType type)
         {
-            if (x < 0)
-                x = 0;
-            if (x >= tiles.GetLength(0))
-                x = tiles.GetLength(0) - 1;
-            if (y < 0)
-                y = 0;
-            if (y >= tiles.GetLength(1))
-                y = tiles.GetLength(1) - 1;
-
-            return tiles[x, y];
-        }
-
-        private GameObject CreateTileCell(Tile t)
-        {
-            var cell = Instantiate(_tileCellPrefab, transform);
-            var index = t.Index;
-            cell.transform.localPosition = t.Position;
-            cell.name = $"Tile ({index.X}, {index.Y})";
-            return cell;
-        }
-
-        private Tile[,] GenerateTileGrid()
-        {
-            var result = new Tile[_columns, _rows];
-            for (var x = 0; x < _columns; x++)
+            switch (type)
             {
-                for (var z = 0; z < _rows; z++)
-                {
-                    var position = new Vector3(x - _columns * 0.5f, 0, z - _rows * 0.5f);
-                    var index = new IntVector2(x, z);
-                    var type = Random.Range(0, _tileSpecifications.Length);
-                    var spec = _tileSpecifications[type];
-                    result[x, z] = new Tile(position, index, type, spec);
-                }
+                case LandscapeType.Mountain:
+                    return _mountainSpec;
+                case LandscapeType.Hill:
+                    return _hillSpec;
+                case LandscapeType.Flatland:
+                    return _flatlandSpec;
+                case LandscapeType.Water:
+                    return _waterSpec;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+        }
 
-            return result;
+        private static LandscapeType GetTypeAt(Tile[,] tiles, Index2D i)
+        {
+           return tiles.Get(i.FitTo(tiles)).Type;
         }
         
-        private struct Tile
+        [Serializable]
+        public struct LandscapeTileSpecification
         {
-            public readonly Vector3 Position;
-            public readonly IntVector2 Index;
-            public readonly int Type;
-            public readonly TileSpecification Specification;
-
-            public Tile(Vector3 position, IntVector2 index, int type, TileSpecification specification)
-            {
-                Position = position;
-                Index = index;
-                Specification = specification;
-                Type = type;
-            }
+            public float OwnHeight;
+            public float SameTypeHeight;
+            public float SameTypeHeightCross;
+            public float Falloff;
+            public Mesh[] TerrainMeshes;
         }
-    }
-
-    [Serializable]
-    public struct TileSpecification
-    {
-        public float OwnHeight;
-        public float SameTypeHeight;
-        public float Falloff;
-        public Mesh[] TerrainMeshes;
     }
 }

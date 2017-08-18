@@ -1,10 +1,10 @@
 Plan
-- hills, mountains, forests
-- terrain generation
-- enter gates
-- units
 - player controlled unit
 - animated unit movement
+- available tiles highlight
+- gates and unit models
+- forests, other decals
+- better terrain generation
 
 * Landscape
 - different types of terrain
@@ -24,4 +24,6 @@ Plan
 - sun lens flare and bloom
 
 
-Ideas
+done
++ enter gates
++ hills, mountains

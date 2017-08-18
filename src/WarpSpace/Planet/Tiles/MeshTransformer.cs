@@ -10,7 +10,7 @@ namespace WarpSpace.Planet.Tiles
 {
     public static class MeshTransformer
     {
-        public static Mesh Transform(Mesh original, RotationsBy90 rotation, Elevations elevations, float falloff)
+        public static Mesh Transform(Mesh original, Direction2D rotation, Elevations elevations, float falloff)
         {
             var mesh = Object.Instantiate(original);
 
@@ -21,11 +21,11 @@ namespace WarpSpace.Planet.Tiles
             return mesh;
         }
 
-        private static IEnumerable<Vector3> Rotate(IEnumerable<Vector3> vs, RotationsBy90 rotationIndex)
+        private static IEnumerable<Vector3> Rotate(IEnumerable<Vector3> vs, Direction2D rotation)
         {
-            var rotation = Quaternion.Euler(0, (float)rotationIndex * 90, 0);
+            var angle = Quaternion.Euler(0, rotation.ToAngle(), 0);
 
-            return vs.Select(v => rotation * v );
+            return vs.Select(v => angle * v );
         }
 
         private static IEnumerable<Vector3> Bend(IEnumerable<Vector3> vs, Elevations elevations, float falloff)
@@ -138,13 +138,5 @@ namespace WarpSpace.Planet.Tiles
                 }
             }
         }
-    }
-
-    public enum RotationsBy90
-    {
-        R0 = 0,
-        R90 = 1,
-        R180 = 2,
-        R270 = 3,
     }
 }

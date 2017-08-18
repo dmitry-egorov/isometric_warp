@@ -43,7 +43,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IntVector2.cs" />
     <Compile Include="MatrixEx.cs" />
     <Compile Include="MatrixExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

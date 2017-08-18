@@ -1,4 +1,5 @@
 ﻿using Lanski.Reactive;
+using Lanski.Structures;
 using UnityEngine;
 
 namespace WarpSpace.Planet.Tiles
@@ -7,14 +8,14 @@ namespace WarpSpace.Planet.Tiles
     [RequireComponent(typeof(MeshFilter))]
     public class TileTransformer: MonoBehaviour
     {
-        [SerializeField] RotationsBy90 _rotation;
+        [SerializeField] Direction2D _rotation;
         [SerializeField] float _falloff;
         [SerializeField] MeshTransformer.Elevations _elevation;
         [SerializeField] Mesh _mesh;
 
         private bool _initialized;
         
-        private ChangeStream<RotationsBy90, float, MeshTransformer.Elevations, Mesh> _change;
+        private ChangeStream<Direction2D, float, MeshTransformer.Elevations, Mesh> _change;
         private MeshFilter _meshFilter;
 
         void Start()
@@ -37,7 +38,7 @@ namespace WarpSpace.Planet.Tiles
             _initialized = true;
 
             _meshFilter = GetComponent<MeshFilter>();
-            _change = new ChangeStream<RotationsBy90, float, MeshTransformer.Elevations, Mesh>();
+            _change = new ChangeStream<Direction2D, float, MeshTransformer.Elevations, Mesh>();
             _change.Subscribe(x => UpdateMesh());
         }
 

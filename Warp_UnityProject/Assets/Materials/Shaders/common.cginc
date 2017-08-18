@@ -22,8 +22,6 @@ fixed3 calculate_rising_ambient_light(float4 local_pos, fixed3 bottom_color, fix
     return lerp(bottom_color, top_color, pow(max(0, min(height / high_point, 1)), rise));
 }
 
-
-
 fixed3 calculate_fixed_light_specular(fixed3 world_pos, fixed3 specular_color, fixed3 light_color, float shininess)
 {
     fixed3 viewDirection = normalize(_WorldSpaceCameraPos - world_pos);
