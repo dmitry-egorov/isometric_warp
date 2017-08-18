@@ -1,35 +1,14 @@
-﻿using WarpSpace.Planet.Tiles;
+﻿using UnityEngine;
 
 namespace WarpSpace.World.Board
 {
-    public struct Map
+    public class Map : MonoBehaviour
     {
-        public readonly Tile[,] Tiles;
-        public readonly MapObject[] MapObjects;
-
-        public Map(Tile[,] tiles, MapObject[] mapObjects)
+        public Tile[,] Tiles { get; private set; }
+        
+        public void SetTiles(Tile[,] tiles)
         {
             Tiles = tiles;
-            MapObjects = mapObjects;
-        }
-
-        public bool Equals(Map other)
-        {
-            return Equals(Tiles, other.Tiles) && Equals(MapObjects, other.MapObjects);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is Map && Equals((Map) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((Tiles != null ? Tiles.GetHashCode() : 0) * 397) ^ (MapObjects != null ? MapObjects.GetHashCode() : 0);
-            }
         }
     }
 }

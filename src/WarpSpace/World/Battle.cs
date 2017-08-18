@@ -7,7 +7,6 @@ namespace WarpSpace.World
     {
         private bool _initialized;
         private Board.Factory _boardFactory;
-        private Board.Gameplay.Layer _gameplay;
 
         private void Initialize()
         {
@@ -16,14 +15,14 @@ namespace WarpSpace.World
             _initialized = true;
 
             _boardFactory = FindObjectOfType<Board.Factory>();
-            _gameplay = FindObjectOfType<Board.Gameplay.Layer>();
         }
         
         [ExposeMethodInEditor]
         public void Begin()
         {
+            Initialize();
+            
             _boardFactory.Create();
-            _gameplay.SpawnPlayer();
         }
     }
 }

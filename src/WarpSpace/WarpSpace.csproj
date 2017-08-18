@@ -43,26 +43,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Planet\Tiles\LandscapeType.cs" />
-    <Compile Include="Planet\Tiles\MeshTransformer.cs" />
-    <Compile Include="Planet\Tiles\Direction.cs" />
-    <Compile Include="Planet\Tiles\TilePartsHolder.cs" />
-    <Compile Include="Planet\Tiles\TileCreation.cs" />
-    <Compile Include="Planet\Tiles\TilesGenerator2.cs" />
-    <Compile Include="Planet\Tiles\TileTransformer.cs" />
+    <Compile Include="Experiment\TileTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="World\Board\PredefinedMapsHolder.cs" />
+    <Compile Include="World\Board\Direction.cs" />
+    <Compile Include="World\Board\LandscapeType.cs" />
+    <Compile Include="World\Board\Landscape\Data.cs" />
+    <Compile Include="World\Board\Landscape\TileData.cs" />
+    <Compile Include="World\Board\Landscape\MeshTransformer.cs" />
+    <Compile Include="World\Board\Landscape\Element.cs" />
+    <Compile Include="World\Board\Landscape\Initiator.cs" />
+    <Compile Include="World\Board\Map.cs" />
+    <Compile Include="World\Board\MapParser.cs" />
     <Compile Include="World\Board\RandomMapGenerator.cs" />
-    <Compile Include="World\Board\MapObject.cs" />
-    <Compile Include="World\Board\MapObjectType.cs" />
+    <Compile Include="World\Board\StructureSpec.cs" />
+    <Compile Include="World\Board\StructureType.cs" />
+    <Compile Include="World\Board\Structure\Element.cs" />
     <Compile Include="World\Board\Tile.cs" />
     <Compile Include="World\Board\Factory.cs" />
-    <Compile Include="World\Board\Gameplay\Factory.cs" />
-    <Compile Include="World\Board\Gameplay\Layer.cs" />
-    <Compile Include="World\Board\Gameplay\Tile.cs" />
-    <Compile Include="World\Board\Map.cs" />
-    <Compile Include="World\Board\Water\Tile.cs" />
-    <Compile Include="World\Board\Water\Factory.cs" />
+    <Compile Include="World\Board\MapSpec.cs" />
+    <Compile Include="World\Board\TileCreation.cs" />
+    <Compile Include="World\Board\TileSpec.cs" />
+    <Compile Include="World\Board\Water\Element.cs" />
+    <Compile Include="World\Board\Water\Initiator.cs" />
     <Compile Include="World\Battle.cs" />
   </ItemGroup>
   <ItemGroup>

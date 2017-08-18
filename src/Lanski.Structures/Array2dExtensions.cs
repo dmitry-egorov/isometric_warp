@@ -41,6 +41,14 @@ namespace Lanski.Structures
         {
             return array[index.Row, index.Column];
         }
+        
+        /// <summary>
+        /// Fit index to the nearest element 
+        /// </summary>
+        public static T GetFit<T>(this T[,] array, Index2D index)
+        {
+            return array.Get(index.FitTo(array.GetDimensions()));
+        }
 
         public static void Set<T>(this T[,] array, Index2D index, T value)
         {
@@ -62,6 +70,11 @@ namespace Lanski.Structures
             return array.GetLength(1);
         }
 
+        public static TResult[,] Map<T, TResult>(this T[,] array, Func<T, TResult> selector)
+        {
+            return Array2D.Create(array.GetDimensions(), i => selector(array.Get(i)));
+        }
+        
         public static TResult[,] Map<T, TResult>(this T[,] array, Func<T, Index2D, TResult> selector)
         {
             return Array2D.Create(array.GetDimensions(), i => selector(array.Get(i), i));
@@ -71,7 +84,7 @@ namespace Lanski.Structures
         {
             return array.EnumerateIndex().Select(array.Get);
         }
-        
+
         public static IEnumerable<(T element, Index2D index)> EnumerateWithIndex<T>(this T[,] array)
         {
             return array.EnumerateIndex().Select(i => (array.Get(i), i));
@@ -104,10 +117,29 @@ namespace Lanski.Structures
             }
         }
 
-        public static Neighbourhood2d<T> GetNeighbours<T>(this T[,] array, Index2D i)
+        /// <summary>
+        /// Gets neighbourhod of the element at a given index, replacing out of range elements with the closest non empty ones. 
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="i">Must be within the array</param>
+        public static FullNeighbourhood2D<T> GetFitNeighbours<T>(this T[,] array, Index2D i)
+        {
+            return FullNeighbourhood2D.Create(
+                leftUp:    array.GetFit(i.Left()  .Up()  ),
+                up:        array.GetFit(i         .Up()  ),
+                rightUp:   array.GetFit(i.Right() .Up()  ),
+                left:      array.GetFit(i.Left()         ),
+                center:    array.GetFit(i                ),
+                right:     array.GetFit(i.Right()        ),
+                leftDown:  array.GetFit(i.Left()  .Down()),
+                down:      array.GetFit(i         .Down()),
+                rightDown: array.GetFit(i.Right() .Down()));
+        }
+        
+        public static AdjacentNeighbourhood2D<T> GetAdjacentNeighbours<T>(this T[,] array, Index2D i)
             where T: struct
         {
-            return new Neighbourhood2d<T>(Neighbours().ToArray());
+            return new AdjacentNeighbourhood2D<T>(Neighbours().ToArray());
             
             IEnumerable<T?> Neighbours()
             {
@@ -134,7 +166,51 @@ namespace Lanski.Structures
         }
     }
 
-    public struct Neighbourhood2d<T>
+    public struct FullNeighbourhood2D
+    {
+        public static FullNeighbourhood2D<T> Create<T>(T center, T left, T up, T right, T down, T leftUp, T rightUp, T rightDown, T leftDown)
+        {
+            var n = new T[3,3];
+            
+            n[0, 0] = leftUp;
+            n[1, 0] = up;
+            n[2, 0] = rightUp;
+            n[0, 1] = left;
+            n[1, 1] = center;
+            n[2, 1] = right;
+            n[0, 2] = leftDown;
+            n[1, 2] = down;
+            n[2, 2] = rightDown;
+            
+            return new FullNeighbourhood2D<T>(n);
+        }
+    }
+    public struct FullNeighbourhood2D<T>
+    {
+        public readonly T[,] Elements;
+
+        public T Center    => Elements[1, 1];
+        public T Left      => Elements[0, 1];
+        public T LeftUp    => Elements[0, 0];
+        public T Up        => Elements[1, 0];
+        public T RightUp   => Elements[2, 0];
+        public T Right     => Elements[2, 1];
+        public T RightDown => Elements[2, 2];
+        public T Down      => Elements[1, 2];
+        public T LeftDown  => Elements[0, 2];
+
+        public FullNeighbourhood2D(T[,] elements)
+        {
+            Elements = elements;
+        }
+
+        public FullNeighbourhood2D<TResult> Select<TResult>(Func<T, TResult> selector)
+        {
+            return new FullNeighbourhood2D<TResult>(Elements.Map(selector));
+        }
+    }
+
+    public struct AdjacentNeighbourhood2D<T>
         where T: struct
     {
         public T? Left  => Neighbours[0]; 
@@ -143,7 +219,7 @@ namespace Lanski.Structures
         public T? Down  => Neighbours[3]; 
         public readonly T?[] Neighbours;//TODO: use read-only interface
 
-        public Neighbourhood2d(T?[] neighbours)
+        public AdjacentNeighbourhood2D(T?[] neighbours)
         {
             Neighbours = neighbours;
         }
@@ -194,10 +270,8 @@ namespace Lanski.Structures
         }
 
 
-        public Index2D FitTo<T>(T[,] array)
+        public Index2D FitTo(Dimensions2D d)
         {
-            var d = array.GetDimensions();
-            
             var r = Row < 0       ? 0
                   : Row >= d.Rows ? d.Rows - 1
                   :                 Row;

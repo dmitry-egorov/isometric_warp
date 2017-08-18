@@ -1,30 +1,24 @@
-﻿using WarpSpace.Planet.Tiles;
+﻿using Lanski.Structures;
+using UnityEngine;
 
 namespace WarpSpace.World.Board
 {
-    public struct Tile
+    public class Tile : MonoBehaviour
     {
-        public readonly LandscapeType Type;
+        public Index2D Index { get; private set; }
+        public TileSpec Spec { get; private set; }
+    
+        public Landscape.Element LandscapeElement { get; private set; }
+        public Water.Element WaterElement { get; private set; }
 
-        public Tile(LandscapeType type)
+        public void Init(Index2D index, TileSpec spec)
         {
-            Type = type;
-        }
-
-        public bool Equals(Tile other)
-        {
-            return Type == other.Type;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is Tile && Equals((Tile) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (int) Type;
+            LandscapeElement = GetComponentInChildren<Landscape.Element>();
+            WaterElement = GetComponentInChildren<Water.Element>();
+        
+            Index = index;
+            Spec = spec;
         }
     }
+    
 }
