@@ -47,6 +47,10 @@
     <Compile Include="Tuple.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Lanski.Maths\Lanski.Maths.csproj">
+      <Project>{1B27FC2D-E60E-4503-9EA7-0B655BBBAF41}</Project>
+      <Name>Lanski.Maths</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lanski.Sharp7\Lanski.Sharp7.csproj">
       <Project>{8c681d57-a09d-4f42-a6ec-81e2e0ffa882}</Project>
       <Name>Lanski.Sharp7</Name>

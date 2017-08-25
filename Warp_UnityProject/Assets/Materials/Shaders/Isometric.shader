@@ -34,8 +34,6 @@ Shader "Custom/Isometric"
 			{
 				float4 vertex : SV_POSITION;
                 float3 c: COLOR;
-                float3 n: NORMAL;
-                float3 wpos: TEXCOORD1;
 			};
             
             fixed3 _Color;

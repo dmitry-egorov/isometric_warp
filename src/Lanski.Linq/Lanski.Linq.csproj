@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EnumerableOfNullableExtensions.cs" />
+    <Compile Include="HashsetExtensions.cs" />
     <Compile Include="MergeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -43,6 +43,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EditorInitializable.cs" />
     <Compile Include="Input\Drag.cs" />
     <Compile Include="Meshes\ISharedMeshBehaviour.cs" />
     <Compile Include="Meshes\SharedMeshInstance.cs" />
@@ -52,6 +53,14 @@
     <ProjectReference Include="..\Lanski.Reactive\Lanski.Reactive.csproj">
       <Project>{227702C3-257D-432F-9AE9-7D49A34EBBDF}</Project>
       <Name>Lanski.Reactive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.Reflection\Lanski.Reflection.csproj">
+      <Project>{22246ECF-EB06-4CCE-BAF6-3862E95AB930}</Project>
+      <Name>Lanski.Reflection</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.Sharp7\Lanski.Sharp7.csproj">
+      <Project>{8c681d57-a09d-4f42-a6ec-81e2e0ffa882}</Project>
+      <Name>Lanski.Sharp7</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
       <Project>{eca31e07-dc35-46fc-9c5b-f0f32f9152b1}</Project>

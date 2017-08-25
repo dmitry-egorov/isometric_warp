@@ -59,6 +59,10 @@
       <Project>{22246ECF-EB06-4CCE-BAF6-3862E95AB930}</Project>
       <Name>Lanski.Reflection</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lanski.Sharp7\Lanski.Sharp7.csproj">
+      <Project>{8c681d57-a09d-4f42-a6ec-81e2e0ffa882}</Project>
+      <Name>Lanski.Sharp7</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
       <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>
       <Name>Lanski.Structures</Name>

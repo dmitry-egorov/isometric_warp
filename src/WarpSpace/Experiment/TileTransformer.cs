@@ -2,9 +2,9 @@
 using Lanski.Reactive;
 using Lanski.Structures;
 using UnityEngine;
-using WarpSpace.World.Board.Landscape;
+using WarpSpace.World.Board.Tile.Landscape;
 
-namespace WarpSpace.Planet.Tiles
+namespace WarpSpace.Experiment
 {
     [ExecuteInEditMode]
     [RequireComponent(typeof(MeshFilter))]

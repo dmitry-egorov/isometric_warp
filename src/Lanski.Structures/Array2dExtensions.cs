@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Lanski.Maths;
 
 namespace Lanski.Structures
 {
@@ -135,6 +136,20 @@ namespace Lanski.Structures
                 down:      array.GetFit(i         .Down()),
                 rightDown: array.GetFit(i.Right() .Down()));
         }
+
+        public static AdjacentRef<T> GetAdjacent<T>(this T[,] array, Index2D i)
+            where T: class
+        {
+            return new AdjacentRef<T>(Neighbours().ToArray());
+            
+            IEnumerable<T> Neighbours()
+            {
+                yield return array.TryGetRef(i.Left());
+                yield return array.TryGetRef(i.Up());
+                yield return array.TryGetRef(i.Right());
+                yield return array.TryGetRef(i.Down());
+            }
+        }
         
         public static AdjacentNeighbourhood2D<T> GetAdjacentNeighbours<T>(this T[,] array, Index2D i)
             where T: struct
@@ -155,14 +170,19 @@ namespace Lanski.Structures
         {
             return array.TryGet(i).Select(condition).GetValueOrDefault(defaultValue);
         }
+
+        public static T TryGetRef<T>(this T[,] array, Index2D i)
+            where T: class
+        {
+            return i.Fits(array) ? array.Get(i) 
+                                 : default(T);
+        }
         
         public static T? TryGet<T>(this T[,] array, Index2D i)
             where T: struct
         {
-            if (!i.Fits(array))
-                return default(T?);
-
-            return array.Get(i);
+            return i.Fits(array) ? array.Get(i) 
+                                 : default(T?);
         }
     }
 
@@ -185,6 +205,7 @@ namespace Lanski.Structures
             return new FullNeighbourhood2D<T>(n);
         }
     }
+    
     public struct FullNeighbourhood2D<T>
     {
         public readonly T[,] Elements;
@@ -204,7 +225,7 @@ namespace Lanski.Structures
             Elements = elements;
         }
 
-        public FullNeighbourhood2D<TResult> Select<TResult>(Func<T, TResult> selector)
+        public FullNeighbourhood2D<TResult> Map<TResult>(Func<T, TResult> selector)
         {
             return new FullNeighbourhood2D<TResult>(Elements.Map(selector));
         }
@@ -223,6 +244,38 @@ namespace Lanski.Structures
         {
             Neighbours = neighbours;
         }
+    }
+    
+    public struct AdjacentRef<T>
+    {
+        private readonly T[] _items;
+        public T[] Items => _items;
+
+        public AdjacentRef(T[] items)
+        {
+            _items = items;
+        }
+
+        public T this[Direction2D d]
+        {
+            get
+            {
+                switch (d)
+                {
+                    case Direction2D.Left:
+                        return _items[0];
+                    case Direction2D.Up:
+                        return _items[1];
+                    case Direction2D.Right:
+                        return _items[2];
+                    case Direction2D.Down:
+                        return _items[3];
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(d), d, null);
+                }
+            }
+        }
+
     }
 
     public struct ElementAndIndex2D<T>
@@ -313,6 +366,31 @@ namespace Lanski.Structures
         public static implicit operator Index2D(ValueTuple<int, int> v)
         {
             return new Index2D(v.Item1, v.Item2);
+        }
+
+        public bool IsAdjacentTo(Index2D other)
+        {
+            var dr = Mathe.Abs(Row - other.Row);
+            var dc = Mathe.Abs(Column - other.Column);
+
+            return dr == 0 && dc == 1 || dr == 1 && dc == 0;
+        }
+
+        public Direction2D DirectionTo(Index2D other)
+        {
+            var dr = other.Row - Row;
+            var dc = other.Column - Column;
+            
+            if (dr < 0)
+                return Direction2D.Up;
+            
+            if (dr > 0)
+                return Direction2D.Down;
+
+            if (dc < 0) 
+                return Direction2D.Left;
+            
+            return Direction2D.Right;
         }
     }
 

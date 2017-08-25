@@ -4,6 +4,28 @@ using System.Reflection;
 
 namespace Lanski.Reflection
 {
+    public static class ReflectionSimpleExtensions
+    {
+        public static bool IsToStringOverriden(this Type type)
+        {
+            var declaringType = type.GetMethod("ToString").DeclaringType;
+            return declaringType != typeof(object) && declaringType != typeof(ValueType);
+        }
+        
+        public static bool IsSimple(this Type type)
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                // nullable type, check if the nested type is simple.
+                return IsSimple(type.GetGenericArguments()[0]);
+            }
+            
+            return type.IsPrimitive 
+                   || type.IsEnum
+                   || type == typeof(string)
+                   || type == typeof(decimal);
+        }
+    }
     public static class ReflectionGenericsExtensions
     {
         public static bool IsAssignableToGenericType(this Type givenType, Type genericType)
@@ -43,6 +65,10 @@ namespace Lanski.Reflection
             return field.GetCustomAttributes(typeof(T), true).Any();
         }
 
+        public static bool IsAssignableTo<T>(this Type type)
+        {
+            return type.IsAssignableTo(typeof(T));
+        }
         public static bool IsAssignableTo(this Type type, Type baseType)
         {
             return baseType.IsAssignableFrom(type);

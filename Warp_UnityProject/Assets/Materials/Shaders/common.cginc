@@ -7,13 +7,13 @@
 fixed3 calculate_isometric_surround_light(float3 local_normal, fixed3 top_color, fixed3 left_color, fixed3 right_color)
 {
     float3 n = normalize(mul(float4(local_normal, 0.0), unity_WorldToObject).xyz);
-    float up_degree = dot(UP, n);
+    float up_degree = max(0, dot(UP, n));
     float inverse_up_degree = sqrt(1 - up_degree * up_degree);
 
-    fixed3 top = top_color * max(0, up_degree);
-    fixed3 surround = lerp(left_color, right_color, (dot(RIGHT, n) + 1.0) * 0.5) * inverse_up_degree;
+    fixed3 top = top_color;
+    fixed3 surround = lerp(left_color, right_color, (dot(RIGHT, n) + 1.0) * 0.5) ;
 
-    return top + surround;
+    return top * up_degree + surround * inverse_up_degree;
 }
 
 fixed3 calculate_rising_ambient_light(float4 local_pos, fixed3 bottom_color, fixed3 top_color, float high_point, float rise)
