@@ -203,7 +203,7 @@ namespace WarpSpace.Editors
                 {
                     TryInitialize();
     
-                    DisplayChildren();
+                    DisplayChildren(target);
                 }
                 else
                 {
@@ -223,40 +223,37 @@ namespace WarpSpace.Editors
                     _type = type;
                     _initialized = true;
 
-                    (FieldInfo info, IDisplayer node)[] CreateChildren()
-                    {
-                        return GetPrivateFields(target)
-                            .Select(CreateChild)
-                            .ToArray();
-                    }
-
-                    (FieldInfo field, IDisplayer node) CreateChild(FieldInfo field)
-                    {
-                        var node = CreateNode();
-
-                        return (field, node);
-
-                        IDisplayer CreateNode()
-                        {
-                            var name = field.Name;
-                            var fieldType = field.FieldType;
-
-                            var displayerType = GetDisplayerType(fieldType);
-
-                            return CreateDisplayer(name, displayerType);
-                        }
-                    }
+                    (FieldInfo info, IDisplayer node)[] CreateChildren() => GetPrivateFields(target)
+                        .Select(CreateChild)
+                        .ToArray();
                 }
+            }
+                
+            (FieldInfo field, IDisplayer node) CreateChild(FieldInfo field)
+            {
+                var node = CreateNode();
 
-                void DisplayChildren()
+                return (field, node);
+
+                IDisplayer CreateNode()
                 {
-                    EditorGUI.indentLevel++;
-                    foreach (var child in _children)
-                    {
-                        child.node.Display(child.info.GetValue(target));
-                    }
-                    EditorGUI.indentLevel--;
+                    var name = field.Name;
+                    var fieldType = field.FieldType;
+
+                    var displayerType = GetDisplayerType(fieldType);
+
+                    return CreateDisplayer(name, displayerType);
                 }
+            }
+
+            void DisplayChildren(object target)
+            {
+                EditorGUI.indentLevel++;
+                foreach (var child in _children)
+                {
+                    child.node.Display(child.info.GetValue(target));
+                }
+                EditorGUI.indentLevel--;
             }
         }
 

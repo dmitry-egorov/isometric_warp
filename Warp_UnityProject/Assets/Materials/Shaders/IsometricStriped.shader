@@ -29,13 +29,13 @@ Shader "Custom/Isometric Striped"
 			struct appdata
 			{
 				float4 vertex : POSITION;
-                float3 normal: NORMAL;
+                fixed3 normal: NORMAL;
 			};
 
 			struct v2f
 			{
 				float4 vertex : SV_POSITION;
-                float3 c: COLOR;
+                fixed4 c: COLOR;
                 float3 normal: NORMAL;
                 float3 wpos: TEXCOORD1;
 			};
@@ -59,19 +59,19 @@ Shader "Custom/Isometric Striped"
                 fixed3 ambient = calculate_rising_ambient_light(v.vertex, _BottomAmbientColor, _TopAmbientColor, _AmbientHighPoint, _AmbientRise);
 
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.c = saturate(_Color * (surround + ambient));
+                o.c = fixed4(saturate(_Color * (surround + ambient)), 1);
                 o.wpos = v.vertex;
                 o.normal = v.normal;
 
                 return o;
             }
 
-            fixed3 frag (v2f i) : SV_Target
+            fixed4 frag (v2f i) : SV_Target
             {
-                float fraction = abs(frac((-i.wpos.x + i.wpos.y + i.wpos.z) * _StripeWidth));
-                float up_degree = normalize(i.normal).y;
-                float4 stripe = up_degree > 0.1 && fraction < 0.5 ? _StripeColor : fixed4(0, 0, 0, 0);
-                return lerp(i.c, stripe.xyz, stripe.w);
+                fixed fraction = abs(frac((-i.wpos.x + i.wpos.y + i.wpos.z) * _StripeWidth));
+                fixed up_degree = normalize(i.normal).y;
+                fixed4 stripe = up_degree > 0.1 && fraction < 0.5 ? _StripeColor : fixed4(0, 0, 0, 0);
+                return lerp(i.c, stripe, stripe.w);
             }
 
 			ENDCG

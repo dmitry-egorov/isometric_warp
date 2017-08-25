@@ -19,9 +19,13 @@ namespace Lanski.Behaviours
         {
             TryInit();
             
+            if (Application.isPlaying)
+                return;
+            
             if (DidAnyParameterChange())
             {
-                PublishParametersChanged();
+                OnParameterChanged();
+                UpdateLastValues();
             }
         }
 
@@ -34,26 +38,33 @@ namespace Lanski.Behaviours
                 return;
             _initialized = true;
             
+            Init();
+            OnParameterChanged();
+
+            if (Application.isPlaying)
+                return;
+
             _getters = GetFieldGetters();
             _lastValues = new object[_getters.Length];
-
-            Init();
-
-            PublishParametersChanged();
-
+            UpdateLastValues();
         }
 
         private bool DidAnyParameterChange()
         {
-            return _getters
-                .Select((x, i) => (x, i))
-                .Any(g => !Equals(g.Item1(), _lastValues[g.Item2]));
-        }
+            for (var i = 0; i < _getters.Length; i++)
+            {
+                var value = _getters[i]();
+                var lastValue = _lastValues[i];
 
-        private void PublishParametersChanged()
-        {
-            UpdateLastValues();
-            OnParameterChanged();
+                if (!Equals(value, lastValue))
+                    return true;
+            }
+
+            return false;
+            
+            //return _getters
+            //    .Select((x, i) => (x, i))
+            //    .Any(g => !Equals(g.Item1(), _lastValues[g.Item2]));
         }
 
         private void UpdateLastValues()

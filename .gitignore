@@ -12,3 +12,6 @@ src/PlanetRider/.vs
 ._.DS_Store
 *.DotSettings.user
 ._*.txt
+*.ide
+.idea/
+builds/

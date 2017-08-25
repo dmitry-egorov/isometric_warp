@@ -27,13 +27,13 @@ Shader "Custom/Isometric"
 			struct appdata
 			{
 				float4 vertex : POSITION;
-                float3 normal: NORMAL;
+                fixed3 normal: NORMAL;
 			};
 
 			struct v2f
 			{
 				float4 vertex : SV_POSITION;
-                float3 c: COLOR;
+                fixed4 c: COLOR;
 			};
             
             fixed3 _Color;
@@ -49,16 +49,16 @@ Shader "Custom/Isometric"
             {
                 v2f o;
 
-                fixed3 surround   = calculate_isometric_surround_light(v.normal, _TopColor, _LeftColor, _RightColor);
+                fixed3 surround = calculate_isometric_surround_light(v.normal, _TopColor, _LeftColor, _RightColor);
                 fixed3 ambient = calculate_rising_ambient_light(v.vertex, _BottomAmbientColor, _TopAmbientColor, _AmbientHighPoint, _AmbientRise);
 
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.c = saturate(_Color * (surround + ambient));
+                o.c = fixed4(saturate(_Color * (surround + ambient)), 1);
 
                 return o;
             }
 
-            fixed3 frag (v2f i) : SV_Target
+            fixed4 frag (v2f i) : SV_Target
             {
                 return i.c;
             }

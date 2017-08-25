@@ -26,13 +26,13 @@ Shader "Custom/IsometricSpecular"
 			struct appdata
 			{
 				float4 vertex : POSITION;
-                float3 normal: NORMAL;
+                fixed3 normal: NORMAL;
 			};
 
 			struct v2f
 			{
 				float4 vertex : SV_POSITION;
-                float3 c: COLOR;
+                fixed4 c: COLOR;
                 float3 wpos: TEXCOORD1;
 			};
             
@@ -52,17 +52,17 @@ Shader "Custom/IsometricSpecular"
 
                 fixed3 surround = calculate_isometric_surround_light(v.normal, _TopColor, _LeftColor, _RightColor);
 
-                o.c = surround + _AmbientColor;
+                o.c = fixed4(surround + _AmbientColor, 1);
                 o.wpos = wpos;
 
                 return o;
             }
             
-            fixed3 frag (v2f i) : SV_Target
+            fixed4 frag (v2f i) : SV_Target
             {
                 fixed3 specular = calculate_fixed_light_specular(i.wpos, _SpecularColor, _TopColor, _Shininess);
 
-                return saturate(_Color * (i.c + specular));
+                return fixed4(saturate(_Color * (i.c + specular)), 1);
             }
 			ENDCG
 		}
