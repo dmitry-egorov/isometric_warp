@@ -41,9 +41,15 @@
       <HintPath>..\..\lib\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\lib\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EditorInitializable.cs" />
+    <Compile Include="FPS\FpsCounter.cs" />
+    <Compile Include="FPS\FpsPresenter.cs" />
     <Compile Include="Input\Drag.cs" />
     <Compile Include="Meshes\ISharedMeshBehaviour.cs" />
     <Compile Include="Meshes\SharedMeshInstance.cs" />

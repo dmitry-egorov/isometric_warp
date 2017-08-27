@@ -1,4 +1,4 @@
-﻿namespace Core.Structures
+﻿namespace Lanski.Structures
 {
     public struct TheVoid
     {

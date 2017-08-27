@@ -1,10 +1,13 @@
 Plan
-- player controlled unit
-- animated unit movement
-- available tiles highlight
-- gates and unit models
+- exit gate
+- enemy units
+- firing
+- end turn
+- enemy ai
+- gate model
 - forests, other decals
 - better terrain generation
+- smoother unit movement (start rotating to the next tile, before reaching previous one)
 
 * Landscape
 - different types of terrain
@@ -25,5 +28,10 @@ Plan
 
 
 done
++ animated unit movement
++ unit model
++ available tiles highlight
++ player controlled unit
 + enter gates
 + hills, mountains
+

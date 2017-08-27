@@ -5,14 +5,14 @@
     }
  
     SubShader {
-        Tags { "Queue" = "Transparent" }
+        Tags { "RenderType" = "Opaque" }
  
         Pass {
             Name "BASE"
             Cull Back
             Blend Zero One
  
-            Offset -128, -8
+            Offset -256, -8
 
             Lighting Off
             Color (0,0,0,0)
@@ -21,13 +21,7 @@
         Pass {
             Name "OUTLINE"
             Cull Front
- 
-            // you can choose what kind of blending mode you want for the outline
-            Blend SrcAlpha OneMinusSrcAlpha // Normal
-            //Blend One One // Additive
-            //Blend One OneMinusDstColor // Soft Additive
-            //Blend DstColor Zero // Multiplicative
-            //Blend DstColor SrcColor // 2x Multiplicative
+            Blend One Zero
  
             CGPROGRAM
             #include "UnityCG.cginc"
@@ -46,10 +40,6 @@
             struct v2f {
                 float4 pos : POSITION;
             };
-             
-            half4 frag(v2f i) : COLOR {
-                return _OutlineColor;
-            }
 
             v2f vert(appdata v) {
                 v2f o;
@@ -60,6 +50,10 @@
              
                 o.pos = pos + float4(offset * _Outline, 0, 0);
                 return o;
+            }
+             
+            half4 frag(v2f i) : COLOR {
+                return _OutlineColor;
             }
             ENDCG
         }

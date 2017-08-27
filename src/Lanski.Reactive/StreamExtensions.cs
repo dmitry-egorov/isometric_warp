@@ -96,6 +96,11 @@ namespace Lanski.Reactive
             return new InProgressCell<T>(events, startCondition, finishCondition);
         }
 
+        public static IStream<(T previous, T current)> IncludePrevious<T>(this IStream<T> stream)
+        {
+            return new PairsStream<T>(stream);
+        }
+
         public class InProgressCell<T> : ICell<bool>
         {
             private readonly IStream<T> _events;
@@ -177,7 +182,7 @@ namespace Lanski.Reactive
                 {
                     lastSubscription?.Invoke();
 
-                    lastSubscription = _selector(x).Subscribe(action);
+                    lastSubscription = x != null ? _selector(x).Subscribe(action) : null;
                 });
             }
         }
@@ -278,6 +283,26 @@ namespace Lanski.Reactive
                     a2();
                 };
             }
+        }
+    }
+
+    public class PairsStream<T>: IStream<(T,T)>
+    {
+        private readonly IStream<T> _stream;
+
+        public PairsStream(IStream<T> stream)
+        {
+            _stream = stream;
+        }
+
+        public Action Subscribe(Action<(T, T)> action)
+        {
+            var prev = default(T);
+            return _stream.Subscribe(v =>
+            {
+                action((prev, v));
+                prev = v;
+            });
         }
     }
 }

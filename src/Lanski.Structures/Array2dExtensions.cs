@@ -248,12 +248,12 @@ namespace Lanski.Structures
     
     public struct AdjacentRef<T>
     {
-        private readonly T[] _items;
-        public T[] Items => _items;
+        private readonly T[] _all;
+        public T[] All => _all;
 
-        public AdjacentRef(T[] items)
+        public AdjacentRef(T[] all)
         {
-            _items = items;
+            _all = all;
         }
 
         public T this[Direction2D d]
@@ -263,19 +263,23 @@ namespace Lanski.Structures
                 switch (d)
                 {
                     case Direction2D.Left:
-                        return _items[0];
+                        return _all[0];
                     case Direction2D.Up:
-                        return _items[1];
+                        return _all[1];
                     case Direction2D.Right:
-                        return _items[2];
+                        return _all[2];
                     case Direction2D.Down:
-                        return _items[3];
+                        return _all[3];
                     default:
                         throw new ArgumentOutOfRangeException(nameof(d), d, null);
                 }
             }
         }
 
+        public AdjacentRef<TResult> Map<TResult>(Func<T, TResult> selector)
+        {
+            return new AdjacentRef<TResult>(All.Select(selector).ToArray());
+        }
     }
 
     public struct ElementAndIndex2D<T>
@@ -346,6 +350,23 @@ namespace Lanski.Structures
                 && Row < d.Rows;
         }
         
+        public static Index2D operator +(Index2D i, Direction2D d)
+        {
+            switch (d)
+            {
+                case Direction2D.Left:
+                    return new Index2D(i.Row    , i.Column - 1);
+                case Direction2D.Up:
+                    return new Index2D(i.Row - 1, i.Column    );
+                case Direction2D.Right:
+                    return new Index2D(i.Row    , i.Column + 1);
+                case Direction2D.Down:
+                    return new Index2D(i.Row + 1, i.Column    );
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(d), d, null);
+            }
+        }
+
         public static bool operator ==(Index2D i1, Index2D i2) => i1.Equals(i2);
         public static bool operator !=(Index2D i1, Index2D i2) => !(i1 == i2);
         public bool Equals(Index2D other) => Row == other.Row && Column == other.Column;
@@ -422,5 +443,11 @@ namespace Lanski.Structures
         Up = 1,
         Right = 2,
         Down = 3,
+    }
+    
+    public enum RotationDirection2D
+    {
+        Clockwise,
+        Counterclockwise
     }
 }

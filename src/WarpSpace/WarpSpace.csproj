@@ -47,52 +47,23 @@
     <Compile Include="Common\Direction2DEx.cs" />
     <Compile Include="Common\Direction2DExtensions.cs" />
     <Compile Include="Common\Index2DData.cs" />
+    <Compile Include="Common\MeshTransformation\MeshTransformer.cs" />
     <Compile Include="Common\Outline\OutlineMeshBuilder.cs" />
     <Compile Include="Common\Outline\OutlinesInitializer.cs" />
     <Compile Include="Common\Spacial2DData.cs" />
     <Compile Include="Experiment\TileTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="World\Board\ComponentSpec.cs" />
-    <Compile Include="World\Board\Component.cs" />
-    <Compile Include="World\Board\ComponentSpecConverter.cs" />
-    <Compile Include="World\Board\Entrance.cs" />
-    <Compile Include="World\Board\EntranceSpec.cs" />
-    <Compile Include="World\Board\Settings.cs" />
-    <Compile Include="World\Board\TileCreationHelper.cs" />
-    <Compile Include="World\Board\Tile\ComponentSpec.cs" />
-    <Compile Include="World\Board\Tile\Highlight\Component.cs" />
-    <Compile Include="World\Board\Tile\Landscape\Component.cs" />
-    <Compile Include="World\Board\Tile\Landscape\ComponentSpec.cs" />
-    <Compile Include="World\Board\Tile\Landscape\Extensions\Factory.cs" />
-    <Compile Include="World\Board\Tile\Landscape\Initiator.cs" />
-    <Compile Include="World\Board\Tile\Landscape\MeshTransformer.cs" />
-    <Compile Include="World\Board\Tile\Landscape\Settings.cs" />
-    <Compile Include="World\Board\Tile\Landscape\TileSettings.cs" />
-    <Compile Include="World\Board\Tile\Descriptions\BoardDescription.cs" />
-    <Compile Include="World\Board\Tile\Descriptions\LandscapeType.cs" />
-    <Compile Include="World\Board\Tile\Descriptions\Spacial2D.cs" />
-    <Compile Include="World\Board\Tile\Descriptions\StructureDescription.cs" />
-    <Compile Include="World\Board\Tile\Descriptions\StructureType.cs" />
-    <Compile Include="World\Board\Tile\Descriptions\TileDescription.cs" />
-    <Compile Include="World\Board\Tile\Commander\Component.cs" />
-    <Compile Include="World\Board\Tile\StructureSlot\Component.cs" />
-    <Compile Include="World\Board\Tile\StructureSlot\ComponentSpec.cs" />
-    <Compile Include="World\Board\Tile\StructureSlot\Extensions\Factory.cs" />
-    <Compile Include="World\Board\Tile\StructureSlot\Initiator.cs" />
-    <Compile Include="World\Board\Tile\StructureSlot\Settings.cs" />
-    <Compile Include="World\Board\Tile\Component.cs" />
-    <Compile Include="World\Board\Tile\UnitSlot\Component.cs" />
-    <Compile Include="World\Board\Tile\Water\Component.cs" />
-    <Compile Include="World\Board\Tile\Water\ComponentSpec.cs" />
-    <Compile Include="World\Board\Tile\Water\Extensions\Factory.cs" />
-    <Compile Include="World\Board\Tile\Water\SpecGenerator.cs" />
-    <Compile Include="World\Board\Tile\Water\Settings.cs" />
-    <Compile Include="World\Factory.cs" />
-    <Compile Include="World\Player\Component.cs" />
-    <Compile Include="World\RandomMapGenerator.cs" />
-    <Compile Include="World\SettingsConversionExtensions.cs" />
-    <Compile Include="World\Unit\Component.cs" />
-    <Compile Include="World\Unit\ComponentSpec.cs" />
+    <Compile Include="Unity\World\Battle\Board\Component.cs" />
+    <Compile Include="Unity\World\Battle\Board\TileCreationHelper.cs" />
+    <Compile Include="Unity\World\Battle\Board\Tile\Component.cs" />
+    <Compile Include="Unity\World\Battle\Board\Tile\Landscape\Component.cs" />
+    <Compile Include="Unity\World\Battle\Board\Tile\PlayerActionSource\Component.cs" />
+    <Compile Include="Unity\World\Battle\Board\Tile\StructureSlot\Component.cs" />
+    <Compile Include="Unity\World\Battle\Board\Tile\UnitSlot\Component.cs" />
+    <Compile Include="Unity\World\Battle\Board\Tile\Water\Component.cs" />
+    <Compile Include="Unity\World\Battle\Component.cs" />
+    <Compile Include="Unity\World\Battle\SettingsConversionExtensions.cs" />
+    <Compile Include="Unity\World\Battle\Unit\Component.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lanski.Behaviours\Lanski.Behaviours.csproj">
@@ -131,6 +102,19 @@
       <Project>{97420AF8-F6A9-428F-AD26-802FAD489D7B}</Project>
       <Name>UnityEditor.Expose</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WarpSpace.Descriptions\WarpSpace.Descriptions.csproj">
+      <Project>{0127FC72-7C5D-434B-8EFE-4313ED9824E0}</Project>
+      <Name>WarpSpace.Descriptions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WarpSpace.Models\WarpSpace.Models.csproj">
+      <Project>{ba651769-958c-4def-b0ec-15c7a154f76b}</Project>
+      <Name>WarpSpace.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Descriptions" />
+    <Folder Include="Models" />
+    <Folder Include="Unity" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

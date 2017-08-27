@@ -56,6 +56,7 @@
      <None Include="Assets\Materials\Shaders\Outline.shader" />
      <None Include="Assets\Materials\Shaders\IsometricSpecular.shader" />
      <None Include="Assets\Materials\Shaders\IsometricStriped.shader" />
+     <None Include="Assets\Materials\Shaders\IsometricUnitPlaceholder.shader" />
      <None Include="Assets\Materials\Shaders\Isometric.shader" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
@@ -141,9 +142,6 @@
  <Reference Include="UnityEditor.Expose">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Editor/UnityEditor.Expose.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.ExposeEditor">
- <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Editor/UnityEditor.ExposeEditor.dll</HintPath>
- </Reference>
  <Reference Include="WarpSpace.Editors">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Editor/WarpSpace.Editors.dll</HintPath>
  </Reference>
@@ -179,6 +177,12 @@
  </Reference>
  <Reference Include="WarpSpace">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/WarpSpace.dll</HintPath>
+ </Reference>
+ <Reference Include="WarpSpace.Descriptions">
+ <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/WarpSpace.Descriptions.dll</HintPath>
+ </Reference>
+ <Reference Include="WarpSpace.Models">
+ <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/WarpSpace.Models.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.iOS.Extensions.Xcode">
  <HintPath>/Applications/Unity/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>

@@ -25,6 +25,11 @@ namespace Lanski.Maths
             return m < 0 ? m + mod : m;
         }
 
+        public static float Min(float v1, float v2, float v3)
+        {
+            return Mathf.Min(Mathf.Min(v1, v2), v3);
+        }
+        
         public static float Min(float v1, float v2, float v3, float v4)
         {
             return Mathf.Min(Mathf.Min(v1, v2), Mathf.Min(v3, v4));
