@@ -1,33 +1,37 @@
 Plan
-- exit gate
-- enemy units
-- firing
+- show hp
+- show weapon button only on selection
 - end turn
+- loot
+- deploy own units
 - enemy ai
+- cooldowns
+- faction materials
+- fire weapon animation
+- destruction animation
+- multiple weapons
+- weapon models
+- weapon ui models
+- tilt and offest units by terrain
 - gate model
+- tank model
+- larger maps with the view centered on the mothership
 - forests, other decals
 - better terrain generation
 - smoother unit movement (start rotating to the next tile, before reaching previous one)
 
 * Landscape
 - different types of terrain
-- geometry on the edges depends on the 2 neighbouring tiles
-
 
 * Move between planets
 - next planet
 
-* More tiles
-- truncated icosahedron sphere tiling
-
-* UI
-- Global drag to panel drag
-
-* Beautify
-- sun lens flare and bloom
-
 
 done
++ attacking
++ unit weapons
++ enemy units
++ exit gate
 + animated unit movement
 + unit model
 + available tiles highlight

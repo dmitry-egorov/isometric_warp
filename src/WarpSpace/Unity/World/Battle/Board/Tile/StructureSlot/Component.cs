@@ -28,6 +28,8 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.StructureSlot
             {
                 case StructureType.Entrance:
                     return Settings.EntrancePrefab;
+                case StructureType.Exit:
+                    return Settings.ExitPrefab;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -37,6 +39,7 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.StructureSlot
         public struct OwnSettings
         {
             public GameObject EntrancePrefab;
+            public GameObject ExitPrefab;
         }
     }
 }

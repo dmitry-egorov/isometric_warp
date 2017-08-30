@@ -15,25 +15,37 @@ namespace WarpSpace.Descriptions
         {
             var types = GenerateTiles();
             
-            var entranceSpacial = GetEntranceSpacial();
+            var entranceSpacial = GetStructureSpacial();
+            var exitSpacial = GetStructureSpacial();
 
             var entranceStructure = new StructureDescription(StructureType.Entrance, entranceSpacial.Orientation);
+            var exitStructure = new StructureDescription(StructureType.Exit, exitSpacial.Orientation);
 
-            var tiles = types.Map((t, i) => new TileDescription(t, i == entranceSpacial.Position ? (StructureDescription?)entranceStructure : null));
+            var tiles = types.Map((t, i) => new TileDescription(t, SelectStructure(i)));
             
-            return new BoardDescription(tiles, entranceSpacial);
+            return new BoardDescription(tiles, entranceSpacial, new UnitDescription?[Rows, Columns]);
             
             LandscapeType[,] GenerateTiles() => 
                 Array2D.Create(new Dimensions2D(Rows, Columns), p => LandscapeTypeEx.Random());
 
-            Spacial2D GetEntranceSpacial() => 
+            Spacial2D GetStructureSpacial() => 
                 types
                 .EnumerateWithIndex()
                 .Where(e => e.element == LandscapeType.Flatland || e.element == LandscapeType.Hill)
                 .Select(p => GetRotationToRandomPassableNeighbour(types.GetAdjacentNeighbours(p.index)).Select(d => new Spacial2D(p.index, d)))
-                .WhereNotNull()
+                .SkipNull()
                 .ToArray()
                 .RandomElement();
+
+            StructureDescription? SelectStructure(Index2D i)
+            {
+                if (i == entranceSpacial.Position) 
+                    return entranceStructure;
+                if (i == exitSpacial.Position)
+                    return exitStructure;
+                
+                return null;
+            }
         }
 
         private static Direction2D? GetRotationToRandomPassableNeighbour(AdjacentNeighbourhood2D<LandscapeType> n)
@@ -62,7 +74,7 @@ namespace WarpSpace.Descriptions
             
             bool IsPassable(LandscapeType? landscape)
             {
-                return landscape.Is(x => x.IsPassableWith(Chassis.Mothership));
+                return landscape.Is(x => x.IsPassableWith(ChassisType.Hower));
             }
         }
 

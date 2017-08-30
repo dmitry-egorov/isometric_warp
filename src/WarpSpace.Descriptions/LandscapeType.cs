@@ -1,4 +1,7 @@
 ﻿using System;
+using static WarpSpace.Descriptions.ChassisType;
+using static WarpSpace.Descriptions.LandscapeType;
+using static WarpSpace.Descriptions.Passability;
 
 namespace WarpSpace.Descriptions
 {
@@ -16,31 +19,31 @@ namespace WarpSpace.Descriptions
             return (LandscapeType) _chars.IndexOf(c);
         }
 
-        public static bool IsPassableWith(this LandscapeType landscape, Chassis chassis)
+        public static bool IsPassableWith(this LandscapeType landscape, ChassisType chassisType)
         {
-            return landscape.GetPassability(chassis) != Passability.None;
+            return landscape.GetPassability(chassisType) != None;
         }
         
-        public static Passability GetPassability(this LandscapeType type, Chassis chassis)
+        public static Passability GetPassability(this LandscapeType type, ChassisType chassisType)
         {
-            switch (chassis)
+            switch (chassisType)
             {
-                case Chassis.Mothership:
+                case Hower:
                     switch (type)
                     {
-                        case LandscapeType.Mountain:
-                            return Passability.None;
-                        case LandscapeType.Hill:
-                            return Passability.None;
-                        case LandscapeType.Flatland:
-                            return Passability.Free;
-                        case LandscapeType.Water:
-                            return Passability.None;
+                        case Mountain:
+                            return None;
+                        case Hill:
+                            return None;
+                        case Flatland:
+                            return Free;
+                        case Water:
+                            return None;
                         default:
                             throw new ArgumentOutOfRangeException(nameof(type), type, null);
                     }
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(chassis), chassis, null);
+                    throw new ArgumentOutOfRangeException(nameof(chassisType), chassisType, null);
             }
             
         }

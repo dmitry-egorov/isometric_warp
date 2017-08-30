@@ -8,6 +8,7 @@ Shader "Custom/Isometric"
 		_TopColor ("Top Color", Color) = (1, 1, 1, 0)
         _LeftColor ("Left Color", Color) = (1, 1, 1, 0)
         _RightColor ("Right Color", Color) = (1, 1, 1, 0)
+        _Angle ("Angle", Float) = 0
         _TopAmbientColor ("Top Ambient Color", Color) = (0, 0, 0, 0)
         _BottomAmbientColor ("Bottom Ambient Color", Color) = (0, 0, 0, 0)
         _AmbientRise ("Ambient Rise", Float) = 1
@@ -40,6 +41,7 @@ Shader "Custom/Isometric"
             fixed3 _TopColor;
             fixed3 _LeftColor;
             fixed3 _RightColor;
+            fixed _Angle;
             fixed3 _TopAmbientColor;
             fixed3 _BottomAmbientColor;
             float _AmbientHighPoint;
@@ -49,7 +51,7 @@ Shader "Custom/Isometric"
             {
                 v2f o;
 
-                fixed3 surround = calculate_isometric_surround_light(v.normal, _TopColor, _LeftColor, _RightColor);
+                fixed3 surround = calculate_isometric_surround_light(v.normal, _Angle, _TopColor, _LeftColor, _RightColor);
                 fixed3 ambient = calculate_rising_ambient_light(v.vertex, _BottomAmbientColor, _TopAmbientColor, _AmbientHighPoint, _AmbientRise);
 
                 o.vertex = UnityObjectToClipPos(v.vertex);

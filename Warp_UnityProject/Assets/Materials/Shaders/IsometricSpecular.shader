@@ -8,8 +8,10 @@ Shader "Custom/IsometricSpecular"
 		_TopColor ("Top Color", Color) = (1, 1, 1, 0)
         _LeftColor ("Left Color", Color) = (1, 1, 1, 0)
         _RightColor ("Right Color", Color) = (1, 1, 1, 0)
+        _Angle ("Angle", Float) = 0
         _AmbientColor ("Ambient Color", Color) = (0, 0, 0, 0)
-        _SpecularColor ("_SpecularColor", Color) = (1, 1, 1, 0)
+        _SpecularColor ("Specular Color", Color) = (1, 1, 1, 0)
+        _SpecularAngle ("Specular Angle", Float) = 0
         _Shininess ("Shininess", Float) = 1
 	}
 	SubShader
@@ -40,8 +42,10 @@ Shader "Custom/IsometricSpecular"
             fixed3 _TopColor;
             fixed3 _LeftColor;
             fixed3 _RightColor;
+            fixed _Angle;
             fixed3 _AmbientColor;
             fixed3 _SpecularColor;
+            fixed _SpecularAngle;
             float _Shininess;
 
             v2f vert (appdata v)
@@ -50,7 +54,7 @@ Shader "Custom/IsometricSpecular"
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 fixed3 wpos = mul(unity_ObjectToWorld, v.vertex).xyz;
 
-                fixed3 surround = calculate_isometric_surround_light(v.normal, _TopColor, _LeftColor, _RightColor);
+                fixed3 surround = calculate_isometric_surround_light(v.normal, _Angle, _TopColor, _LeftColor, _RightColor);
 
                 o.c = fixed4(surround + _AmbientColor, 1);
                 o.wpos = wpos;
@@ -60,7 +64,7 @@ Shader "Custom/IsometricSpecular"
             
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed3 specular = calculate_fixed_light_specular(i.wpos, _SpecularColor, _TopColor, _Shininess);
+                fixed3 specular = calculate_fixed_light_specular(i.wpos, _SpecularAngle, _SpecularColor, _Shininess);
 
                 return fixed4(saturate(_Color * (i.c + specular)), 1);
             }

@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Editor\ScreenshotTaker.cs" />
+     <None Include="Assets\Materials\Shaders\Gradient.shader" />
      <None Include="Assets\Materials\Shaders\common.cginc" />
      <None Include="Assets\Materials\Shaders\Outline.shader" />
      <None Include="Assets\Materials\Shaders\IsometricSpecular.shader" />
@@ -163,6 +164,9 @@
  <Reference Include="Lanski.Reflection">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/Lanski.Reflection.dll</HintPath>
  </Reference>
+ <Reference Include="Lanski.Semantics">
+ <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/Lanski.Semantics.dll</HintPath>
+ </Reference>
  <Reference Include="Lanski.Sharp7">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/Lanski.Sharp7.dll</HintPath>
  </Reference>
@@ -175,11 +179,11 @@
  <Reference Include="UnityEditor.Expose">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/UnityEditor.Expose.dll</HintPath>
  </Reference>
- <Reference Include="WarpSpace">
- <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/WarpSpace.dll</HintPath>
- </Reference>
  <Reference Include="WarpSpace.Descriptions">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/WarpSpace.Descriptions.dll</HintPath>
+ </Reference>
+ <Reference Include="WarpSpace">
+ <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/WarpSpace.dll</HintPath>
  </Reference>
  <Reference Include="WarpSpace.Models">
  <HintPath>/Users/dmitrijegorov/dev/games/IsometricWarp/Warp_UnityProject/Assets/Scripts/WarpSpace.Models.dll</HintPath>

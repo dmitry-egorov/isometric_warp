@@ -3,6 +3,11 @@ using System.Collections.Generic;
 
 namespace Lanski.Reactive
 {
+    public static class Stream
+    {
+        public static IStream<T> Empty<T>() => new EmptyStream<T>();
+    }
+
     public class Stream<T> : IStream<T>, IConsumer<T>
     {
         private readonly List<Action<T>> _subscribers = new List<Action<T>>();

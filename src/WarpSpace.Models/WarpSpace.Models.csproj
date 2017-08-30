@@ -42,20 +42,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\Battle\Board\Model.cs" />
-    <Compile Include="Game\Battle\Board\Tile\Landscape\Model.cs" />
-    <Compile Include="Game\Battle\Board\Tile\Model.cs" />
-    <Compile Include="Game\Battle\Board\Unit\Model.cs" />
-    <Compile Include="Game\Battle\Factory.cs" />
-    <Compile Include="Game\Battle\Model.cs" />
-    <Compile Include="Game\Battle\Player\Model.cs" />
-    <Compile Include="Game\Model.cs" />
+    <Compile Include="Debug.cs" />
+    <Compile Include="Game\Battle\Board\BoardModel.cs" />
+    <Compile Include="Game\Battle\Board\Tile\Landscape\LandscapeModel.cs" />
+    <Compile Include="Game\Battle\Board\Tile\TileModel.cs" />
+    <Compile Include="Game\Battle\Board\Tile\Structure\Interactors\Empty.cs" />
+    <Compile Include="Game\Battle\Board\Tile\Structure\Interactors\Exiter.cs" />
+    <Compile Include="Game\Battle\Board\Tile\Structure\Interactors\IInteractor.cs" />
+    <Compile Include="Game\Battle\Board\Tile\Structure\Interactors\Factory.cs" />
+    <Compile Include="Game\Battle\Board\Tile\Structure\Interactors\InteractorBase.cs" />
+    <Compile Include="Game\Battle\Board\Tile\Structure\StructureModel.cs" />
+    <Compile Include="Game\Battle\Board\Unit\ChassisModel.cs" />
+    <Compile Include="Game\Battle\Board\Unit\HealthModel.cs" />
+    <Compile Include="Game\Battle\Board\Unit\UnitModel.cs" />
+    <Compile Include="Game\Battle\BattleFactory.cs" />
+    <Compile Include="Game\Battle\BattleModel.cs" />
+    <Compile Include="Game\Battle\Board\Unit\Weapon\WeaponModel.cs" />
+    <Compile Include="Game\Battle\Player\PlayerModel.cs" />
+    <Compile Include="Game\GameModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Lanski.Linq\Lanski.Linq.csproj">
+      <Project>{044D53C7-AFD3-4FD0-9E0D-63FF7CD1DFC0}</Project>
+      <Name>Lanski.Linq</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lanski.Reactive\Lanski.Reactive.csproj">
       <Project>{227702C3-257D-432F-9AE9-7D49A34EBBDF}</Project>
       <Name>Lanski.Reactive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.Semantics\Lanski.Semantics.csproj">
+      <Project>{3E6E76DD-CE0C-4E98-9C84-9A5132AB2B02}</Project>
+      <Name>Lanski.Semantics</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lanski.Sharp7\Lanski.Sharp7.csproj">
       <Project>{8c681d57-a09d-4f42-a6ec-81e2e0ffa882}</Project>

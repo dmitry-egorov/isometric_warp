@@ -295,7 +295,7 @@ namespace WarpSpace.Editors
     
         private static IEnumerable<FieldInfo> GetPrivateFields(object target)
         {
-            var bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
+            var bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
             
             return target
                 .GetType()

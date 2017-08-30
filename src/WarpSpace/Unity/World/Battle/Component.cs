@@ -1,18 +1,30 @@
 ﻿using System;
+using Lanski.Reactive;
 using Lanski.Structures;
 using Lanski.UnityExtensions;
 using UnityEditor.Expose;
 using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Descriptions;
+using WarpSpace.Models.Game;
 
 namespace WarpSpace.Unity.World.Battle
 {
     public class Component: MonoBehaviour
     {
         public OptionalPredefinedBoardsSettings PredefinedBoards;
-        [TextArea(8,8)] public string LastMap;//For inspector
+        [TextArea(8,8)] public string LastMapString;//For inspector
+        private BoardDescription _lastMap;//For inspector
 
+        private bool _initialized;
+        private ValueCell<Slot<GameModel>> _gameCell;
+        public ICell<Slot<GameModel>> GameCell => _gameCell;
+
+        void Awake()
+        {
+            Init();
+        }
+        
         void Start()
         {
             Restart();
@@ -21,19 +33,23 @@ namespace WarpSpace.Unity.World.Battle
         [ExposeMethodInEditor]
         public void Restart()
         {
+            Init();
+
             var board = FindObjectOfType<Board.Component>();//TODO: create from prefab
 
             var game = Create_the_Game();
+            _gameCell.Value = game;
             Wire_Board_Component_to_the_Game();
             Start_the_Game();
 
-            Models.Game.Model Create_the_Game()
+            GameModel Create_the_Game()
             {
                 var boardDescription = GetBoardDescription();
 
-                LastMap = boardDescription.Display();
-
-                return new Models.Game.Model(boardDescription);
+                _lastMap = boardDescription;
+                LastMapString = boardDescription.Display();
+                
+                return new GameModel(boardDescription);
                 
                 BoardDescription GetBoardDescription() => 
                     PredefinedBoards
@@ -44,12 +60,12 @@ namespace WarpSpace.Unity.World.Battle
             
             void Wire_Board_Component_to_the_Game()
             {
-                game.CurrentBattle.Subscribe(b =>
+                game.CurrentBattle.Subscribe(battle_ref =>
                 {
-                    if (b == null)
+                    if (battle_ref.doesnt_have(out var battle))
                         return;
                     
-                    board.Init(b.Board, b.Player);
+                    board.Init(battle.Board, battle.Player);
                 });
             }
 
@@ -59,6 +75,15 @@ namespace WarpSpace.Unity.World.Battle
             }
         }
 
+        private void Init()
+        {
+            if (_initialized)
+                return;
+            _initialized = true;
+            
+            _gameCell = new ValueCell<Slot<GameModel>>(null);
+        }
+
         [Serializable]
         public class OptionalPredefinedBoardsSettings: Optional<PredefinedBoardsSettings>{}
             
@@ -66,7 +91,9 @@ namespace WarpSpace.Unity.World.Battle
         public struct BoardData
         {
             [TextArea(8,8)] public string Tiles;
+            [TextArea(8,8)] public string Units;
             public Spacial2DData Entrance;
+            public Spacial2DData Exit;
         }
 
         [Serializable]

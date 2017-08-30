@@ -40,6 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChangeStream.cs" />
+    <Compile Include="EmptyStream.cs" />
+    <Compile Include="NullableCell.cs" />
+    <Compile Include="NullableCellExtensions.cs" />
     <Compile Include="RefCell.cs" />
     <Compile Include="CellExtensions.cs" />
     <Compile Include="ICell.cs" />
@@ -54,6 +57,10 @@
     <Compile Include="VoidStreamExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Lanski.Semantics\Lanski.Semantics.csproj">
+      <Project>{3E6E76DD-CE0C-4E98-9C84-9A5132AB2B02}</Project>
+      <Name>Lanski.Semantics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lanski.Sharp7\Lanski.Sharp7.csproj">
       <Project>{8c681d57-a09d-4f42-a6ec-81e2e0ffa882}</Project>
       <Name>Lanski.Sharp7</Name>

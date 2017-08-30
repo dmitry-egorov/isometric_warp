@@ -1,4 +1,5 @@
 using System;
+using Lanski.Structures;
 
 namespace Lanski.Reactive
 {
@@ -91,15 +92,15 @@ namespace Lanski.Reactive
             return new FirstStream<T>(stream);
         }
 
-        public static ICell<bool> IsInProgress<T>(this IStream<T> events, Func<T, bool> startCondition, Func<T, bool> finishCondition)
-        {
-            return new InProgressCell<T>(events, startCondition, finishCondition);
-        }
+        public static ICell<bool> IsInProgress<T>(this IStream<T> events, Func<T, bool> startCondition, Func<T, bool> finishCondition) => 
+            new InProgressCell<T>(events, startCondition, finishCondition);
 
-        public static IStream<(T previous, T current)> IncludePrevious<T>(this IStream<T> stream)
-        {
-            return new PairsStream<T>(stream);
-        }
+        public static IStream<T> SkipEmpty<T>(this IStream<Slot<T>> stream) where T : class => stream.Where(r => r.has_something()).Select(r => r.must_have_something().otherwise(null));
+
+        public static IStream<(T? previous, T? current)> IncludePrevious<T>(this IStream<T?> stream) where T : struct => new PairsNullableStream<T>(stream);
+        public static IStream<(Slot<T> previous, Slot<T> current)> IncludePrevious<T>(this IStream<Slot<T>> stream) where T : class => new PairsRefStream<T>(stream);
+        public static IStream<(T? previous, T current)> IncludePreviousVal<T>(this IStream<T> stream) where T : struct => new PairsValStream<T>(stream);
+        public static IStream<(Slot<T> previous, T current)> IncludePrevious<T>(this IStream<T> stream) where T : class => new PairsStream<T>(stream);
 
         public class InProgressCell<T> : ICell<bool>
         {
@@ -286,7 +287,7 @@ namespace Lanski.Reactive
         }
     }
 
-    public class PairsStream<T>: IStream<(T,T)>
+    public class PairsStream<T>: IStream<(Slot<T>,T)> where T : class
     {
         private readonly IStream<T> _stream;
 
@@ -295,9 +296,69 @@ namespace Lanski.Reactive
             _stream = stream;
         }
 
-        public Action Subscribe(Action<(T, T)> action)
+        public Action Subscribe(Action<(Slot<T>, T)> action)
         {
-            var prev = default(T);
+            var prev = default(Slot<T>);
+            return _stream.Subscribe(v =>
+            {
+                action((prev, v));
+                prev = v;
+            });
+        }
+    }
+
+    public class PairsNullableStream<T> : IStream<(T?, T?)> where T : struct
+    {
+        private readonly IStream<T?> _stream;
+
+        public PairsNullableStream(IStream<T?> stream)
+        {
+            _stream = stream;
+        }
+
+        public Action Subscribe(Action<(T?, T?)> action)
+        {
+            var prev = default(T?);
+            return _stream.Subscribe(v =>
+            {
+                action((prev, v));
+                prev = v;
+            });
+        }
+    }
+    
+    public class PairsRefStream<T>: IStream<(Slot<T>,Slot<T>)> where T : class
+    {
+        private readonly IStream<Slot<T>> _stream;
+
+        public PairsRefStream(IStream<Slot<T>> stream)
+        {
+            _stream = stream;
+        }
+
+        public Action Subscribe(Action<(Slot<T>, Slot<T>)> action)
+        {
+            var prev = default(Slot<T>);
+            return _stream.Subscribe(v =>
+            {
+                action((prev, v));
+                prev = v;
+            });
+        }
+    }
+    
+    public class PairsValStream<T>: IStream<(T?,T)> where T : struct
+    {
+        private readonly IStream<T> _stream;
+
+        public PairsValStream(IStream<T> stream)
+        {
+            _stream = stream;
+        }
+
+        public Action Subscribe(Action<(T?, T)> action)
+        {
+            var prev = default(T?);
             return _stream.Subscribe(v =>
             {
                 action((prev, v));

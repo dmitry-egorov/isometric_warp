@@ -2,6 +2,7 @@
 {
     public enum StructureType
     {
-        Entrance
+        Entrance,
+        Exit
     }
 }

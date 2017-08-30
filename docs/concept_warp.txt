@@ -24,6 +24,7 @@ Planet Types:
 
 
 Ideas
+- destroy structures
 - teleporter
 - warp tunels are huge antennas pointing to the sky. Upon entering a tunnel camera rises up.
 - air units can be deployed at a tile and then move once before retreating. Air unit can ether move or shoot at a tile.

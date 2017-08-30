@@ -15,7 +15,7 @@ namespace Lanski.Reactive
 
         public T Value
         {
-            get { return _lastValue; }
+            get => _lastValue;
             set
             {
                 if (_lastValue.Equals(value))

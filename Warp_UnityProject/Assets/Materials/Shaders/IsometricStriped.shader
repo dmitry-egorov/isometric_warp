@@ -8,6 +8,7 @@ Shader "Custom/Isometric Striped"
 		_TopColor ("Top Color", Color) = (1, 1, 1, 0)
         _LeftColor ("Left Color", Color) = (1, 1, 1, 0)
         _RightColor ("Right Color", Color) = (1, 1, 1, 0)
+        _Angle ("Angle", Float) = 0
         _TopAmbientColor ("Top Ambient Color", Color) = (0, 0, 0, 0)
         _BottomAmbientColor ("Bottom Ambient Color", Color) = (0, 0, 0, 0)
         _AmbientRise ("Ambient Rise", Float) = 1
@@ -44,6 +45,7 @@ Shader "Custom/Isometric Striped"
             fixed3 _TopColor;
             fixed3 _LeftColor;
             fixed3 _RightColor;
+            fixed _Angle;
             fixed3 _TopAmbientColor;
             fixed3 _BottomAmbientColor;
             float _AmbientHighPoint;
@@ -55,7 +57,7 @@ Shader "Custom/Isometric Striped"
             {
                 v2f o;
 
-                fixed3 surround   = calculate_isometric_surround_light(v.normal, _TopColor, _LeftColor, _RightColor);
+                fixed3 surround   = calculate_isometric_surround_light(v.normal, _Angle, _TopColor, _LeftColor, _RightColor);
                 fixed3 ambient = calculate_rising_ambient_light(v.vertex, _BottomAmbientColor, _TopAmbientColor, _AmbientHighPoint, _AmbientRise);
 
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -68,7 +70,7 @@ Shader "Custom/Isometric Striped"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed fraction = abs(frac((-i.wpos.x + i.wpos.y + i.wpos.z) * _StripeWidth));
+                fixed fraction = abs(frac((i.vertex.y) * _StripeWidth));
                 fixed up_degree = normalize(i.normal).y;
                 fixed4 stripe = up_degree > 0.1 && fraction < 0.5 ? _StripeColor : fixed4(0, 0, 0, 0);
                 return lerp(i.c, stripe, stripe.w);

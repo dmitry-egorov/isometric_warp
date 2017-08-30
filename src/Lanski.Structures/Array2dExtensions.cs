@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Lanski.Maths;
 
 namespace Lanski.Structures
@@ -142,7 +143,7 @@ namespace Lanski.Structures
         {
             return new AdjacentRef<T>(Neighbours().ToArray());
             
-            IEnumerable<T> Neighbours()
+            IEnumerable<Slot<T>> Neighbours()
             {
                 yield return array.TryGetRef(i.Left());
                 yield return array.TryGetRef(i.Up());
@@ -171,7 +172,7 @@ namespace Lanski.Structures
             return array.TryGet(i).Select(condition).GetValueOrDefault(defaultValue);
         }
 
-        public static T TryGetRef<T>(this T[,] array, Index2D i)
+        public static Slot<T> TryGetRef<T>(this T[,] array, Index2D i)
             where T: class
         {
             return i.Fits(array) ? array.Get(i) 
@@ -247,16 +248,17 @@ namespace Lanski.Structures
     }
     
     public struct AdjacentRef<T>
+        where T: class
     {
-        private readonly T[] _all;
-        public T[] All => _all;
+        private readonly Slot<T>[] _all;
+        public Slot<T>[] All => _all;
 
-        public AdjacentRef(T[] all)
+        public AdjacentRef(Slot<T>[] all)
         {
             _all = all;
         }
 
-        public T this[Direction2D d]
+        public Slot<T> this[Direction2D d]
         {
             get
             {
@@ -276,7 +278,7 @@ namespace Lanski.Structures
             }
         }
 
-        public AdjacentRef<TResult> Map<TResult>(Func<T, TResult> selector)
+        public AdjacentRef<TResult> Map<TResult>(Func<Slot<T>, Slot<TResult>> selector) where TResult : class
         {
             return new AdjacentRef<TResult>(All.Select(selector).ToArray());
         }
@@ -389,7 +391,7 @@ namespace Lanski.Structures
             return new Index2D(v.Item1, v.Item2);
         }
 
-        public bool IsAdjacentTo(Index2D other)
+        [Pure] public bool IsAdjacentTo(Index2D other)
         {
             var dr = Mathe.Abs(Row - other.Row);
             var dc = Mathe.Abs(Column - other.Column);

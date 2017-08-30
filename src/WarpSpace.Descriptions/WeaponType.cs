@@ -1,0 +1,28 @@
+﻿using System;
+using WarpSpace.Models.Game.Battle.Board.Unit.Weapon;
+
+namespace WarpSpace.Descriptions
+{
+    public static class WeaponTypeExtensions
+    {
+        public static DamageDescription GetDamageDescription(this WeaponType type)
+        {
+            switch (type)
+            {
+                case WeaponType.Missle:
+                    return new DamageDescription(1, DamageType.Missle);
+                case WeaponType.Cannon:
+                    return new DamageDescription(2, DamageType.Cannon);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+        
+    }
+    
+    public enum WeaponType
+    {
+        Missle,
+        Cannon
+    }
+}

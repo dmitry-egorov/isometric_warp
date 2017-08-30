@@ -60,6 +60,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AmbientHighPoint: 1
+    - _Angle: 0
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -73,6 +74,7 @@ Material:
     - _Parallax: 0.02
     - _Shininess: 25
     - _SmoothnessTextureChannel: 1
+    - _SpecularAngle: 55
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
@@ -85,6 +87,6 @@ Material:
     - _LeftColor: {r: 0.756, g: 0.756, b: 0.756, a: 0}
     - _RightColor: {r: 0.353, g: 0.353, b: 0.353, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _SpecularColor: {r: 0.8778951, g: 0.64599, b: 0.915, a: 0}
+    - _SpecularColor: {r: 0.87549716, g: 0.628605, b: 0.915, a: 0}
     - _TopAmbientColor: {r: 0, g: 0, b: 0, a: 0}
     - _TopColor: {r: 1, g: 1, b: 1, a: 0}

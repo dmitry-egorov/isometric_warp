@@ -1,7 +1,14 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace Lanski.Structures
 {
+    public static class NullableEx
+    {
+        public static T? From<T>(T value) where T: struct => value;
+    }
+
+
     public static class NullableExtensions
     {
         public static void Do<T>(this T nullable, Action<T> action)
@@ -36,6 +43,13 @@ namespace Lanski.Structures
         {
             return nullable.Select(selector).GetValueOrDefault();
         }
+
+        public static Slot<TResult> SelectRef<T, TResult>(this T? nullable, Func<T, TResult> selector)
+            where T : struct
+            where TResult: class
+        {
+            return nullable.HasValue ? selector(nullable.Value) : default(Slot<TResult>);
+        }
         
         public static TResult? Select<T, TResult>(this T? nullable, Func<T, TResult> selector)
             where T : struct
@@ -48,6 +62,17 @@ namespace Lanski.Structures
             where T : struct
         {
             return nullable ?? defaultFactory();
+        }
+        
+        public static bool doesnt_have_a_value<T>(this T? nullable) where T: struct => !nullable.has_a_value();
+        public static bool has_a_value<T>(this T? nullable) where T: struct => nullable != null;
+        public static bool doesnt_contain_a<T>(this T? nullable, out T v) where T : struct => !nullable.has_a_value(out v);
+        
+        public static bool has_a_value<T>(this T? nullable, out T o) where T: struct
+        {
+            var result = nullable.HasValue;
+            o = result ? nullable.Value : default(T);
+            return result;
         }
     }
 }

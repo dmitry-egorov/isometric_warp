@@ -61,6 +61,7 @@ Material:
     m_Floats:
     - _AmbientHighPoint: 0.81
     - _AmbientRise: 1.3
+    - _Angle: 35
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -81,11 +82,11 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _BottomAmbientColor: {r: 0.14705884, g: 0.02270762, b: 0.12268599, a: 0}
-    - _Color: {r: 0.846, g: 0.75211096, b: 0.543132, a: 0}
+    - _Color: {r: 0.853, g: 0.737417, b: 0.558715, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _LeftColor: {r: 0.772, g: 0.6957264, b: 0.581316, a: 0}
+    - _LeftColor: {r: 0.672, g: 0.6056064, b: 0.50601596, a: 0}
     - _RightColor: {r: 0.23731354, g: 0.23513597, b: 0.352, a: 0}
     - _SpecColor: {r: 0.066, g: 0.066, b: 0.066, a: 1}
     - _SpecularColor: {r: 0.053, g: 0.038902, b: 0.042110503, a: 0}
-    - _TopAmbientColor: {r: 0.6707898, g: 0.495018, b: 0.927, a: 0}
-    - _TopColor: {r: 0.959, g: 0.959, b: 0.959, a: 0}
+    - _TopAmbientColor: {r: 0.5301842, g: 0.369776, b: 0.764, a: 0}
+    - _TopColor: {r: 1, g: 1, b: 1, a: 0}

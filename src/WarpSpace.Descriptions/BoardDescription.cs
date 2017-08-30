@@ -7,11 +7,13 @@ namespace WarpSpace.Descriptions
     {
         public readonly TileDescription[,] Tiles;
         public readonly Spacial2D EntranceSpacial;
+        public readonly UnitDescription?[,] Units;
 
-        public BoardDescription(TileDescription[,] tiles, Spacial2D entranceSpacial)
+        public BoardDescription(TileDescription[,] tiles, Spacial2D entranceSpacial, UnitDescription?[,] units)
         {
             Tiles = tiles;
             EntranceSpacial = entranceSpacial;
+            Units = units;
         }
 
         public bool Equals(BoardDescription other)
@@ -29,7 +31,7 @@ namespace WarpSpace.Descriptions
         {
             unchecked
             {
-                return ((Tiles != null ? Tiles.GetHashCode() : 0) * 397) ^ EntranceSpacial.GetHashCode();
+                return (Tiles.GetHashCode() * 397) ^ EntranceSpacial.GetHashCode();
             }
         }
 

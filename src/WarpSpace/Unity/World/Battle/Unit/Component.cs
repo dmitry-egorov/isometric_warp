@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Lanski.Geometry;
+using Lanski.Reactive;
 using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
+using WarpSpace.Models.Game.Battle.Board.Tile;
+using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Unity.World.Battle.Unit
 {
@@ -14,39 +17,88 @@ namespace WarpSpace.Unity.World.Battle.Unit
         
         private Mover _mover;
 
-        public static Component Create(GameObject prefab, Quaternion rotation, Transform parent)
+        public static void Create(GameObject prefab, Transform parent, UnitModel unit, TileModel source_tile, Board.Tile.Component[,] tile_components, Dictionary<UnitModel, Component> components_map)
         {
             var obj = Instantiate(prefab, parent).GetComponent<Component>();
 
-            obj.Init(rotation);
-
-            return obj;
+            obj.Init(unit, source_tile, tile_components, components_map);
         }
 
-        private void Init(Quaternion rotation)
-        {
-            transform.localRotation = rotation;
-            _mover = new Mover(Movement, transform);
-        }
-
-        public void Update()
-        {
-            _mover.Update();
-        }
-
-        public void EnableOutline()
+        public bool Enable_the_Outline()
         {
             Outline.SetActive(true);
+            return true;
         }
 
-        public void DisableOutline()
+        public bool Disable_the_Outline()
         {
             Outline.SetActive(false);
+            return true;
         }
 
         public void MoveTo(Board.Tile.Component tile, Direction2D newRotation)
         {
             _mover.ScheduleMovement(tile, newRotation);
+        }
+
+        void Update()
+        {
+            _mover.Update();
+        }
+
+        private void Init(UnitModel unit, TileModel source_tile, Board.Tile.Component[,] tile_components, Dictionary<UnitModel, Component> components_map)
+        {
+            _mover = new Mover(Movement, transform);
+            var movement_wiring = Wire_Movements();
+
+            Add_the_Component_To_the_Map();
+            Wire_the_Destruction();
+            
+            Action Wire_Movements()
+            {
+                return
+                    unit
+                        .CurrentTileCell
+                        .IncludePrevious()
+                        .Subscribe(x => MoveUnitComponent(x.previous, x.current));
+
+                void MoveUnitComponent(Slot<TileModel> previousSlot, TileModel current)
+                {
+                    if (previousSlot.Has_a_Value(out var previous))
+                    {
+                        var cur_tile_component = tile_components.Get(current.Position);
+                        var orientation = previous.GetDirectionTo(current);
+
+                        MoveTo(cur_tile_component, orientation);
+                    }
+                    else
+                    {
+                        transform.localRotation = source_tile.GetDirectionTo(current).ToRotation();
+                    }
+                    
+                }
+            }
+            
+            void Add_the_Component_To_the_Map() => components_map[unit] = this;
+
+            void Wire_the_Destruction()
+            {
+                unit
+                    .Destroyed
+                    .First()
+                    .Subscribe(isAlive => Destory());
+
+                void Destory()
+                {
+                    Unwire();
+                    Remove_the_Component_From_the_Map();
+                    Remove_the_Component_From_the_Scene();
+
+                    void Unwire() => movement_wiring();
+                    void Remove_the_Component_From_the_Map() => components_map.Remove(unit);
+                    void Remove_the_Component_From_the_Scene() => Destroy(gameObject);
+                }
+            }
         }
         
         [Serializable]
@@ -103,10 +155,9 @@ namespace WarpSpace.Unity.World.Battle.Unit
             public void Update()
             {
                 Try_to_Update_the_Target();
-                if (Theres_No_Target())
+                if (!there_Is_a_Target(out var target))
                     return;
 
-                var target = _currentTarget.Value;
                 var parent = target.Parent;
                 var dt = Time.deltaTime;
                 var tr = target.Rotation;
@@ -119,23 +170,24 @@ namespace WarpSpace.Unity.World.Battle.Unit
 
                 Try_to_Update_objects_Rotation();
                 Try_to_Update_objects_Position();
-                Check_if_Target_is_Reached_and_Repeat_a_Step_if_necessary();
+                Check_if_Target_Is_Reached_and_Repeat_a_Step_if_necessary();
 
                 void Try_to_Update_the_Target()
                 {
-                    while (Queue_is_not_empty() && (Theres_No_Target() || Current_target_has_the_same_rotation_as_the_next_target_in_the_queue()))
-                        Update_target_from_the_queue();
+                    while (Queue_Is_Not_Empty() && (there_Is_No_Target() || the_Current_Target_Has_the_Same_Rotation_As_the_Next_Target_in_the_queue()))
+                        Update_Target_From_the_Queue();
 
-                    bool Queue_is_not_empty() => _movementQueue.Count != 0;
-                    bool Current_target_has_the_same_rotation_as_the_next_target_in_the_queue() => _currentTarget.Value.Rotation == _movementQueue.Peek().Rotation;
-                    void Update_target_from_the_queue()
-                    {
-                        _currentTarget = _movementQueue.Dequeue();
-                    }
+                    bool Queue_Is_Not_Empty() => _movementQueue.Count != 0;
+                    bool the_Current_Target_Has_the_Same_Rotation_As_the_Next_Target_in_the_queue() => 
+                        there_Is_a_Target(out var current_target) 
+                        && current_target.Rotation == _movementQueue.Peek().Rotation;
+                    
+                    void Update_Target_From_the_Queue() => _currentTarget = _movementQueue.Dequeue();
+                    bool there_Is_No_Target() => _currentTarget.doesnt_have_a_value();
                 }
-                
-                bool Theres_No_Target() => !_currentTarget.HasValue;
 
+                bool there_Is_a_Target(out MovementTarget current_target) => _currentTarget.has_a_value(out current_target);
+                
                 void Try_to_Update_objects_Parent()
                 {
                     if (_transform.parent == parent) 
@@ -191,7 +243,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
                     Vector3 Calculate_current_position() => Vector3.MoveTowards(p, tp, s * dt);
                 }
 
-                void Check_if_Target_is_Reached_and_Repeat_a_Step_if_necessary()
+                void Check_if_Target_Is_Reached_and_Repeat_a_Step_if_necessary()
                 {
                     var dr = Calc_remaining_angle();
                     var dp = Calc_remaining_distance();

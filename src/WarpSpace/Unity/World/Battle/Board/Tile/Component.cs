@@ -3,23 +3,24 @@ using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
+using WarpSpace.Models.Game.Battle.Player;
 
 namespace WarpSpace.Unity.World.Battle.Board.Tile
 {
     public class Component : MonoBehaviour
     {
-        public Model Model { get; private set; }
+        public TileModel Model { get; private set; }
         public Landscape.Component Landscape { get; private set; }
         public UnitSlot.Component UnitSlot { get; private set; }
         
-        public static Component Create(GameObject prefab, Transform parent, Model tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, Models.Game.Battle.Player.Model player)
+        public static Component Create(GameObject prefab, Transform parent, TileModel tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, PlayerModel player)
         {
             var component = Instantiate(prefab, parent).GetComponent<Component>();
             component.Init(tile, neighbourhood, dimensions, player);
             return component;
         }
 
-        private void Init(Model tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, Models.Game.Battle.Player.Model player)
+        private void Init(TileModel tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, PlayerModel player)
         {
             var position = tile.Position;
 
@@ -35,7 +36,10 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile
 
             Landscape.Init(position, neighbourhood);
             water.Init(position, neighbourhood);
-            structureSlot.Init(tile.Structure);
+            
+            if (tile.StructureSlot.Has_a_Value(out var structure))
+                structureSlot.Init(structure.Description);
+
             playerActionsDetector.Init();
             
             WirePlayerActionsDetector();

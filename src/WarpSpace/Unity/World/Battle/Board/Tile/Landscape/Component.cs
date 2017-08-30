@@ -16,25 +16,37 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.Landscape
         public Material Normal;
         public Material MoveHighlight;
         public Material UnitHighlight;
-        
+        public Material InteractionHighlight;
+        public Material UseWeaponHighlight;
+
         public void Init(Index2D position, FullNeighbourhood2D<LandscapeType> neighbourhood)
         {
             LandscapeMeshFilter.sharedMesh = GenerateMesh(position, neighbourhood);
         }
-        
-        public void ResetHighlight()
-        {
-            Renderer.sharedMaterial = Normal;
-        }
 
-        public void SetMovementHighlight()
+        public bool set_highlight(HighlightType type)
         {
-            Renderer.sharedMaterial = MoveHighlight;
-        }
+            Renderer.sharedMaterial = SelectMaterial();
+            return true;
 
-        public void SetUnitHighlight()
-        {
-            Renderer.sharedMaterial = UnitHighlight;
+            Material SelectMaterial()
+            {
+                switch (type)
+                {
+                    case HighlightType.None:
+                        return Normal;
+                    case HighlightType.Move:
+                        return MoveHighlight;
+                    case HighlightType.Unit:
+                        return UnitHighlight;
+                    case HighlightType.Interaction:
+                        return InteractionHighlight;
+                    case HighlightType.UseWeapon:
+                        return UseWeaponHighlight;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
+            }
         }
 
         private Mesh GenerateMesh(Index2D index, FullNeighbourhood2D<LandscapeType> neighbourhood)
@@ -109,7 +121,7 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.Landscape
             }
             
         }
-        
+
         private struct TypeAndSettings
         {
             public readonly LandscapeType Type;
@@ -131,7 +143,7 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.Landscape
                 return !(t1 == t2);
             }
         }
-        
+
         [Serializable]
         public struct OwnSettings
         {
