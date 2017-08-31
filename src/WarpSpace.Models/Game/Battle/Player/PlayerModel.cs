@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Lanski.Reactive;
 using Lanski.Structures;
+using WarpSpace.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Board.Unit.Weapon;
@@ -18,89 +19,99 @@ namespace WarpSpace.Models.Game.Battle.Player
             _selectionCell = new NullableCell<PlayersSelection>(null);
             SelectedUnit = _selectionCell.Select(x => x.SelectRef(s => s.Unit));
 
-            wire_Selected_unit_Destruction();
+            Wire_Selected_Unit_Destruction();
             
-            void wire_Selected_unit_Destruction()
+            void Wire_Selected_Unit_Destruction()
             {
                 SelectedUnit
                     .SkipEmpty()
-                    .SelectMany(u => u.Destroyed)
+                    .SelectMany(u => u.Stream_Of_Destroyed_Events)
                     .Subscribe(_ => deselect());
                     
                 void deselect() => _selectionCell.Value = null;
             }
         }
 
-        public bool ExecuteActionAt(TileModel tile)
+        public void Execute_Command_At(TileModel tile)
         {
-            return try_to_Use_the_Selected_Weapon_at_the(tile)
-                || try_to_Deselect_the_Weapon()
-                || try_to_Select_a_Unit_at_the(tile)
-                || try_to_Move_the_Selected_Unit_To_the(tile)
-                || try_to_make_the_Selected_Unit_Interact_with_the_Structure_at_the(tile)
-            ;
-            
-            bool try_to_Use_the_Selected_Weapon_at_the(TileModel target_tile) => 
-                   a_Weapon_is_Selected(out var selected_weapon)
-                && target_tile.Has_a_Unit(out var target_unit)
-                && selected_weapon.try_to_fire_at_the(target_unit)
-                && try_to_Deselect_the_Weapon()
-            ;
-
-            bool try_to_Select_a_Unit_at_the(TileModel target_tile) =>
-                   a_Weapon_is_Not_Selected()
-                && target_tile.Has_a_Unit(out var target_unit) 
-                && try_to_Select_the_Unit(target_unit)
-            ;
-
-            bool try_to_Move_the_Selected_Unit_To_the(TileModel target_tile) => 
-                   a_Unit_is_Selected(out var selected_unit)
-                && a_Weapon_is_Not_Selected()
-                && selected_unit.try_to_Move_To_the(target_tile)
-            ;
-
-            bool try_to_make_the_Selected_Unit_Interact_with_the_Structure_at_the(TileModel target_tile) => 
-                   a_Unit_is_Selected(out var selected_unit)
-                && a_Weapon_is_Not_Selected()
-                && target_tile.Has_a_Structure(out var target_structure)
-                && selected_unit.try_to_Interact_with_the(target_structure)
-            ;
-
-            bool try_to_Deselect_the_Weapon() =>
-                   a_Weapon_is_Selected()
-                && try_to_Select_the_Weapon(null)
-            ;
+            if (Try_Get_Command_At(tile).Has_a_Value(out var command))
+                command.Execute();
         }
 
-        public bool SelectWeapon() => 
-               a_Unit_is_Selected(out var selected_unit)
-            && selected_unit.Weapon.aka(out var selected_units_weapon)
-            && try_to_Select_the_Weapon(selected_units_weapon);
+        public PlayerCommand? Try_Get_Command_At(TileModel tile)
+        {
+            if (A_Weapon_Is_Selected(out var weapon))
+            {
+                if (tile.Has_a_Unit(out var target_unit) && weapon.Can_Fire_At(target_unit))
+                    return PlayerCommand.Fire(weapon, target_unit);
+            }
+            else
+            {
+                if (tile.Has_a_Unit(out var target_unit) && Can_Select(target_unit))
+                    return PlayerCommand.Select_Unit(this, target_unit);
 
-        private bool try_to_Select_the_Unit(UnitModel unit) => 
-               unit.can_be_Selected() 
-            && (_selectionCell.Value = new PlayersSelection(unit, null)).inline();
+                if (A_Unit_Is_Selected(out var selected_unit))
+                {
+                    if (selected_unit.Can_Move_To(tile))
+                        return PlayerCommand.Move(selected_unit, tile);
+                    
+                    if (tile.Has_a_Structure(out var structure) && selected_unit.Can_Interact_With(structure))
+                        return PlayerCommand.Interact(selected_unit, structure);
+                }
+            }
 
-        private bool try_to_Select_the_Weapon(Slot<WeaponModel> weapon) => 
-               theres_a_Selection(out var selection) 
-            && (_selectionCell.Value = selection.with(weapon)).inline();
+            return null;
+        }
 
-        private bool a_Unit_is_Selected(out UnitModel selected_unit) =>
-               default(UnitModel).is_the(out selected_unit)
-            && SelectionCell.has_a_value(out var selection) 
-            && selection.Unit.is_the(out selected_unit);
+        public void Select_a_Unit(UnitModel unit) => 
+            _selectionCell.Value = new PlayersSelection(unit, null)
+        ;
 
-        private bool a_Weapon_is_Selected() => 
-               theres_a_Selection(out var selection) 
-            && selection.has_a_Weapon();
-        
-        private bool a_Weapon_is_Selected(out WeaponModel selected_weapon) => 
-               default(WeaponModel).is_the(out selected_weapon) 
-            && theres_a_Selection(out var selection) 
-            && selection.has_a_Weapon(out selected_weapon); 
+        public void Toggle_Weapon_Selection()
+        {
+            if (There_Is_No_Selection())
+                return;
 
-        private bool a_Weapon_is_Not_Selected() => SelectionCell.doesnt_have_a(out var selection) || selection.doesnt_have_a_weapon(); 
-        private bool theres_a_Selection(out PlayersSelection selection) => SelectionCell.has_a_value(out selection);
+            if (A_Weapon_Is_Not_Selected())
+            {
+                Select_Current_Units_Weapon();
+            }
+            else
+            {
+                Reset_Weapon_Selection();
+            }
+        }
+
+        private void Select_Current_Units_Weapon()
+        {
+            if (There_Is_No_Selection(out var selection))
+                return;
+            
+            var selected_units_weapon = selection.Unit.Weapon;
+            _selectionCell.Value = selection.With(selected_units_weapon);
+        }
+
+        private void Reset_Weapon_Selection()
+        {
+            if (There_Is_No_Selection(out var selection))
+                return;
+            
+            _selectionCell.Value = selection.With(default(Slot<WeaponModel>));
+        }
+
+        private bool A_Unit_Is_Selected(out UnitModel selected_unit) => 
+            (selected_unit = There_Is_a_Selection(out var selection) ? selection.Unit : null) != null
+        ;
+
+        private bool A_Weapon_Is_Selected(out WeaponModel selected_weapon) => 
+             (selected_weapon = There_Is_a_Selection(out var selection) && selection.Has_a_Weapon(out selected_weapon) ? selected_weapon : null) != null
+        ; 
+
+        private bool A_Weapon_Is_Not_Selected() => There_Is_No_Selection(out var selection) || selection.Doesnt_Have_a_Weapon(); 
+        private bool There_Is_No_Selection() => SelectionCell.Does_Not_Have_a_Value();
+        private bool There_Is_No_Selection(out PlayersSelection selection) => !There_Is_a_Selection(out selection);
+        private bool There_Is_a_Selection(out PlayersSelection selection) => SelectionCell.Has_a_Value(out selection);
+        private bool Can_Select(UnitModel unit) => unit.Faction == Faction.Players;
 
         public struct PlayersSelection
         {
@@ -113,16 +124,10 @@ namespace WarpSpace.Models.Game.Battle.Player
                 WeaponSlot = weaponSlot;
             }
 
-            [Pure]public PlayersSelection with(Slot<WeaponModel> weapon) => new PlayersSelection(Unit, weapon);
+            [Pure]public PlayersSelection With(Slot<WeaponModel> weapon) => new PlayersSelection(Unit, weapon);
 
-            public bool has_a_Weapon() => WeaponSlot.has_something();
-            public bool has_a_Weapon(out WeaponModel weapon) => WeaponSlot.Has_a_Value(out weapon);
-            public bool doesnt_have_a_weapon() => WeaponSlot.Has_Nothing();
+            public bool Has_a_Weapon(out WeaponModel weapon) => WeaponSlot.Has_a_Value(out weapon);
+            public bool Doesnt_Have_a_Weapon() => WeaponSlot.Has_Nothing();
         }
-    }
-
-    internal static class UnitExtensionForPlayer
-    {
-        public static bool can_be_Selected(this UnitModel unit) => unit.is_owned_by_the_player;
     }
 }

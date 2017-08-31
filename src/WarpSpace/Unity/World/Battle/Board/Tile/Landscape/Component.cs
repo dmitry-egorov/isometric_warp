@@ -24,10 +24,9 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.Landscape
             LandscapeMeshFilter.sharedMesh = GenerateMesh(position, neighbourhood);
         }
 
-        public bool set_highlight(HighlightType type)
+        public void Set_the_Highlight_To(HighlightType type)
         {
             Renderer.sharedMaterial = SelectMaterial();
-            return true;
 
             Material SelectMaterial()
             {
@@ -37,11 +36,11 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.Landscape
                         return Normal;
                     case HighlightType.Move:
                         return MoveHighlight;
-                    case HighlightType.Unit:
+                    case HighlightType.Unit_Placeholder:
                         return UnitHighlight;
                     case HighlightType.Interaction:
                         return InteractionHighlight;
-                    case HighlightType.UseWeapon:
+                    case HighlightType.Fire_Weapon:
                         return UseWeaponHighlight;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);

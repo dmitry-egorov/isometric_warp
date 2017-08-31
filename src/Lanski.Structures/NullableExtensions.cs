@@ -64,11 +64,11 @@ namespace Lanski.Structures
             return nullable ?? defaultFactory();
         }
         
-        public static bool doesnt_have_a_value<T>(this T? nullable) where T: struct => !nullable.has_a_value();
-        public static bool has_a_value<T>(this T? nullable) where T: struct => nullable != null;
-        public static bool doesnt_contain_a<T>(this T? nullable, out T v) where T : struct => !nullable.has_a_value(out v);
+        public static bool doesnt_have_a_value<T>(this T? nullable) where T: struct => !nullable.Has_a_Value();
+        public static bool Has_a_Value<T>(this T? nullable) where T: struct => nullable != null;
+        public static bool doesnt_contain_a<T>(this T? nullable, out T v) where T : struct => !nullable.Has_a_Value(out v);
         
-        public static bool has_a_value<T>(this T? nullable, out T o) where T: struct
+        public static bool Has_a_Value<T>(this T? nullable, out T o) where T: struct
         {
             var result = nullable.HasValue;
             o = result ? nullable.Value : default(T);

@@ -19,17 +19,17 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             _currentTile = new RefCell<TileModel>(initialTile);
         }
         
-        public bool CanMoveTo(TileModel destination)
+        public bool Can_Move_To(TileModel destination)
         {
             var source = _currentTile.Value;
 
             return destination.IsPassableBy(_chassisType)
-                   && source.is_adjacent_to_the(destination);
+                   && source.Is_Adjacent_To(destination);
         }
 
-        public bool TryMoveTo(TileModel tile)
+        public bool Try_to_Move_To(TileModel tile)
         {
-            if (!CanMoveTo(tile))
+            if (!Can_Move_To(tile))
                 return false;
             
             _currentTile.Value = tile;

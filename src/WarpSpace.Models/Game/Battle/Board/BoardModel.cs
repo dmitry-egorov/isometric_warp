@@ -10,35 +10,37 @@ namespace WarpSpace.Models.Game.Battle.Board
     public class BoardModel
     {
         public readonly TileModel[,] Tiles;
-        private readonly Spacial2D _entranceSpacial;
+        private readonly Spacial2D _entrance_spacial;
         
-        private readonly RepeatAllStream<UnitAdded> _unitAddedStream = new RepeatAllStream<UnitAdded>();
-        public IStream<UnitAdded> UnitAddedStream => _unitAddedStream;
+        private readonly RepeatAllStream<UnitAdded> _stream_of_added_units = new RepeatAllStream<UnitAdded>();
+        private readonly RepeatAllStream<UnitModel> _stream_of_destoryed_units = new RepeatAllStream<UnitModel>();
+        public IStream<UnitAdded> Stream_Of_Added_Units => _stream_of_added_units;
+        public IStream<UnitModel> Stream_Of_Destroyed_Units => _stream_of_destoryed_units;
 
         public BoardModel(TileModel[,] tiles, Spacial2D entranceSpacial)
         {
-            _entranceSpacial = entranceSpacial;
+            _entrance_spacial = entranceSpacial;
             Tiles = tiles;
         }
 
         public void WarpInMothership()
         {
-            var position = _entranceSpacial.Position;
-            var orientation = _entranceSpacial.Orientation;
+            var position = _entrance_spacial.Position;
+            var orientation = _entrance_spacial.Orientation;
             
             var source = Tiles.Get(position);
             var initialTile = Tiles.Get(position + orientation);
-            var mothership = new UnitModel(UnitType.Mothership, initialTile, true);
+            var mothership = new UnitModel(UnitType.Mothership, initialTile, Faction.Players);
             
             Add(mothership, source);
         }
 
-        public void AddUnit(UnitType type, Index2D position, Index2D sourcePosition, bool isOwnedByPlayer)
+        public void AddUnit(UnitType type, Index2D position, Index2D sourcePosition, Faction faction)
         {
             var initialTile = Tiles.Get(position);
             var sourceTile = Tiles.Get(sourcePosition);
             
-            var unit = new UnitModel(type, initialTile, isOwnedByPlayer);
+            var unit = new UnitModel(type, initialTile, faction);
             Add(unit, sourceTile);
         }
 
@@ -47,15 +49,15 @@ namespace WarpSpace.Models.Game.Battle.Board
             var wirings = new Action[0]; 
             wirings = new[]
             {
-                wire_Destruction(),
-                wire_Movement()
+                Wire_Destruction(),
+                Wire_Movement()
             }; 
             
-            _unitAddedStream.Next(new UnitAdded(unit, source));
+            _stream_of_added_units.Next(new UnitAdded(unit, source));
         
-            Action wire_Movement() => 
+            Action Wire_Movement() => 
                 unit
-                    .CurrentTileCell
+                    .Current_Tile_Cell
                     .IncludePrevious()
                     .Subscribe(p =>
                     {
@@ -65,17 +67,20 @@ namespace WarpSpace.Models.Game.Battle.Board
                         p.current.SetUnit(unit);
                     });
             
-            Action wire_Destruction()
+            Action Wire_Destruction()
             {
                 return unit
-                    .Destroyed
-                    .Subscribe(_ => destroy());
+                    .Stream_Of_Destroyed_Events
+                    .Subscribe(_ => Destroy());
 
-                void destroy()
+                void Destroy()
                 {
-                    unwire();
-                    
-                    void unwire()
+                    Send_Destroyed_Event();
+                    Unwire();
+
+                    void Send_Destroyed_Event() => _stream_of_destoryed_units.Next(unit);
+
+                    void Unwire()
                     {
                         foreach (var wiring in wirings)
                             wiring();

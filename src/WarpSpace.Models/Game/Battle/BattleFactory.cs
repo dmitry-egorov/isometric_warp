@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using Lanski.Linq;
 using Lanski.Structures;
 using WarpSpace.Descriptions;
 using WarpSpace.Models.Game.Battle.Board;
@@ -28,7 +27,7 @@ namespace WarpSpace.Models.Game.Battle
             {
                 var unit = x.Item1;
                 var index = x.Item2;
-                board.AddUnit(unit.Type, index, index, false);
+                board.AddUnit(unit.Type, index, index, Faction.Natives);
             }
 
             return new BattleModel(board, player);
@@ -36,8 +35,10 @@ namespace WarpSpace.Models.Game.Battle
 
         private static TileModel CreateTile(Index2D i, TileDescription t, GameModel game)
         {
-            var structure = t.Structure.SelectRef(s => new StructureModel(s, game));
-            return new TileModel(i, t.Type, structure);
+            var tile = new TileModel(i, t.Type);
+            var structure = t.Structure.SelectRef(s => new StructureModel(s, game, tile));
+            tile.Set_Structure(structure);
+            return tile;
         }
     }
 }

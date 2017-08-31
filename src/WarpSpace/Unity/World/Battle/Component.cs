@@ -7,6 +7,7 @@ using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Descriptions;
 using WarpSpace.Models.Game;
+using WarpSpace.Models.Game.Battle.Player;
 
 namespace WarpSpace.Unity.World.Battle
 {
@@ -18,7 +19,8 @@ namespace WarpSpace.Unity.World.Battle
 
         private bool _initialized;
         private ValueCell<Slot<GameModel>> _gameCell;
-        public ICell<Slot<GameModel>> GameCell => _gameCell;
+        public ICell<Slot<GameModel>> Game_Cell => _gameCell;
+        public ICell<Slot<PlayerModel>> Player_Cell { get; private set; }
 
         void Awake()
         {
@@ -82,6 +84,7 @@ namespace WarpSpace.Unity.World.Battle
             _initialized = true;
             
             _gameCell = new ValueCell<Slot<GameModel>>(null);
+            Player_Cell = Game_Cell.SelectMany(gc => gc.Select(g => g.CurrentPlayer).Cell_Or_Single_Default());
         }
 
         [Serializable]

@@ -235,27 +235,27 @@ namespace Lanski.Structures
     public struct AdjacentNeighbourhood2D<T>
         where T: struct
     {
-        public T? Left  => Neighbours[0]; 
-        public T? Up    => Neighbours[1]; 
-        public T? Right => Neighbours[2]; 
-        public T? Down  => Neighbours[3]; 
-        public readonly T?[] Neighbours;//TODO: use read-only interface
+        public T? Left  => Adjacent[0]; 
+        public T? Up    => Adjacent[1]; 
+        public T? Right => Adjacent[2]; 
+        public T? Down  => Adjacent[3]; 
+        public readonly T?[] Adjacent;//TODO: use read-only interface
 
-        public AdjacentNeighbourhood2D(T?[] neighbours)
+        public AdjacentNeighbourhood2D(T?[] adjacent)
         {
-            Neighbours = neighbours;
+            Adjacent = adjacent;
         }
     }
     
     public struct AdjacentRef<T>
         where T: class
     {
-        private readonly Slot<T>[] _all;
-        public Slot<T>[] All => _all;
-
-        public AdjacentRef(Slot<T>[] all)
+        public readonly T[] NotEmpty;
+        public readonly Slot<T>[] Items;
+        public AdjacentRef(Slot<T>[] adjacent)
         {
-            _all = all;
+            Items = adjacent;
+            NotEmpty = adjacent.SkipEmpty().ToArray();
         }
 
         public Slot<T> this[Direction2D d]
@@ -265,23 +265,22 @@ namespace Lanski.Structures
                 switch (d)
                 {
                     case Direction2D.Left:
-                        return _all[0];
+                        return Items[0];
                     case Direction2D.Up:
-                        return _all[1];
+                        return Items[1];
                     case Direction2D.Right:
-                        return _all[2];
+                        return Items[2];
                     case Direction2D.Down:
-                        return _all[3];
+                        return Items[3];
                     default:
                         throw new ArgumentOutOfRangeException(nameof(d), d, null);
                 }
             }
         }
 
-        public AdjacentRef<TResult> Map<TResult>(Func<Slot<T>, Slot<TResult>> selector) where TResult : class
-        {
-            return new AdjacentRef<TResult>(All.Select(selector).ToArray());
-        }
+        public AdjacentRef<TResult> Map<TResult>(Func<Slot<T>, Slot<TResult>> selector) where TResult : class => 
+            new AdjacentRef<TResult>(Items.Select(selector).ToArray())
+        ;
     }
 
     public struct ElementAndIndex2D<T>
@@ -391,7 +390,7 @@ namespace Lanski.Structures
             return new Index2D(v.Item1, v.Item2);
         }
 
-        [Pure] public bool IsAdjacentTo(Index2D other)
+        [Pure] public bool Is_Adjacent_To(Index2D other)
         {
             var dr = Mathe.Abs(Row - other.Row);
             var dc = Mathe.Abs(Column - other.Column);
@@ -399,7 +398,7 @@ namespace Lanski.Structures
             return dr == 0 && dc == 1 || dr == 1 && dc == 0;
         }
 
-        public Direction2D DirectionTo(Index2D other)
+        public Direction2D Direction_To(Index2D other)
         {
             var dr = other.Row - Row;
             var dc = other.Column - Column;

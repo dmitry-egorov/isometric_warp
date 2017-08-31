@@ -58,6 +58,7 @@
     <Compile Include="Game\Battle\BattleFactory.cs" />
     <Compile Include="Game\Battle\BattleModel.cs" />
     <Compile Include="Game\Battle\Board\Unit\Weapon\WeaponModel.cs" />
+    <Compile Include="Game\Battle\Player\PlayerCommand.cs" />
     <Compile Include="Game\Battle\Player\PlayerModel.cs" />
     <Compile Include="Game\GameModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

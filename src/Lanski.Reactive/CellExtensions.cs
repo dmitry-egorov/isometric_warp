@@ -9,6 +9,11 @@ namespace Lanski.Reactive
         {
             return new SelectCell<TIn, TOut>(cell, selector);
         }
+        
+        public static ICell<TOut> SelectMany<TIn, TOut>(this ICell<TIn> cell, Func<TIn, ICell<TOut>> selector)
+        {
+            return new SelectManyCell<TIn, TOut>(cell, selector);
+        }
 
         public static ICell<Tuple<T1, T2>> Merge<T1, T2>(this ICell<T1> cell, ICell<T2> other) 
             where T1 : IEquatable<T1> 
@@ -39,6 +44,32 @@ namespace Lanski.Reactive
             }
 
             public TOut Value => _selector(_inCell.Value);
+        }
+
+        public class SelectManyCell<TIn, TOut>: ICell<TOut>
+        {
+            private readonly ICell<TIn> _inCell;
+            private readonly Func<TIn, ICell<TOut>> _selector;
+
+            public SelectManyCell(ICell<TIn> inCell, Func<TIn, ICell<TOut>> selector)
+            {
+                _inCell = inCell;
+                _selector = selector;
+            }
+
+            public Action Subscribe(Action<TOut> action)
+            {
+                Action lastSubscription = null;
+
+                return _inCell.Subscribe(x =>
+                {
+                    lastSubscription?.Invoke();
+
+                    lastSubscription = x != null ? _selector(x).Subscribe(action) : null;
+                });
+            }
+
+            public TOut Value => _selector(_inCell.Value).Value;
         }
 
 

@@ -39,10 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EnumerableOfNullableExtensions.cs" />
     <Compile Include="HashsetExtensions.cs" />
     <Compile Include="MergeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
+      <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>
+      <Name>Lanski.Structures</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

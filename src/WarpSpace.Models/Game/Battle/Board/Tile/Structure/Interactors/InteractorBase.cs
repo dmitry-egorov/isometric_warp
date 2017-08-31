@@ -4,11 +4,15 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile.Structure.Interactors
 {
     public abstract class InteractorBase : IInteractor
     {
-        public abstract bool CanBeInteractedBy(UnitModel unit);
+        private readonly TileModel _tile;
 
-        public bool TryInteractBy(UnitModel unit)
+        protected InteractorBase(TileModel tile) => _tile = tile;
+
+        public abstract bool Can_Interact_With(UnitModel unit);
+
+        public bool Try_to_Interact_With(UnitModel unit)
         {
-            if (!CanBeInteractedBy(unit))
+            if (!Is_Adjacent_To(unit) || !Can_Interact_With(unit))
                 return false;
 
             Interact(unit);
@@ -16,5 +20,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile.Structure.Interactors
         }
 
         protected abstract void Interact(UnitModel unit);
+
+        private bool Is_Adjacent_To(UnitModel unit) => 
+            _tile.Is_Adjacent_To(unit.Current_Tile)
+        ;
     }
 }

@@ -9,6 +9,7 @@
         public static bool s_value_is<T>(this T obj, T value) => obj.Equals(value);
         
         public static bool inline<T>(this T value) => true;
+        public static bool prepare<T>(out T value) => default(T).Is_the_Value_Of_the(out value);
 
         public static bool Is_the_Value_Of_the<T>(this T obj, out T alias) => obj.is_the(out alias);
         public static bool aka<T>(this T obj, out T alias) => obj.is_the(out alias);

@@ -11,27 +11,28 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
     {
         public readonly Index2D Position;
         public readonly LandscapeModel Landscape;
-        public readonly Slot<StructureModel> StructureSlot;
-        
+
         public AdjacentRef<TileModel> Adjacent { get; private set; }
-
-        private readonly ValueCell<Slot<UnitModel>> _unitCell = new ValueCell<Slot<UnitModel>>(null);
-        public ICell<Slot<UnitModel>> UnitCell => _unitCell;
         
-        public bool IsOccupied => Theres_a_Unit() || Theres_a_Structure();
+        private readonly ValueCell<Slot<StructureModel>> _structure_cell = new ValueCell<Slot<StructureModel>>(null);
+        public ICell<Slot<StructureModel>> Structure_Cell => _structure_cell;
 
-        public TileModel(Index2D position, LandscapeType landscapeType, Slot<StructureModel> structureSlot)
+        private readonly ValueCell<Slot<UnitModel>> _unit_cell = new ValueCell<Slot<UnitModel>>(null);
+        public ICell<Slot<UnitModel>> Unit_Cell => _unit_cell;
+        
+        public bool Is_Occupied => Has_a_Unit() || Has_a_Structure();
+
+        public TileModel(Index2D position, LandscapeType landscapeType)
         {
             Position = position;
-            StructureSlot = structureSlot;
             Landscape = new LandscapeModel(landscapeType);
 
-            wire_current_unit_destruction();
+            Wire_Current_Unit_Destruction();
             
-            void wire_current_unit_destruction() => 
-                UnitCell
+            void Wire_Current_Unit_Destruction() => 
+                Unit_Cell
                     .SkipEmpty()
-                    .SelectMany(u => u.Destroyed)
+                    .SelectMany(u => u.Stream_Of_Destroyed_Events)
                     .Subscribe(_ => ResetUnit());
         }
 
@@ -39,25 +40,30 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         {
             Adjacent = adjacentTiles;
         }
+
+        public bool Has_a_Unit(out UnitModel unit) => Unit_Cell.Has_a_Value(out unit);
+
+        public bool IsPassableBy(ChassisType chassisType) => Landscape.Is_Passable_By(chassisType) && !Is_Occupied;
+        public bool Is_Adjacent_To(TileModel destination) => Position.Is_Adjacent_To(destination.Position);
+        public Direction2D GetDirectionTo(TileModel destination) => Position.Direction_To(destination.Position);
+        public bool Has_a_Structure(out StructureModel structure) => Structure_Cell.Has_a_Value(out structure);
         
-        public bool Has_a_Unit(out UnitModel unit) => UnitCell.has_a_value(out unit);
-
-        public bool IsPassableBy(ChassisType chassisType) => Landscape.IsPassableBy(chassisType) && !IsOccupied;
-        public bool is_adjacent_to_the(TileModel destination) => Position.IsAdjacentTo(destination.Position);
-        public Direction2D GetDirectionTo(TileModel destination) => Position.DirectionTo(destination.Position);
-        public bool Has_a_Structure(out StructureModel structure) => StructureSlot.Has_a_Value(out structure);
-
         public void ResetUnit()
         {
-            _unitCell.Value = null;
+            _unit_cell.Value = null;
         }
 
         public void SetUnit(UnitModel model)
         {
-            _unitCell.Value = model;
+            _unit_cell.Value = model;
         }
         
-        private bool Theres_a_Structure() => StructureSlot.has_something();
-        private bool Theres_a_Unit() => UnitCell.has_something();
+        public void Set_Structure(Slot<StructureModel> structure)
+        {
+            _structure_cell.Value = structure;
+        }
+        
+        private bool Has_a_Structure() => Structure_Cell.Has_a_Value();
+        private bool Has_a_Unit() => Unit_Cell.Has_a_Value();
     }
 }

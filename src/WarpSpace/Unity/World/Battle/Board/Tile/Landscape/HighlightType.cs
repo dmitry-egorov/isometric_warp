@@ -4,8 +4,8 @@
     {
         None,
         Move,
-        Unit,
+        Unit_Placeholder,
         Interaction,
-        UseWeapon
+        Fire_Weapon
     }
 }

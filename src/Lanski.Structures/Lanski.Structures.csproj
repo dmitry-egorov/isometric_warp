@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Array2dExtensions.cs" />
     <Compile Include="DictionarySemanticExtensions.cs" />
+    <Compile Include="EnumerableOfNullableExtensions.cs" />
     <Compile Include="NullableExtensions.cs" />
     <Compile Include="BooleanFlowSemanticExtensionss.cs" />
     <Compile Include="NullableSemantics.cs" />

@@ -5,7 +5,7 @@ namespace WarpSpace.Descriptions
 {
     public static class WeaponTypeExtensions
     {
-        public static DamageDescription GetDamageDescription(this WeaponType type)
+        public static DamageDescription Get_Damage_Description(this WeaponType type)
         {
             switch (type)
             {

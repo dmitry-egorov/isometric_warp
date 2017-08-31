@@ -4,7 +4,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile.Structure.Interactors
 {
     public interface IInteractor
     {
-        bool CanBeInteractedBy(UnitModel unit);
-        bool TryInteractBy(UnitModel unit);
+        bool Can_Interact_With(UnitModel unit);
+        bool Try_to_Interact_With(UnitModel unit);
     }
 }

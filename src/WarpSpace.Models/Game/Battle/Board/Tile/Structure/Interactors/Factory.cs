@@ -5,16 +5,14 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile.Structure.Interactors
 {
     public static class Factory
     {
-        private static readonly Empty Empty = new Empty();
-
-        public static IInteractor From(StructureType type, Game.GameModel game)
+        public static IInteractor From(StructureType type, GameModel game, TileModel tile)
         {
             switch (type)
             {
                 case StructureType.Entrance:
-                    return Empty;
+                    return new Empty(tile);
                 case StructureType.Exit:
-                    return new Exiter(game);
+                    return new Exiter(game, tile);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

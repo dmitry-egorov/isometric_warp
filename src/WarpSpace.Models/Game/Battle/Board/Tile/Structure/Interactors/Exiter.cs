@@ -6,12 +6,12 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile.Structure.Interactors
     {
         private readonly GameModel _game;
 
-        public Exiter(GameModel game)
+        public Exiter(GameModel game, TileModel tile) : base(tile)
         {
             _game = game;
         }
 
-        public override bool CanBeInteractedBy(UnitModel unit)
+        public override bool Can_Interact_With(UnitModel unit)
         {
             return true;
         }

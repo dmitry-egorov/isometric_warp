@@ -9,9 +9,9 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile
 {
     public class Component : MonoBehaviour
     {
-        public TileModel Model { get; private set; }
         public Landscape.Component Landscape { get; private set; }
         public UnitSlot.Component UnitSlot { get; private set; }
+        public HighlightElement Highlight { get; private set; }
         
         public static Component Create(GameObject prefab, Transform parent, TileModel tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, PlayerModel player)
         {
@@ -27,17 +27,17 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile
             transform.localPosition = GetPosition(position, dimensions);
             name = $"Tile ({position.Column}, {position.Row})";
 
-            Model = tile;
             Landscape = GetComponentInChildren<Landscape.Component>();
             var water = GetComponentInChildren<Water.Component>();
             var structureSlot = GetComponentInChildren<StructureSlot.Component>();
             UnitSlot = GetComponentInChildren<UnitSlot.Component>();
             var playerActionsDetector = GetComponentInChildren<PlayerActionSource.Component>();
+            Highlight = new HighlightElement(player, tile, Landscape);
 
             Landscape.Init(position, neighbourhood);
             water.Init(position, neighbourhood);
             
-            if (tile.StructureSlot.Has_a_Value(out var structure))
+            if (tile.Structure_Cell.Has_a_Value(out var structure))
                 structureSlot.Init(structure.Description);
 
             playerActionsDetector.Init();
@@ -48,7 +48,7 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile
             {
                 playerActionsDetector
                     .Actions
-                    .Subscribe(() => player.ExecuteActionAt(tile));
+                    .Subscribe(() => player.Execute_Command_At(tile));
             }
         }
 
@@ -56,7 +56,5 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile
         {
             return new Vector3(i.Column - dimensions.Columns * 0.5f, 0, dimensions.Rows * 0.5f - i.Row);
         }
-        
-        
     }
 }
