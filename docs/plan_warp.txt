@@ -1,9 +1,8 @@
 Plan
 - show hp
-- show weapon button only on selection
-- end turn
 - loot
 - deploy own units
+- end turn
 - enemy ai
 - cooldowns
 - faction materials
@@ -28,6 +27,8 @@ Plan
 
 
 done
++ weapon button highlight
++ show weapon button only on selection
 + attacking
 + unit weapons
 + enemy units

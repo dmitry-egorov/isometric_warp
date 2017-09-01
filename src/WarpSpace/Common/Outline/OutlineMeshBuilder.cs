@@ -8,42 +8,37 @@ namespace WarpSpace.Common.Outline
     [RequireComponent(typeof(MeshFilter))]
     public class OutlineMeshBuilder: MonoBehaviour
     {
-        public MeshFilter Source;
-
-        [ExposeMethodInEditor]
-        public void Build()
+        public void Build_From(Mesh source_mesh)
         {
             var dst = GetComponent<MeshFilter>();
-            var src = Source;
             
-            var newVertices = new List<VertexAccumulator>();
-            var vertexMap = new Dictionary<Vector3, int>();
+            var new_vertices = new List<VertexAccumulator>();
+            var vertex_map = new Dictionary<Vector3, int>();
 
-            var srcMesh = src.sharedMesh;
-            var srcVertices = srcMesh.vertices;
-            var srcNormals = srcMesh.normals;
+            var src_vertices = source_mesh.vertices;
+            var src_normals = source_mesh.normals;
             
-            for (var i = 0; i < srcVertices.Length; i++)
+            for (var i = 0; i < src_vertices.Length; i++)
             {
-                var position = srcVertices[i];
-                var normal = srcNormals[i];
+                var position = src_vertices[i];
+                var normal = src_normals[i];
                 
-                if (!vertexMap.TryGetValue(position, out var newIndex))
+                if (!vertex_map.TryGetValue(position, out var newIndex))
                 {
-                    newVertices.Add(new VertexAccumulator(position, normal));
-                    vertexMap.Add(position, newVertices.Count - 1);
+                    new_vertices.Add(new VertexAccumulator(position, normal));
+                    vertex_map.Add(position, new_vertices.Count - 1);
                 }
                 else
                 {
-                    newVertices[newIndex].AddNormal(normal);
+                    new_vertices[newIndex].AddNormal(normal);
                 }                
             }
 
             var newMesh = new Mesh
             {
-                vertices = newVertices.Select(x => x.Position).ToArray(),
-                normals = newVertices.Select(x => x.Normal).Select(x => x.normalized).ToArray(),
-                triangles = srcMesh.triangles.Select(i => vertexMap[srcVertices[i]]).ToArray()
+                vertices = new_vertices.Select(x => x.Position).ToArray(),
+                normals = new_vertices.Select(x => x.Normal).Select(x => x.normalized).ToArray(),
+                triangles = source_mesh.triangles.Select(i => vertex_map[src_vertices[i]]).ToArray()
             };
             
             dst.sharedMesh = newMesh;

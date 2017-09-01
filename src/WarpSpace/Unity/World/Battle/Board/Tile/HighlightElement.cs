@@ -51,7 +51,7 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile
             }
 
             bool A_Unit_Is_Selected(out UnitModel selected_unit) => 
-                _player.SelectedUnit.Has_a_Value(out selected_unit)
+                _player.Selected_Unit_Cell.Has_a_Value(out selected_unit)
             ;
         }
     }

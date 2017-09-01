@@ -11,14 +11,14 @@ namespace WarpSpace.Models.Game
         private readonly BoardDescription _boardDescription;
 
         private readonly ValueCell<Slot<BattleModel>> _currentBattle;
-        public ICell<Slot<BattleModel>> CurrentBattle => _currentBattle;
-        public ICell<Slot<PlayerModel>> CurrentPlayer { get; }
+        public ICell<Slot<BattleModel>> Current_Battle => _currentBattle;
+        public ICell<Slot<PlayerModel>> Current_Player { get; }
 
         public GameModel(BoardDescription boardDescription)
         {
             _boardDescription = boardDescription;
             _currentBattle = new ValueCell<Slot<BattleModel>>(null);
-            CurrentPlayer = _currentBattle.Select(b => b.Select(x => x.Player));
+            Current_Player = _currentBattle.Select(b => b.Select(x => x.Player));
         }
 
         public void Start()

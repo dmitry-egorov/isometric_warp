@@ -1,14 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using Lanski.Geometry;
+using Lanski.Reactive;
 using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
 
 namespace WarpSpace.Unity.World.Battle.Unit
 {
-    internal class Mover
+    public class Mover
     {
-        private readonly Component.MovementSettings _settings;
+        private readonly MovementSettings _settings;
         private readonly Transform _transform;
         private readonly float _acceleration;
         private readonly float _angularAcceleration;
@@ -19,7 +22,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
         private float _speed;
         private float _angularSpeed;
 
-        public Mover(Component.MovementSettings settings, Transform transform)
+        public Mover(MovementSettings settings, Transform transform)
         {
             _settings = settings;
             _transform = transform;
@@ -167,6 +170,17 @@ namespace WarpSpace.Unity.World.Battle.Unit
                 Position = position;
                 Rotation = rotation;
             }
+        }
+
+        [Serializable]
+        public struct MovementSettings
+        {
+            public float MaxAngularSpeed;
+            public float MinAngularSpeed;
+            public float AnglularAccelerationDistance;
+            public float MaxSpeed;
+            public float MinSpeed;
+            public float AccelerationDistance;
         }
     }
 }

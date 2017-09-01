@@ -5,6 +5,8 @@ namespace Lanski.Reactive
     public static class NullableCellExtensions
     {
         public static bool s_Value_Is<T>(this ICell<T> cell, out T value) where T : class => (value = cell.Value).inline();
+        
+        public static bool Does_Not_Have_a_Value<T>(this ICell<Slot<T>> cell) where T : class => !cell.Has_a_Value();
         public static bool Has_a_Value<T>(this ICell<Slot<T>> cell) where T : class => cell.Value.Has_a_Value();
         public static bool Has_a_Value<T>(this ICell<Slot<T>> cell, out T obj) where T : class => cell.Value.Has_a_Value(out obj);
         

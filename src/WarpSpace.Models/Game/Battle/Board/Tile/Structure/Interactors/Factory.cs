@@ -10,7 +10,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile.Structure.Interactors
             switch (type)
             {
                 case StructureType.Entrance:
-                    return new Empty(tile);
+                    return new Empty();
                 case StructureType.Exit:
                     return new Exiter(game, tile);
                 default:

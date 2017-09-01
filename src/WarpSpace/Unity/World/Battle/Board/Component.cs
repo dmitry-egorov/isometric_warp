@@ -1,45 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using JetBrains.Annotations;
+﻿using Lanski.Reactive;
 using Lanski.Structures;
 using Lanski.UnityExtensions;
 using UnityEngine;
 using WarpSpace.Models.Game.Battle.Board;
-using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Player;
+using WarpSpace.Unity.World.Battle.Unit;
 
 namespace WarpSpace.Unity.World.Battle.Board
 {
     public class Component : MonoBehaviour
     {
-        public OwnSettings Settings;
+        public GameObject TilePrefab;
+        public GameObject UnitPrefab;
+        
+        private RepeatAllStream<UnitComponent> _stream_of_created_units;
+        public IStream<UnitComponent> Stream_Of_Created_Units => _stream_of_created_units;
 
         public void Init(BoardModel board, PlayerModel player)
         {
-            this.DestroyChildren();
+            gameObject.DestroyChildren();
+            
+            _stream_of_created_units = new RepeatAllStream<UnitComponent>();
 
             var tile_components = CreateTiles();
-            var components_map = new Dictionary<UnitModel, Unit.Component>();
 
-            UnitCreationWiring.Wire(board, tile_components, components_map, Settings);
+            UnitCreationWiring.Wire(board, tile_components, UnitPrefab, player, _stream_of_created_units);
             TileHighlightsWiring.Wire(player, board, tile_components);
-            OutlinesWiring.Wire(player, components_map);
 
             Tile.Component[,] CreateTiles() => 
                 board.Tiles.Map((tile, index) =>
                 {
                     var n = board.Tiles.GetFitNeighbours(index).Map(t => t.Landscape.Type);
-                    return Tile.Component.Create(Settings.TilePrefab, transform, tile, n, board.Tiles.GetDimensions(), player);
+                    return Tile.Component.Create(TilePrefab, transform, tile, n, board.Tiles.GetDimensions(), player);
                 })
             ;
-        }
-
-        [Serializable]
-        public struct OwnSettings
-        {
-            public GameObject TilePrefab;
-            public GameObject MothershipPrefab;
-            public GameObject TankPrefab;
         }
     }
 }

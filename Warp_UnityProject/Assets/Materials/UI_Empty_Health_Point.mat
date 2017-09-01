@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI Slot
-  m_Shader: {fileID: 4800000, guid: 8dc5e6d040d9c48c6b303251c1364c23, type: 3}
+  m_Name: UI_Empty_Health_Point
+  m_Shader: {fileID: 4800000, guid: 79f0bfdd6608c4cb2b394cc50455713b, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -65,6 +65,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _OutlineWidth: 0
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -72,7 +73,8 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _BottomColor: {r: 0.63988, g: 0.70010406, b: 0.941, a: 0.191}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _BottomColor: {r: 0.4055705, g: 0.629, b: 0.27298602, a: 1}
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _TopColor: {r: 0.52937055, g: 0.5380965, b: 0.573, a: 0.19}
+    - _OutlineColor: {r: 0.3019608, g: 0.7529412, b: 0.3019608, a: 1}
+    - _TopColor: {r: 0.27323404, g: 0.678, b: 0.27323404, a: 1}

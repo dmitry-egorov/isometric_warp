@@ -1,15 +1,17 @@
 ﻿// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 
-Shader "Custom/Gradient"
+Shader "Custom/UISlot"
 {
 	Properties
 	{
-        _TopColor ("Top Color", Color) = (1, 1, 1, 0)
-        _BottomColor ("Bottom Color", Color) = (1, 1, 1, 0)
+        _TopColor ("Top Color", Color) = (1, 1, 1, 1)
+        _BottomColor ("Bottom Color", Color) = (1, 1, 1, 1)
+        _OutlineColor("Outline color", Color) = (1, 1, 1, 1)
+        _OutlineWidth ("Outline width", Float) = 2
 	}
 	SubShader
 	{
-		Tags { "RenderQueue"="Transparent" }
+		Tags { "Queue"="Transparent" "RenderType"="Transparent" }
         ZWrite Off
         Blend SrcAlpha OneMinusSrcAlpha
 
@@ -34,6 +36,8 @@ Shader "Custom/Gradient"
             
             fixed4 _TopColor;
             fixed4 _BottomColor;
+            fixed4 _OutlineColor;
+            half _OutlineWidth;
 
             v2f vert (appdata v)
             {
@@ -47,8 +51,13 @@ Shader "Custom/Gradient"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                
-                return lerp(_BottomColor, _TopColor, saturate(i.uv.y));
+                //return fixed4(fwidth(i.uv) * 20, 0, 1);
+
+                fixed4 gradient = lerp(_BottomColor, _TopColor, saturate(i.uv.y));
+
+                fixed2 uvmasks = min(i.uv, 1.0 - i.uv) / fwidth(i.uv);
+                fixed mask = min(uvmasks.x, uvmasks.y);
+                return mask < _OutlineWidth ? _OutlineColor : gradient;
             }
 
 			ENDCG

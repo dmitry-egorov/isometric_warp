@@ -5,9 +5,9 @@ namespace Lanski.UnityExtensions
 {
     public static class MonoBehaviourChildrenExtensions
     {
-        public static void DestroyChildren(this MonoBehaviour behaviour)
+        public static void DestroyChildren(this GameObject gameObject)
         {
-            var children = behaviour
+            var children = gameObject
                 .transform
                 .Cast<Transform>()
                 .Select(x => x.gameObject)

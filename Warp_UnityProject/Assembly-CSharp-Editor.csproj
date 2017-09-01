@@ -52,12 +52,13 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Editor\ScreenshotTaker.cs" />
-     <None Include="Assets\Materials\Shaders\Gradient.shader" />
+     <None Include="Assets\Materials\Shaders\UISlot.shader" />
      <None Include="Assets\Materials\Shaders\common.cginc" />
      <None Include="Assets\Materials\Shaders\Outline.shader" />
      <None Include="Assets\Materials\Shaders\IsometricSpecular.shader" />
      <None Include="Assets\Materials\Shaders\IsometricStriped.shader" />
      <None Include="Assets\Materials\Shaders\IsometricUnitPlaceholder.shader" />
+     <None Include="Assets\Materials\Shaders\Opaque.shader" />
      <None Include="Assets\Materials\Shaders\Isometric.shader" />
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>

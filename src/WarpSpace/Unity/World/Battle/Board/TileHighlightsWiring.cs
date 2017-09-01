@@ -1,6 +1,5 @@
 ﻿using Lanski.Reactive;
 using Lanski.Structures;
-using UnityEngine;
 using WarpSpace.Models.Game.Battle.Board;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Unit;
@@ -13,7 +12,7 @@ namespace WarpSpace.Unity.World.Battle.Board
         public static void Wire(PlayerModel player, BoardModel board, Tile.Component[,] tile_components)
         {
             player
-                .SelectedUnit
+                .Selected_Unit_Cell
                 .SelectMany(Get_Tiles_Stream)
                 .DelayByOne()
                 .Subscribe(prev_tile_slot =>
@@ -29,7 +28,7 @@ namespace WarpSpace.Unity.World.Battle.Board
             
             void Update_Neighborhood_Of_Current_Tile()
             {
-                if (!player.SelectedUnit.Has_a_Value(out var selected_unit)) return;
+                if (!player.Selected_Unit_Cell.Has_a_Value(out var selected_unit)) return;
 
                 var tile = selected_unit.Current_Tile;
                 Update_Neighbourhood_Of(tile);
