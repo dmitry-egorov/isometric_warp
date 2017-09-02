@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -47,23 +48,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\AdjacentRef.cs" />
-    <Compile Include="Common\Direction2DEx.cs" />
-    <Compile Include="Common\Direction2DExtensions.cs" />
-    <Compile Include="Common\Index2DData.cs" />
-    <Compile Include="Common\MapParsing\MapParsingExtensions.cs" />
-    <Compile Include="Common\MeshTransformation\MeshTransformer.cs" />
-    <Compile Include="Common\Outline\OutlineMeshBuilder.cs" />
-    <Compile Include="Common\Spacial2DData.cs" />
     <Compile Include="Experiment\TileTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\Common\ClickSource.cs" />
-    <Compile Include="UI\Gameplay\ShowOnlyWhenAUnitIsSelected.cs" />
-    <Compile Include="UI\Gameplay\Units\HealthComponent.cs" />
-    <Compile Include="UI\Gameplay\Units\UiUnitComponent.cs" />
-    <Compile Include="UI\Gameplay\Units\UIUnitsComponent.cs" />
-    <Compile Include="UI\Gameplay\Weapon\WeaponClicksHandler.cs" />
-    <Compile Include="UI\Gameplay\Weapon\WeaponSelectionHighlight.cs" />
     <Compile Include="Unity\DebugComponent.cs" />
     <Compile Include="Unity\World\Battle\Board\Component.cs" />
     <Compile Include="Unity\World\Battle\Board\TileCreationHelper.cs" />
@@ -105,10 +91,6 @@
       <Project>{227702C3-257D-432F-9AE9-7D49A34EBBDF}</Project>
       <Name>Lanski.Reactive</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Lanski.Semantics\Lanski.Semantics.csproj">
-      <Project>{3E6E76DD-CE0C-4E98-9C84-9A5132AB2B02}</Project>
-      <Name>Lanski.Semantics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Lanski.Sharp7\Lanski.Sharp7.csproj">
       <Project>{8c681d57-a09d-4f42-a6ec-81e2e0ffa882}</Project>
       <Name>Lanski.Sharp7</Name>
@@ -125,6 +107,10 @@
       <Project>{97420AF8-F6A9-428F-AD26-802FAD489D7B}</Project>
       <Name>UnityEditor.Expose</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WarpSpace.Common\WarpSpace.Common.csproj">
+      <Project>{8151E833-B7CD-4CD5-8CE0-4B0EF66B89F3}</Project>
+      <Name>WarpSpace.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\WarpSpace.Descriptions\WarpSpace.Descriptions.csproj">
       <Project>{0127FC72-7C5D-434B-8EFE-4313ED9824E0}</Project>
       <Name>WarpSpace.Descriptions</Name>
@@ -133,6 +119,12 @@
       <Project>{ba651769-958c-4def-b0ec-15c7a154f76b}</Project>
       <Name>WarpSpace.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Common" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

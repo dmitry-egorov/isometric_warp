@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8151E833-B7CD-4CD5-8CE0-4B0EF66B89F3}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WarpSpace.Common</RootNamespace>
+    <AssemblyName>WarpSpace.Common</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AdjacentRef.cs" />
+    <Compile Include="Direction2DEx.cs" />
+    <Compile Include="Direction2DExtensions.cs" />
+    <Compile Include="Index2DData.cs" />
+    <Compile Include="MapParsing\MapParsingExtensions.cs" />
+    <Compile Include="MeshTransformation\MeshTransformer.cs" />
+    <Compile Include="Outline\OutlineMeshBuilder.cs" />
+    <Compile Include="Spacial2DData.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lanski.Geometry\Lanski.Geometry.csproj">
+      <Project>{D581D1F2-8332-44D4-8799-0C0E1690635C}</Project>
+      <Name>Lanski.Geometry</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
+      <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>
+      <Name>Lanski.Structures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UnityEditor.Expose\UnityEditor.Expose.csproj">
+      <Project>{97420af8-f6a9-428f-ad26-802fad489d7b}</Project>
+      <Name>UnityEditor.Expose</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\lib\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

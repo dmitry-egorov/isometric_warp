@@ -52,7 +52,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
         public void Update()
         {
             Try_to_Update_the_Target();
-            if (!there_Is_a_Target(out var target))
+            if (!There_Is_a_Target(out var target))
                 return;
 
             var parent = target.Parent;
@@ -76,14 +76,13 @@ namespace WarpSpace.Unity.World.Battle.Unit
 
                 bool Queue_Is_Not_Empty() => _movementQueue.Count != 0;
                 bool the_Current_Target_Has_the_Same_Rotation_As_the_Next_Target_in_the_queue() => 
-                    there_Is_a_Target(out var current_target) 
+                    There_Is_a_Target(out var current_target) 
                     && current_target.Rotation == _movementQueue.Peek().Rotation;
                     
                 void Update_Target_From_the_Queue() => _currentTarget = _movementQueue.Dequeue();
                 bool there_Is_No_Target() => _currentTarget.doesnt_have_a_value();
             }
 
-            bool there_Is_a_Target(out MovementTarget current_target) => _currentTarget.Has_a_Value(out current_target);
                 
             void Try_to_Update_the_Parent()
             {
@@ -157,6 +156,9 @@ namespace WarpSpace.Unity.World.Battle.Unit
             float Calc_remaining_angle() => Quaternion.Angle(r, tr);
             float Calc_remaining_distance() => p.DistanceTo(tp);
         }
+        
+        //Compiler error when making it a local function (since it's used on two different layers)
+        private bool There_Is_a_Target(out MovementTarget current_target) => _currentTarget.Has_a_Value(out current_target);
 
         private struct MovementTarget
         {

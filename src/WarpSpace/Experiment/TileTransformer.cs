@@ -10,10 +10,10 @@ namespace WarpSpace.Experiment
     [RequireComponent(typeof(MeshFilter))]
     public class TileTransformer: MonoBehaviour
     {
-        [SerializeField] Direction2D _rotation;
-        [SerializeField] float _falloff;
-        [SerializeField] Elevations _elevation;
-        [SerializeField] Mesh _mesh;
+        public Direction2D Rotation;
+        public float Falloff;
+        public Elevations Elevation;
+        public Mesh Mesh;
 
         private bool _initialized;
         
@@ -29,7 +29,7 @@ namespace WarpSpace.Experiment
         {
             Initialize();
 
-            _change.Update(_rotation, _falloff, _elevation, _mesh);
+            _change.Update(Rotation, Falloff, Elevation, Mesh);
         }
 
         private void Initialize()
@@ -46,7 +46,7 @@ namespace WarpSpace.Experiment
 
         private void UpdateMesh()
         {
-            _meshFilter.sharedMesh = MeshTransformer.Transform(_mesh, _rotation, _elevation.ToNeighbourhood(), _falloff);
+            _meshFilter.sharedMesh = MeshTransformer.Transform(Mesh, Rotation, Elevation.ToNeighbourhood(), Falloff);
         }
         
         [Serializable]

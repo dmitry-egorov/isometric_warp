@@ -29,15 +29,15 @@ Shader "Custom/Isometric Unit Placeholder"
                      
 			struct appdata
 			{
-				float4 vertex : POSITION;
+				float4 vertex: POSITION;
                 fixed3 normal: NORMAL;
 			};
 
 			struct v2f
 			{
-				float4 vertex : SV_POSITION;
+				float4 vertex: SV_POSITION;
                 fixed4 c: COLOR;
-                float2 local_pos: TEXCOORD1;
+                float2 local_pos: TEXCOORD0;
 			};
             
             fixed3 _Color;
@@ -69,7 +69,7 @@ Shader "Custom/Isometric Unit Placeholder"
             fixed4 frag (v2f i) : SV_Target
             {
                 float distance_to_center_squared = dot(i.local_pos, i.local_pos);
-                fixed4 additional_color = distance_to_center_squared < _PlaceholderRadius * _PlaceholderRadius ? _PlaceholderColor : (0,0,0,0);
+                fixed4 additional_color = distance_to_center_squared < _PlaceholderRadius * _PlaceholderRadius ? _PlaceholderColor : fixed4(0,0,0,0);
                 return lerp(i.c, additional_color, additional_color.w);
             }
 

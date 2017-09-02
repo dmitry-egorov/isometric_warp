@@ -10,16 +10,16 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.StructureSlot
     {
         public OwnSettings Settings;
 
-        public void Init(StructureDescription? description)
+        public void Init(StructureDescription? description_slot)
         {
-            description.Do(s =>
-            {
-                var prefab = GetPrefab(s.Type);
-                var rotation = s.Orientation.ToRotation();
-                
-                var structure = Instantiate(prefab, transform);
-                structure.transform.localRotation = rotation;
-            });
+            if (!description_slot.Has_a_Value(out var description))
+                return;
+            
+            var prefab = GetPrefab(description.Type);
+            var rotation = description.Orientation.ToRotation();
+
+            var structure = Instantiate(prefab, transform);
+            structure.transform.localRotation = rotation;
         }
 
         private GameObject GetPrefab(StructureType type)

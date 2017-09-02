@@ -57,7 +57,7 @@ Shader "Custom/Isometric Striped"
             {
                 v2f o;
 
-                fixed3 surround   = calculate_isometric_surround_light(v.normal, _Angle, _TopColor, _LeftColor, _RightColor);
+                fixed3 surround = calculate_isometric_surround_light(v.normal, _Angle, _TopColor, _LeftColor, _RightColor);
                 fixed3 ambient = calculate_rising_ambient_light(v.vertex, _BottomAmbientColor, _TopAmbientColor, _AmbientHighPoint, _AmbientRise);
 
                 o.vertex = UnityObjectToClipPos(v.vertex);

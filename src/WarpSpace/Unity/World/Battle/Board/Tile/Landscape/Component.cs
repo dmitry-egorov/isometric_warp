@@ -52,14 +52,33 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.Landscape
         {
             var n = GetTypeAndSpecs();
             var spec = n.Center.Spec;
-            var mesh = SelectMesh();
+            var mesh = spec.Meshes.SelectBy(index);
             var elevations = CalculateElevations();
             var orientation = TileCreationHelper.GetOrientation(index);
             
             return MeshTransformer.Transform(mesh, orientation, elevations, spec.Falloff);
 
-            FullNeighbourhood2D<TypeAndSettings> GetTypeAndSpecs() => neighbourhood.Map(t => new TypeAndSettings(t, GetDataFor(t)));
-            Mesh SelectMesh() => spec.Meshes.SelectBy(index);
+            FullNeighbourhood2D<TypeAndSettings> GetTypeAndSpecs()
+            {
+                return neighbourhood.Map(t => new TypeAndSettings(t, GetDataFor(t)));
+                
+                OwnSettings.Type GetDataFor(LandscapeType type)
+                {
+                    switch (type)
+                    {
+                        case LandscapeType.Mountain:
+                            return Settings.Mountain;
+                        case LandscapeType.Hill:
+                            return Settings.Hill;
+                        case LandscapeType.Flatland:
+                            return Settings.Flatland;
+                        case LandscapeType.Water:
+                            return Settings.Water;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    }
+                }
+            }
 
             FullNeighbourhood2D<float> CalculateElevations()
             {
@@ -101,25 +120,9 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.Landscape
                     return Mathe.Avg(Mathf.Min(ldh, ruh), Mathf.Min(luh, rdh));
                 }
             }
-
-            OwnSettings.Type GetDataFor(LandscapeType type)
-            {
-                switch (type)
-                {
-                    case LandscapeType.Mountain:
-                        return Settings.Mountain;
-                    case LandscapeType.Hill:
-                        return Settings.Hill;
-                    case LandscapeType.Flatland:
-                        return Settings.Flatland;
-                    case LandscapeType.Water:
-                        return Settings.Water;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                }
-            }
-            
         }
+
+        
 
         private struct TypeAndSettings
         {
@@ -132,14 +135,23 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.Landscape
                 Spec = spec;
             }
 
-            public static bool operator ==(TypeAndSettings t1, TypeAndSettings t2)
+            public static bool operator ==(TypeAndSettings t1, TypeAndSettings t2) => t1.Type == t2.Type;
+            public static bool operator !=(TypeAndSettings t1, TypeAndSettings t2) => !(t1 == t2);
+
+            public bool Equals(TypeAndSettings other) => Type == other.Type && Spec.Equals(other.Spec);
+
+            public override bool Equals(object obj)
             {
-                return t1.Type == t2.Type;
+                if (ReferenceEquals(null, obj)) return false;
+                return obj is TypeAndSettings && Equals((TypeAndSettings) obj);
             }
 
-            public static bool operator !=(TypeAndSettings t1, TypeAndSettings t2)
+            public override int GetHashCode()
             {
-                return !(t1 == t2);
+                unchecked
+                {
+                    return ((int) Type * 397) ^ Spec.GetHashCode();
+                }
             }
         }
 
@@ -150,7 +162,7 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.Landscape
             public Type Hill;
             public Type Flatland;
             public Type Water;
-            
+
             [Serializable]
             public struct Type
             {

@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6CD07C23-331A-4C7C-B4E1-B645A8F5C0EF}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WarpSpace.UI</RootNamespace>
+    <AssemblyName>WarpSpace.UI</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Warp_UnityProject\Assets\Scripts\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Warp_UnityProject\Assets\Scripts\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Common\ClickSource.cs" />
+    <Compile Include="Gameplay\ShowOnlyWhenAUnitIsSelected.cs" />
+    <Compile Include="Gameplay\Units\HealthComponent.cs" />
+    <Compile Include="Gameplay\Units\UiUnitComponent.cs" />
+    <Compile Include="Gameplay\Units\UIUnitsComponent.cs" />
+    <Compile Include="Gameplay\Weapon\WeaponClicksHandler.cs" />
+    <Compile Include="Gameplay\Weapon\WeaponSelectionHighlight.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\lib\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\lib\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lanski.Geometry\Lanski.Geometry.csproj">
+      <Project>{D581D1F2-8332-44D4-8799-0C0E1690635C}</Project>
+      <Name>Lanski.Geometry</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.Reactive\Lanski.Reactive.csproj">
+      <Project>{227702C3-257D-432F-9AE9-7D49A34EBBDF}</Project>
+      <Name>Lanski.Reactive</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
+      <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>
+      <Name>Lanski.Structures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.UnityExtensions\Lanski.UnityExtensions.csproj">
+      <Project>{56177DAE-76CF-4796-A02D-F4C0833CF22C}</Project>
+      <Name>Lanski.UnityExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WarpSpace.Descriptions\WarpSpace.Descriptions.csproj">
+      <Project>{0127FC72-7C5D-434B-8EFE-4313ED9824E0}</Project>
+      <Name>WarpSpace.Descriptions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WarpSpace.Models\WarpSpace.Models.csproj">
+      <Project>{BA651769-958C-4DEF-B0EC-15C7A154F76B}</Project>
+      <Name>WarpSpace.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WarpSpace\WarpSpace.csproj">
+      <Project>{50a126f4-46c4-4748-bddf-f9eaaafd3e12}</Project>
+      <Name>WarpSpace</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
