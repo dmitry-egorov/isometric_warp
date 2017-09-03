@@ -13,11 +13,13 @@ namespace WarpSpace.Unity.World.Battle.Unit
     public class UnitComponent : MonoBehaviour
     {
         public OwnSettings Settings;
+        private Action _outline_wiring;
+        private Action _movement_wiring;
 
         public Mover Mover { get; private set; }
         public UnitModel Unit { get; private set; }
 
-        public static UnitComponent Create(GameObject prefab, Transform parent, UnitModel unit, TileModel source_tile, Board.Tile.Component[,] tile_components, PlayerModel player)
+        public static UnitComponent Create(GameObject prefab, Transform parent, UnitModel unit, TileModel source_tile, Board.Tile.TileComponent[,] tile_components, PlayerModel player)
         {
             var obj = Instantiate(prefab, parent).GetComponent<UnitComponent>();
 
@@ -26,12 +28,18 @@ namespace WarpSpace.Unity.World.Battle.Unit
             return obj;
         }
 
-        void Update()
+        public void Update()
         {
             Mover.Update();
         }
 
-        private void Init(UnitModel unit, TileModel source_tile, PlayerModel player, Board.Tile.Component[,] tile_components)
+        public void OnDestroy()
+        {
+            _movement_wiring();
+            _outline_wiring();
+        }
+
+        private void Init(UnitModel unit, TileModel source_tile, PlayerModel player, Board.Tile.TileComponent[,] tile_components)
         {
             var unitSettings = SelectSettings(unit.Type);
             var factionSettings = SelectFactionSettings(unit.Faction);
@@ -43,8 +51,8 @@ namespace WarpSpace.Unity.World.Battle.Unit
 
             filter.Init(unitSettings.Mesh, factionSettings.Material);
             outline.Init(unitSettings.Mesh);
-            var outline_wiring = Wire_Selections_to_Outline();
-            var movement_wiring = Wire_Movements();
+            _outline_wiring = Wire_Selections_to_Outline();
+            _movement_wiring = Wire_Movements();
             
             Wire_the_Destruction();
 
@@ -54,7 +62,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
                     .Selected_Unit_Cell
                     .IncludePrevious()
                     .Subscribe(x => SetOutline(x.previous, x.current))
-                    ;
+                ;
 
                 void SetOutline(Slot<UnitModel> possible_prev_unit, Slot<UnitModel> possible_cur_unit)
                 {
@@ -70,7 +78,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
             {
                 return
                     unit
-                        .Current_Tile_Cell
+                        .Cell_of_the_Current_Tile
                         .IncludePrevious()
                         .Subscribe(x => MoveUnitComponent(x.previous, x.current));
 
@@ -94,23 +102,9 @@ namespace WarpSpace.Unity.World.Battle.Unit
             void Wire_the_Destruction()
             {
                 unit
-                    .Stream_Of_Destroyed_Events
+                    .Stream_Of_Single_Destroyed_Event
                     .First()
-                    .Subscribe(isAlive => Destory());
-
-                void Destory()
-                {
-                    Unwire();
-                    Remove_the_Component_From_the_Scene();
-
-                    void Unwire()
-                    {
-                        movement_wiring();
-                        outline_wiring();
-                    }
-
-                    void Remove_the_Component_From_the_Scene() => Destroy(gameObject);
-                }
+                    .Subscribe(isAlive => Destroy(gameObject));
             }
         }
 

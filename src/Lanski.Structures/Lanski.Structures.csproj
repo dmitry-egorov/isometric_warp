@@ -50,6 +50,7 @@
     <Compile Include="NullableSemantics.cs" />
     <Compile Include="Option.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SingleValueFuncCache.cs" />
     <Compile Include="Slot.cs" />
     <Compile Include="TheVoid.cs" />
     <Compile Include="Tuple.cs" />

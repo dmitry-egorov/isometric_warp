@@ -1,8 +1,11 @@
 ﻿using System;
 using Lanski.Structures;
+using Lanski.UnityExtensions;
 using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Descriptions;
+using WarpSpace.Models.Game.Battle.Board.Tile;
+using WarpSpace.Models.Game.Battle.Board.Tile.Structure;
 
 namespace WarpSpace.Unity.World.Battle.Board.Tile.StructureSlot
 {
@@ -10,26 +13,36 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.StructureSlot
     {
         public OwnSettings Settings;
 
-        public void Init(StructureDescription? description_slot)
+        public void Init(TileModel tile)
         {
-            if (!description_slot.Has_a_Value(out var description))
-                return;
-            
-            var prefab = GetPrefab(description.Type);
-            var rotation = description.Orientation.ToRotation();
-
-            var structure = Instantiate(prefab, transform);
-            structure.transform.localRotation = rotation;
+            tile.Structure_Cell.Subscribe(CreateStructure);
         }
 
-        private GameObject GetPrefab(StructureType type)
+        private void CreateStructure(Slot<StructureModel> possible_structure)
+        {
+            gameObject.DestroyChildren();
+            
+            if (!possible_structure.Has_a_Value(out var structure))
+                return;
+
+            var description = structure.Description;
+            var prefab = GetPrefab(description.TheType);
+            var rotation = description.Orientation.ToRotation();
+
+            var structure_component = Instantiate(prefab, transform);
+            structure_component.transform.localRotation = rotation;
+        }
+
+        private GameObject GetPrefab(StructureDescription.Type type)
         {
             switch (type)
             {
-                case StructureType.Entrance:
+                case StructureDescription.Type.Entrance:
                     return Settings.EntrancePrefab;
-                case StructureType.Exit:
+                case StructureDescription.Type.Exit:
                     return Settings.ExitPrefab;
+                case StructureDescription.Type.Debris:
+                    return Settings.DebriePrefab;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -40,6 +53,7 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.StructureSlot
         {
             public GameObject EntrancePrefab;
             public GameObject ExitPrefab;
+            public GameObject DebriePrefab;
         }
     }
 }

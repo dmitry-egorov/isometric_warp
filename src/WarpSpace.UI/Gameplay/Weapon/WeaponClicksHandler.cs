@@ -1,10 +1,9 @@
 ﻿using System;
+using Lanski.Behaviours;
 using Lanski.Reactive;
 using Lanski.Structures;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using WarpSpace.Models.Game.Battle.Player;
-using WarpSpace.UI.Common;
 
 namespace WarpSpace.UI.Gameplay.Weapon
 {
@@ -27,7 +26,7 @@ namespace WarpSpace.UI.Gameplay.Weapon
             void HandleClick(Slot<PlayerModel> player) => 
                 player
                 .Must_Have_a_Value()
-                .Otherwise(new InvalidOperationException("Player not found"))
+                .Otherwise_Throw()
                 .Toggle_Weapon_Selection()
             ;
         }

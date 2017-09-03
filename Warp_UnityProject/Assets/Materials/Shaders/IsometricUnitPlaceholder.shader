@@ -51,6 +51,9 @@ Shader "Custom/Isometric Unit Placeholder"
             float _AmbientRise;
             fixed4 _PlaceholderColor;
             float _PlaceholderRadius;
+            
+            //Global
+            float _PixelScale;
 
             v2f vert (appdata v)
             {
@@ -69,6 +72,7 @@ Shader "Custom/Isometric Unit Placeholder"
             fixed4 frag (v2f i) : SV_Target
             {
                 float distance_to_center_squared = dot(i.local_pos, i.local_pos);
+                float radius = _PlaceholderRadius * _PixelScale;
                 fixed4 additional_color = distance_to_center_squared < _PlaceholderRadius * _PlaceholderRadius ? _PlaceholderColor : fixed4(0,0,0,0);
                 return lerp(i.c, additional_color, additional_color.w);
             }

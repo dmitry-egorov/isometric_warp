@@ -1,14 +1,9 @@
-﻿using Lanski.Reactive;
-using WarpSpace.Descriptions;
-using Lanski.Structures;
+﻿using WarpSpace.Descriptions;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit.Weapon
 {
     public class WeaponModel
     {
-        private readonly UnitModel _mountingUnit;
-        private readonly DamageDescription _damage;
-
         public WeaponModel(WeaponType type, UnitModel mountingUnit)
         {
             _mountingUnit = mountingUnit;
@@ -27,14 +22,14 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit.Weapon
 
         public bool Can_Fire_At(UnitModel unit)
         {
-            var target = the(unit);
+            var target = The(unit);
             
             return unit.Is_Alive 
                    && target.Is_Within_Range()
                    && target.s_Faction_Is_Hostile();
         }
 
-        private Target the(UnitModel unit) => new Target(unit, _mountingUnit);
+        private Target The(UnitModel unit) => new Target(unit, _mountingUnit);
         
         private struct Target
         {
@@ -57,5 +52,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit.Weapon
                 return source_tile.Is_Adjacent_To(targets_tile);
             }
         }
+        
+        private readonly UnitModel _mountingUnit;
+        private readonly DamageDescription _damage;
     }
 }

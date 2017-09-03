@@ -27,11 +27,11 @@ namespace WarpSpace.Unity.World.Battle.Board
             UnitCreationWiring.Wire(board, tile_components, UnitPrefab, player, _stream_of_created_units);
             TileHighlightsWiring.Wire(player, board, tile_components);
 
-            Tile.Component[,] CreateTiles() => 
+            Tile.TileComponent[,] CreateTiles() => 
                 board.Tiles.Map((tile, index) =>
                 {
                     var n = board.Tiles.GetFitNeighbours(index).Map(t => t.Landscape.Type);
-                    return Tile.Component.Create(TilePrefab, transform, tile, n, board.Tiles.GetDimensions(), player);
+                    return Tile.TileComponent.Create(TilePrefab, transform, tile, n, board.Tiles.GetDimensions(), player);
                 })
             ;
         }

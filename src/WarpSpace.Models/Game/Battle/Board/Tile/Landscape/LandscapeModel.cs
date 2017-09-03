@@ -8,7 +8,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile.Landscape
 
         public LandscapeModel(LandscapeType type)
         {
-            Type = type;//Note: can check value here
+            Type = type; //Note: can check value here
         }
 
         public bool Is_Passable_By(ChassisType chassisType)

@@ -29,8 +29,11 @@
             #pragma vertex vert
             #pragma fragment frag
 
-            uniform float _Outline;
-            uniform float4 _OutlineColor;
+            float _Outline;
+            float4 _OutlineColor;
+            
+            //Global
+            float _PixelScale;
 
             struct appdata {
                 float4 vertex : POSITION;
@@ -48,7 +51,7 @@
                 float3 norm   = mul (UNITY_MATRIX_IT_MV, float4(v.normal, 0.0)).xyz;
                 float2 offset = TransformViewToProjection(norm).xy;
              
-                o.pos = pos + float4(offset * _Outline, 0, 0);
+                o.pos = pos + float4(offset * _Outline * _PixelScale, 0, 0);
                 return o;
             }
              

@@ -37,14 +37,14 @@ namespace WarpSpace.Unity.World.Battle
                 new TileDescription(t,
                 SelectStructure(i));
 
-            UnitDescription? CreateUnitDescritpion(UnitType? arg) => arg.Select(t => new UnitDescription(t)); 
+            UnitDescription? CreateUnitDescritpion(UnitType? arg) => arg.Select(t => new UnitDescription(t, InventoryContent.InitialFor(t)));//TODO: generate random loot from description? 
             
             StructureDescription? SelectStructure(Index2D i)
             {
                 if (i == entrance.Position)
-                    return new StructureDescription(StructureType.Entrance, entrance.Orientation);
+                    return StructureDescription.Entrance(entrance.Orientation);
                 if (i == exit.Position)
-                    return new StructureDescription(StructureType.Exit, exit.Orientation);
+                    return StructureDescription.Exit(exit.Orientation);
                 
                 return null;
             }

@@ -49,12 +49,13 @@
     <Compile Include="DamageType.cs" />
     <Compile Include="Faction.cs" />
     <Compile Include="LandscapeType.cs" />
+    <Compile Include="InventoryContent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomBoardGenerator.cs" />
     <Compile Include="Spacial2D.cs" />
     <Compile Include="StructureDescription.cs" />
-    <Compile Include="StructureType.cs" />
     <Compile Include="TileDescription.cs" />
+    <Compile Include="TileHelper.cs" />
     <Compile Include="UnitDescription.cs" />
     <Compile Include="UnitType.cs" />
     <Compile Include="WeaponType.cs" />

@@ -19,6 +19,8 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile
             _player = player;
             _tile = tile;
             _landscape = landscape;
+
+            tile.Structure_Cell.Subscribe(_ => Update_the_Highlight());
         }
 
         public void Update_the_Highlight()

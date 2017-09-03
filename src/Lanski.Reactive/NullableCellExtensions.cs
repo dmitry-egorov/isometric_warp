@@ -22,6 +22,7 @@ namespace Lanski.Reactive
 
         public static ICell<T> Cell_Or_Single_Default_Ref<T>(this Slot<ICell<T>> cell_slot) where T : class => cell_slot.Value_Or(new RefCell<T>(default(T)));
         public static ICell<T> Cell_Or_Single_Default<T>(this Slot<ICell<T>> cell_slot) where T : struct => cell_slot.Value_Or(new ValueCell<T>(default(T)));
+        public static ICell<T?> Cell_Or_Single_Default_Nullable<T>(this Slot<ICell<T?>> cell_slot) where T : struct => cell_slot.Value_Or(new NullableCell<T>(default(T?)));
         public static IStream<T> Cell_Or_Empty<T>(this Slot<ICell<T>> cell_slot) where T : struct => cell_slot.Select(c => (IStream<T>)c).Value_Or(Stream.Empty<T>());
     }
 }

@@ -37,6 +37,8 @@ namespace Lanski.Structures
 
         public Slot<TResult> flat_map<TResult>(Func<T, Slot<TResult>> selector) where TResult : class => Has_a_Value(out var value) ? selector(value) : null;
         public Slot<TResult> Select<TResult>(Func<T, TResult> selector) where TResult : class => Has_a_Value(out var value) ? selector(value) : null;
+        public TResult? SelectValue<TResult>(Func<T, TResult> selector) where TResult : struct => Has_a_Value(out var value) ? selector(value) : default(TResult?);
+        public TResult? SelectManyValue<TResult>(Func<T, TResult?> selector) where TResult : struct => Has_a_Value(out var value) ? selector(value) : default(TResult?);
         
         public T Value_Or(T defaultValue) => Has_a_Value(out var value) ? value : defaultValue;
         
@@ -46,7 +48,7 @@ namespace Lanski.Structures
         {
             private readonly Slot<T> _r;
             internal MustHave(Slot<T> r) => _r = r;
-            public T Otherwise(Exception exception) => _r.Has_a_Value(out var value) ? value : throw exception;
+            public T Otherwise_Throw() => _r.Has_a_Value(out var value) ? value : throw new InvalidOperationException();
         }
     }
 }

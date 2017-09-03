@@ -54,7 +54,7 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.Landscape
             var spec = n.Center.Spec;
             var mesh = spec.Meshes.SelectBy(index);
             var elevations = CalculateElevations();
-            var orientation = TileCreationHelper.GetOrientation(index);
+            var orientation = TileHelper.GetOrientation(index);
             
             return MeshTransformer.Transform(mesh, orientation, elevations, spec.Falloff);
 

@@ -1,5 +1,4 @@
-﻿using System;
-using Lanski.Reactive;
+﻿using Lanski.Reactive;
 using Lanski.Structures;
 using WarpSpace.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
@@ -10,12 +9,9 @@ namespace WarpSpace.Models.Game.Battle.Board
     public class BoardModel
     {
         public readonly TileModel[,] Tiles;
-        private readonly Spacial2D _entrance_spacial;
         
-        private readonly RepeatAllStream<UnitAdded> _stream_of_added_units = new RepeatAllStream<UnitAdded>();
-        private readonly RepeatAllStream<UnitModel> _stream_of_destoryed_units = new RepeatAllStream<UnitModel>();
         public IStream<UnitAdded> Stream_Of_Added_Units => _stream_of_added_units;
-        public IStream<UnitModel> Stream_Of_Destroyed_Units => _stream_of_destoryed_units;
+        public IStream<UnitDestroyed> Stream_Of_Destroyed_Units => _stream_of_destoryed_units;
 
         public BoardModel(TileModel[,] tiles, Spacial2D entranceSpacial)
         {
@@ -23,82 +19,42 @@ namespace WarpSpace.Models.Game.Battle.Board
             Tiles = tiles;
         }
 
-        public void WarpInMothership()
+        public void Warp_In_the_Mothership()
         {
             var position = _entrance_spacial.Position;
             var orientation = _entrance_spacial.Orientation;
             
             var source = Tiles.Get(position);
-            var initialTile = Tiles.Get(position + orientation);
-            var mothership = new UnitModel(UnitType.Mothership, initialTile, Faction.Players);
+            var initial_tile = Tiles.Get(position + orientation);
+            var mothership = new UnitModel(UnitType.Mothership, initial_tile, Faction.Players, null);//TODO: Rememeber and pass inventory
             
             Add(mothership, source);
         }
 
-        public void AddUnit(UnitType type, Index2D position, Index2D sourcePosition, Faction faction)
+        public void Add_a_Unit(UnitType type, Index2D position, Index2D source_position, Faction faction, InventoryContent? initial_inventory_content)
         {
-            var initialTile = Tiles.Get(position);
-            var sourceTile = Tiles.Get(sourcePosition);
+            var initial_tile = Tiles.Get(position);
+            var source_tile = Tiles.Get(source_position);
             
-            var unit = new UnitModel(type, initialTile, faction);
-            Add(unit, sourceTile);
+            var unit = new UnitModel(type, initial_tile, faction, initial_inventory_content);
+            Add(unit, source_tile);
         }
 
-        public void Add(UnitModel unit, TileModel source)
+        private void Add(UnitModel unit, TileModel source)
         {
-            var wirings = new Action[0]; 
-            wirings = new[]
-            {
-                Wire_Destruction(),
-                Wire_Movement()
-            }; 
-            
+            Wire_the_Destruction();
             _stream_of_added_units.Next(new UnitAdded(unit, source));
         
-            Action Wire_Movement() => 
+            void Wire_the_Destruction()
+            {
                 unit
-                    .Current_Tile_Cell
-                    .IncludePrevious()
-                    .Subscribe(p =>
-                    {
-                        if (p.previous.Has_a_Value(out var prev))
-                            prev.ResetUnit();
-                            
-                        p.current.SetUnit(unit);
-                    });
-            
-            Action Wire_Destruction()
-            {
-                return unit
-                    .Stream_Of_Destroyed_Events
-                    .Subscribe(_ => Destroy());
-
-                void Destroy()
-                {
-                    Send_Destroyed_Event();
-                    Unwire();
-
-                    void Send_Destroyed_Event() => _stream_of_destoryed_units.Next(unit);
-
-                    void Unwire()
-                    {
-                        foreach (var wiring in wirings)
-                            wiring();
-                    }
-                }
+                    .Stream_Of_Single_Destroyed_Event
+                    .Subscribe(destroyed => _stream_of_destoryed_units.Next(destroyed));
             }
         }
-
-        public struct UnitAdded
-        {
-            public readonly UnitModel Unit;
-            public readonly TileModel SourceTile;
-
-            public UnitAdded(UnitModel unit, TileModel sourceTile)
-            {
-                Unit = unit;
-                SourceTile = sourceTile;
-            }
-        }
+        
+        private readonly RepeatAllStream<UnitDestroyed> _stream_of_destoryed_units = new RepeatAllStream<UnitDestroyed>();
+        private readonly RepeatAllStream<UnitAdded> _stream_of_added_units = new RepeatAllStream<UnitAdded>();
+        private readonly Spacial2D _entrance_spacial;
     }
 }

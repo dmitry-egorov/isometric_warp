@@ -9,16 +9,16 @@ namespace WarpSpace.Unity.World.Battle.Board
 {
     internal static class UnitCreationWiring
     {
-        public static void Wire(BoardModel board, Tile.Component[,] tile_components, GameObject prefab, PlayerModel player, IConsumer<UnitComponent> stream_of_created_units)
+        public static void Wire(BoardModel board, Tile.TileComponent[,] tile_components, GameObject prefab, PlayerModel player, IConsumer<UnitComponent> stream_of_created_units)
         {
             board
                 .Stream_Of_Added_Units
                 .Subscribe(Create_and_Wire_a_Component_For_the_Unit);
                 
-            void Create_and_Wire_a_Component_For_the_Unit(BoardModel.UnitAdded unit_added)
+            void Create_and_Wire_a_Component_For_the_Unit(UnitAdded unit_added)
             {
                 var unit = unit_added.Unit;
-                var tile = unit.Current_Tile_Cell.Value;
+                var tile = unit.Cell_of_the_Current_Tile.Value;
                 var source_tile = unit_added.SourceTile;
                 var tile_component = tile_components.Get(tile.Position);
 

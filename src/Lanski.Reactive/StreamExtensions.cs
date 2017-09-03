@@ -95,9 +95,10 @@ namespace Lanski.Reactive
         public static ICell<bool> IsInProgress<T>(this IStream<T> events, Func<T, bool> startCondition, Func<T, bool> finishCondition) => 
             new InProgressCell<T>(events, startCondition, finishCondition);
 
-        public static IStream<T> SkipEmpty<T>(this IStream<Slot<T>> stream) where T : class => stream.Where(r => r.Has_a_Value()).Select(r => r.Must_Have_a_Value().Otherwise(null));
+        public static IStream<T> SkipEmpty<T>(this IStream<Slot<T>> stream) where T : class => stream.Where(r => r.Has_a_Value()).Select(r => r.Must_Have_a_Value().Otherwise_Throw());
 
-        public static IStream<Slot<T>> DelayByOne<T>(this IStream<Slot<T>> stream) where T : class => new DelayByOneStream<T>(stream);
+        public static IStream<Slot<T>> DelayByOne<T>(this IStream<T> stream) where T : class => new DelayByOneStream<T>(stream);
+        public static IStream<Slot<T>> DelayByOne<T>(this IStream<Slot<T>> stream) where T : class => new DelayByOneSlotStream<T>(stream);
         public static IStream<(T? previous, T? current)> IncludePrevious<T>(this IStream<T?> stream) where T : struct => new PairsNullableStream<T>(stream);
         public static IStream<(Slot<T> previous, Slot<T> current)> IncludePrevious<T>(this IStream<Slot<T>> stream) where T : class => new PairsRefStream<T>(stream);
         public static IStream<(T? previous, T current)> IncludePreviousVal<T>(this IStream<T> stream) where T : struct => new PairsValStream<T>(stream);
@@ -290,9 +291,29 @@ namespace Lanski.Reactive
 
     public class DelayByOneStream<T>: IStream<Slot<T>> where T : class
     {
+        private readonly IStream<T> _stream;
+
+        public DelayByOneStream(IStream<T> stream)
+        {
+            _stream = stream;
+        }
+
+        public Action Subscribe(Action<Slot<T>> action)
+        {
+            var prev = default(Slot<T>);
+            return _stream.Subscribe(v =>
+            {
+                action(prev);
+                prev = v;
+            });
+        }
+    }
+
+    public class DelayByOneSlotStream<T>: IStream<Slot<T>> where T : class
+    {
         private readonly IStream<Slot<T>> _stream;
 
-        public DelayByOneStream(IStream<Slot<T>> stream)
+        public DelayByOneSlotStream(IStream<Slot<T>> stream)
         {
             _stream = stream;
         }

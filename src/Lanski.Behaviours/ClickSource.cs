@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace WarpSpace.UI.Common
+namespace Lanski.Behaviours
 {
     public class ClickSource : MonoBehaviour, IPointerClickHandler
     {

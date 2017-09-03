@@ -1,11 +1,12 @@
 Plan
-- show hp
-- loot
 - deploy own units
 - end turn
 - enemy ai
 - cooldowns
 - faction materials
+- multiple objects per unit
+- weapon model for the mothership
+- more weapons
 - fire weapon animation
 - destruction animation
 - multiple weapons
@@ -27,6 +28,9 @@ Plan
 
 
 done
++ loot
++ pixel perfect overlay
++ show hp
 + weapon button highlight
 + show weapon button only on selection
 + attacking

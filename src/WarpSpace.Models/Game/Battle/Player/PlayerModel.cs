@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Lanski.Reactive;
+﻿using Lanski.Reactive;
 using Lanski.Structures;
 using WarpSpace.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
@@ -10,16 +9,14 @@ namespace WarpSpace.Models.Game.Battle.Player
 {
     public class PlayerModel
     {
-        private readonly NullableCell<PlayersSelection> _selectionCell;
-        public ICell<PlayersSelection?> Selection_Cell => _selectionCell;//Value can be null
         public ICell<Slot<UnitModel>> Selected_Unit_Cell { get; }
         public ICell<Slot<WeaponModel>> Selected_Weapon_Cell { get; }
 
         public PlayerModel()
         {
-            _selectionCell = new NullableCell<PlayersSelection>(null);
-            Selected_Unit_Cell = _selectionCell.Select(x => x.SelectRef(s => s.Unit));
-            Selected_Weapon_Cell = _selectionCell.Select(x => x.SelectManyRef(s => s.WeaponSlot));
+            _selection_cell = new NullableCell<PlayersSelection>(null);
+            Selected_Unit_Cell = _selection_cell.Select(x => x.SelectRef(s => s.Unit));
+            Selected_Weapon_Cell = _selection_cell.Select(x => x.SelectManyRef(s => s.WeaponSlot));
 
             Wire_Selected_Unit_Destruction();
             
@@ -27,10 +24,10 @@ namespace WarpSpace.Models.Game.Battle.Player
             {
                 Selected_Unit_Cell
                     .SkipEmpty()
-                    .SelectMany(u => u.Stream_Of_Destroyed_Events)
-                    .Subscribe(_ => deselect());
+                    .SelectMany(u => u.Stream_Of_Single_Destroyed_Event)
+                    .Subscribe(_ => Deselect());
                     
-                void deselect() => _selectionCell.Value = null;
+                void Deselect() => _selection_cell.Value = null;
             }
         }
 
@@ -65,9 +62,7 @@ namespace WarpSpace.Models.Game.Battle.Player
             return null;
         }
 
-        public void Select_a_Unit(UnitModel unit) => 
-            _selectionCell.Value = new PlayersSelection(unit, null)
-        ;
+        public void Select_a_Unit(UnitModel unit) => _selection_cell.Value = new PlayersSelection(unit, null);
 
         public void Toggle_Weapon_Selection()
         {
@@ -83,6 +78,8 @@ namespace WarpSpace.Models.Game.Battle.Player
                 Reset_Weapon_Selection();
             }
         }
+        
+        private ICell<PlayersSelection?> Selection_Cell => _selection_cell;//Value can be null
 
         private void Select_Current_Units_Weapon()
         {
@@ -90,7 +87,7 @@ namespace WarpSpace.Models.Game.Battle.Player
                 return;
             
             var selected_units_weapon = selected_unit.Weapon;
-            _selectionCell.Value = new PlayersSelection(selected_unit, selected_units_weapon);
+            _selection_cell.Value = new PlayersSelection(selected_unit, selected_units_weapon);
         }
 
         private void Reset_Weapon_Selection()
@@ -98,7 +95,7 @@ namespace WarpSpace.Models.Game.Battle.Player
             if (!A_Unit_Is_Selected(out var selected_unit))
                 return;
             
-            _selectionCell.Value = new PlayersSelection(selected_unit, null);
+            _selection_cell.Value = new PlayersSelection(selected_unit, null);
         }
 
         private bool A_Unit_Is_Selected(out UnitModel selected_unit) => Selected_Unit_Cell.Has_a_Value(out selected_unit);
@@ -106,8 +103,8 @@ namespace WarpSpace.Models.Game.Battle.Player
         private bool A_Weapon_Is_Not_Selected() => Selected_Weapon_Cell.Does_Not_Have_a_Value(); 
         private bool There_Is_No_Selection() => Selection_Cell.Does_Not_Have_a_Value();
         private bool Can_Select(UnitModel unit) => unit.Faction == Faction.Players;
-
-        public struct PlayersSelection
+        
+        private struct PlayersSelection
         {
             public readonly UnitModel Unit;
             public readonly Slot<WeaponModel> WeaponSlot;
@@ -118,5 +115,7 @@ namespace WarpSpace.Models.Game.Battle.Player
                 WeaponSlot = weaponSlot;
             }
         }
+
+        private readonly NullableCell<PlayersSelection> _selection_cell;
     }
 }

@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using Lanski.Reactive;
+﻿using Lanski.Reactive;
 using WarpSpace.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 
@@ -7,23 +6,15 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public class ChassisModel
     {
-        private readonly ChassisType _chassisType;
-        private readonly RefCell<TileModel> _currentTile;
-        public ICell<TileModel> CurrentTile => _currentTile; //Tile is not null
-        
-        public static ChassisModel From(UnitType unitType, TileModel initialTile) => new ChassisModel(unitType.GetChassisType(), initialTile);
+        public static ChassisModel From(UnitModel unit, TileModel initial_tile) => new ChassisModel(unit, unit.Type.Get_Chassis_Type(), initial_tile);
 
-        public ChassisModel(ChassisType chassisType, TileModel initialTile)
-        {
-            _chassisType = chassisType;
-            _currentTile = new RefCell<TileModel>(initialTile);
-        }
-        
+        public ICell<TileModel> Current_Tile => _current_tile;
+
         public bool Can_Move_To(TileModel destination)
         {
-            var source = _currentTile.Value;
+            var source = _current_tile.Value;
 
-            return destination.IsPassableBy(_chassisType)
+            return destination.Is_Passable_By(_chassis_type)
                    && source.Is_Adjacent_To(destination);
         }
 
@@ -31,10 +22,28 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         {
             if (!Can_Move_To(tile))
                 return false;
+
+            var prev_tile = _current_tile.Value;
+            prev_tile.Reset_Unit();
+            tile.Set_Unit(_unit);
             
-            _currentTile.Value = tile;
+            _current_tile.Value = tile;
 
             return true;
         }
+        
+        private ChassisModel(UnitModel unit, ChassisType chassis_type, TileModel initial_tile)
+        {
+            _chassis_type = chassis_type;
+            _unit = unit;
+            
+            _current_tile = new RefCell<TileModel>(initial_tile);
+            
+            initial_tile.Set_Unit(unit);
+        }
+
+        private readonly UnitModel _unit;
+        private readonly ChassisType _chassis_type;
+        private readonly RefCell<TileModel> _current_tile;
     }
 }

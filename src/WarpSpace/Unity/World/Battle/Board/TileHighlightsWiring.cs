@@ -9,7 +9,7 @@ namespace WarpSpace.Unity.World.Battle.Board
 {
     internal static class TileHighlightsWiring
     {
-        public static void Wire(PlayerModel player, BoardModel board, Tile.Component[,] tile_components)
+        public static void Wire(PlayerModel player, BoardModel board, Tile.TileComponent[,] tile_components)
         {
             player
                 .Selected_Unit_Cell
@@ -23,9 +23,9 @@ namespace WarpSpace.Unity.World.Battle.Board
 
             board
                 .Stream_Of_Destroyed_Units
-                .Select(destroyed_unit => destroyed_unit.Current_Tile)
+                .Select(destroyed => destroyed.Location)
                 .Subscribe(Update_Highlight_Of);
-            
+
             void Update_Neighborhood_Of_Current_Tile()
             {
                 if (!player.Selected_Unit_Cell.Has_a_Value(out var selected_unit)) return;
@@ -41,9 +41,7 @@ namespace WarpSpace.Unity.World.Battle.Board
 
                 Update_Highlight_Of(prev_tile);
                 foreach (var adjacent in prev_tile.Adjacent.NotEmpty)
-                {
                     Update_Highlight_Of(adjacent);
-                }
             }
             
             void Update_Highlight_Of(TileModel tile) => 
@@ -52,7 +50,7 @@ namespace WarpSpace.Unity.World.Battle.Board
 
             IStream<Slot<TileModel>> Get_Tiles_Stream(Slot<UnitModel> selected_unit_slot) =>
                 selected_unit_slot
-                    .Select(u => u.Current_Tile_Cell.Select(x => x.AsSlot()))
+                    .Select(u => u.Cell_of_the_Current_Tile.Select(x => x.AsSlot()))
                     .Cell_Or_Single_Default()
             ;
 

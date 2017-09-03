@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.Net.Compilers.2.3.2\build\Microsoft.Net.Compilers.props" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -54,7 +53,7 @@
     <Compile Include="Unity\World\Battle\Board\Component.cs" />
     <Compile Include="Unity\World\Battle\Board\TileCreationHelper.cs" />
     <Compile Include="Unity\World\Battle\Board\TileHighlightsWiring.cs" />
-    <Compile Include="Unity\World\Battle\Board\Tile\Component.cs" />
+    <Compile Include="Unity\World\Battle\Board\Tile\TileComponent.cs" />
     <Compile Include="Unity\World\Battle\Board\Tile\HighlightElement.cs" />
     <Compile Include="Unity\World\Battle\Board\Tile\Landscape\Component.cs" />
     <Compile Include="Unity\World\Battle\Board\Tile\Landscape\HighlightType.cs" />
@@ -119,12 +118,6 @@
       <Project>{ba651769-958c-4def-b0ec-15c7a154f76b}</Project>
       <Name>WarpSpace.Models</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

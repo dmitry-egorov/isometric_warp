@@ -28,7 +28,7 @@ namespace WarpSpace.Descriptions
             }
         }
         
-        public static WeaponType GetWeaponType(this UnitType type)
+        public static WeaponType Get_Weapon_Type(this UnitType type)
         {
             switch (type)
             {
@@ -41,7 +41,7 @@ namespace WarpSpace.Descriptions
             }
         }
         
-        public static ChassisType GetChassisType(this UnitType type)
+        public static ChassisType Get_Chassis_Type(this UnitType type)
         {
             switch (type)
             {

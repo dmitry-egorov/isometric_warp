@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Lanski.Linq;
 using Lanski.Structures;
 using Lanski.UnityExtensions;
 
@@ -18,8 +17,8 @@ namespace WarpSpace.Descriptions
             var entranceSpacial = GetStructureSpacial();
             var exitSpacial = GetStructureSpacial();
 
-            var entranceStructure = new StructureDescription(StructureType.Entrance, entranceSpacial.Orientation);
-            var exitStructure = new StructureDescription(StructureType.Exit, exitSpacial.Orientation);
+            var entranceStructure = StructureDescription.Entrance(entranceSpacial.Orientation);
+            var exitStructure = StructureDescription.Exit(exitSpacial.Orientation);
 
             var tiles = types.Map((t, i) => new TileDescription(t, SelectStructure(i)));
             

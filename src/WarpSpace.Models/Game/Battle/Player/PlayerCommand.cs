@@ -18,15 +18,36 @@ namespace WarpSpace.Models.Game.Battle.Player
             Interact
         }
 
-        private PlayerCommand(Type theType) : this()
-        {
-            TheType = theType;
-        }
-
         public static PlayerCommand Fire(WeaponModel weapon, UnitModel target_unit) => new PlayerCommand(Type.Fire) { FireSlot = new FireCommand(weapon, target_unit)};
         public static PlayerCommand Select_Unit(PlayerModel player, UnitModel target_unit) => new PlayerCommand(Type.Select_Unit) { SelectUnitSlot = new SelectUnitCommand(player, target_unit)};
         public static PlayerCommand Move(UnitModel unit, TileModel target_tile) => new PlayerCommand(Type.Move) { MoveSlot = new MoveCommand(unit, target_tile)};
         public static PlayerCommand Interact(UnitModel unit, StructureModel target_structure) => new PlayerCommand(Type.Interact) { InteractSlot = new InteractCommand(unit, target_structure)};
+        
+        public void Execute()
+        {
+            switch (TheType)
+            {
+                case Type.Fire:
+                    FireSlot.Value.Execute();
+                    return;
+                case Type.Select_Unit:
+                    SelectUnitSlot.Value.Execute();
+                    return;
+                case Type.Move:
+                    MoveSlot.Value.Execute();
+                    return;
+                case Type.Interact:
+                    InteractSlot.Value.Execute();
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+        
+        private PlayerCommand(Type theType) : this()
+        {
+            TheType = theType;
+        }
 
         private struct FireCommand
         {
@@ -76,26 +97,5 @@ namespace WarpSpace.Models.Game.Battle.Player
         private SelectUnitCommand? SelectUnitSlot;
         private MoveCommand? MoveSlot;
         private InteractCommand? InteractSlot;
-
-        public void Execute()
-        {
-            switch (TheType)
-            {
-                case Type.Fire:
-                    FireSlot.Value.Execute();
-                    return;
-                case Type.Select_Unit:
-                    SelectUnitSlot.Value.Execute();
-                    return;
-                case Type.Move:
-                    MoveSlot.Value.Execute();
-                    return;
-                case Type.Interact:
-                    InteractSlot.Value.Execute();
-                    return;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
     }
 }

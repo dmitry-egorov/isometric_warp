@@ -81,5 +81,20 @@ namespace Lanski.Structures
             o = result ? nullable.Value : default(T);
             return result;
         }
+        
+        public static MustHave<T> Must_Have_a_Value<T>(this T? nullable) where T: struct => new MustHave<T>(nullable);
+
+        public struct MustHave<T>
+            where T : struct
+        {
+            private readonly T? _nullable;
+
+            public MustHave(T? nullable)
+            {
+                _nullable = nullable;
+            }
+
+            public T Otherwise_Throw() => _nullable.Has_a_Value(out var value) ? value : throw new InvalidOperationException();
+        }
     }
 }

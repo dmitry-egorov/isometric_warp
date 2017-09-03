@@ -40,7 +40,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
             }
         }
 
-        public void ScheduleMovement(Board.Tile.Component tile, Direction2D orientation)
+        public void ScheduleMovement(Board.Tile.TileComponent tile, Direction2D orientation)
         {
             var parent = tile.UnitSlot.transform;
             var rotation = orientation.ToRotation();

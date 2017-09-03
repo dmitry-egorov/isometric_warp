@@ -40,12 +40,18 @@
     <Compile Include="MapParsing\MapParsingExtensions.cs" />
     <Compile Include="MeshTransformation\MeshTransformer.cs" />
     <Compile Include="Outline\OutlineMeshBuilder.cs" />
+    <Compile Include="ReferencePixels.cs" />
+    <Compile Include="ShaderGlobalsWirer.cs" />
     <Compile Include="Spacial2DData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lanski.Geometry\Lanski.Geometry.csproj">
       <Project>{D581D1F2-8332-44D4-8799-0C0E1690635C}</Project>
       <Name>Lanski.Geometry</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.Reactive\Lanski.Reactive.csproj">
+      <Project>{227702C3-257D-432F-9AE9-7D49A34EBBDF}</Project>
+      <Name>Lanski.Reactive</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
       <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>

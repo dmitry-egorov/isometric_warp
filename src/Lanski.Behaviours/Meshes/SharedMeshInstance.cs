@@ -48,11 +48,11 @@ namespace Lanski.Behaviours.Meshes
             _subscription = FindObjectOfType<T>().MeshCell
                 .Merge(_ownMeshCell.Where(x => x == null))
                 .Subscribe(_ => UpdateMesh());
-        }
 
-        private void UpdateMesh()
-        {
-            _filter.sharedMesh = FindObjectOfType<T>().MeshCell.Value;
+            void UpdateMesh()
+            {
+                _filter.sharedMesh = FindObjectOfType<T>().MeshCell.Value;
+            }
         }
     }
 }

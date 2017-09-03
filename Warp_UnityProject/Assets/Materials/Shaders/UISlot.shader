@@ -8,6 +8,7 @@ Shader "Custom/UISlot"
         _BottomColor ("Bottom Color", Color) = (1, 1, 1, 1)
         _OutlineColor("Outline color", Color) = (1, 1, 1, 1)
         _OutlineWidth ("Outline width", Float) = 2
+        _Falloff("Falloff", Float) = 1
 	}
 	SubShader
 	{
@@ -33,11 +34,16 @@ Shader "Custom/UISlot"
 				float4 vertex : SV_POSITION;
                 fixed2 uv: TEXCOORD0;
 			};
-            
+
+            //Parameters
             fixed4 _TopColor;
             fixed4 _BottomColor;
             fixed4 _OutlineColor;
-            half _OutlineWidth;
+            float _OutlineWidth;
+            float _Falloff;
+
+            //Global
+            float _PixelPerfectScale;
 
             v2f vert (appdata v)
             {
@@ -57,7 +63,10 @@ Shader "Custom/UISlot"
 
                 fixed2 uvmasks = min(i.uv, 1.0 - i.uv) / fwidth(i.uv);
                 fixed mask = min(uvmasks.x, uvmasks.y);
-                return mask < _OutlineWidth ? _OutlineColor : gradient;
+                //return mask < (_OutlineWidth * floor(_ScreenParams.y / 600 * 2) / 2) ? _OutlineColor : gradient;
+                //return lerp(_OutlineColor, gradient, mask);
+
+                return lerp(_OutlineColor, gradient, saturate((mask - _OutlineWidth * _PixelPerfectScale) / _Falloff));
             }
 
 			ENDCG

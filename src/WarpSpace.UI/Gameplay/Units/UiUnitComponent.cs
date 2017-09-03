@@ -1,7 +1,6 @@
 ﻿using System;
-using Lanski.Geometry;
 using UnityEngine;
-using WarpSpace.Descriptions;
+using WarpSpace.Common;
 using WarpSpace.Unity.World.Battle.Unit;
 
 namespace WarpSpace.UI.Gameplay.Units
@@ -11,19 +10,25 @@ namespace WarpSpace.UI.Gameplay.Units
         private Camera _camera;
         private RectTransform _rect_transform;
         private UnitComponent _unit_component;
+        
+        private Action _scale_wiring;
+        private Action _health_wiring;
 
         public void Init(UnitComponent unitComponent)
         {
-            Wire_Moves();
-            var wiring = Wire_Health();
+            _camera = FindObjectOfType<Camera>();
+            _rect_transform = GetComponent<RectTransform>();
+            _unit_component = unitComponent;
+            
+            _scale_wiring = Wire_Scale();
+            _health_wiring = Wire_Health();
             Wire_Destroyed();
 
-            void Wire_Moves()
-            {
-                _camera = FindObjectOfType<Camera>();
-                _rect_transform = GetComponent<RectTransform>();
-                _unit_component = unitComponent;
-            }
+            Action Wire_Scale() => 
+                FindObjectOfType<ReferencePixels>()
+                .PixelPixelPerfectScaleCell
+                .Subscribe(scale => _rect_transform.localScale = new Vector3(scale, scale, 1))
+            ;
 
             Action Wire_Health()
             {
@@ -32,7 +37,9 @@ namespace WarpSpace.UI.Gameplay.Units
                 var health = unitComponent.Unit.Health;
 
                 health_component.Total = health.TotalHitPoints;
-                return health
+                
+                return 
+                    health
                     .Current_Hit_Points_Cell
                     .Subscribe(current => 
                         health_component.Current = current
@@ -42,13 +49,16 @@ namespace WarpSpace.UI.Gameplay.Units
             void Wire_Destroyed()
             {
                 unitComponent
-                    .Unit.Stream_Of_Destroyed_Events
-                    .Subscribe(_ =>
-                    {
-                        wiring();
-                        Destroy(gameObject);
-                    });
+                    .Unit
+                    .Stream_Of_Single_Destroyed_Event
+                    .Subscribe(_ => Destroy(gameObject));
             }
+        }
+
+        public void OnDestroy()
+        {
+            _health_wiring();
+            _scale_wiring();
         }
         
         public void LateUpdate()
@@ -56,35 +66,7 @@ namespace WarpSpace.UI.Gameplay.Units
             var transformPosition = _unit_component.transform.position;
             var screen_position = _camera.WorldToScreenPoint(transformPosition);
 
-            var anchoredPosition = new Vector2(Mathf.Floor(screen_position.x), Mathf.Floor(screen_position.y));
-            
-            //if(_unit_component.Unit.Faction == Faction.Players)
-            //    Debug.Log(_rect_transform.anchoredPosition - screen_position.XY());
-            
             _rect_transform.anchoredPosition = screen_position;
-            
-            //_rect_transform.anchoredPosition = anchoredPosition;
-            
-            
-            
-
-            //var x = Mathf.Floor(canvas_position.x) * _scaler.referenceResolution.x / Screen.width;
-            //var y = Mathf.Floor(canvas_position.y) * _scaler.referenceResolution.y / Screen.height;
-            //var ref_x = _scaler.referenceResolution.x;
-            //var ref_y = _scaler.referenceResolution.y;
-            //var screen_x = Screen.width;
-            //var screen_y = Screen.height;
-            //var points_per_pixel = ref_y / screen_y;
-
-            //var x = canvas_position.x * points_per_pixel;
-            //var y = canvas_position.y * points_per_pixel;
-            //var canvas_position = new Vector2(x, y);
-            //_rect_transform.anchoredPosition = canvas_position;
-            
-            //_rect_transform.position = transformPosition;
-            
         }
-        
-        
     }
 }

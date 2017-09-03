@@ -14,7 +14,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         public AdjacentRef<TileModel> Adjacent { get; private set; }
         
-        private readonly ValueCell<Slot<StructureModel>> _structure_cell = new ValueCell<Slot<StructureModel>>(null);
         public ICell<Slot<StructureModel>> Structure_Cell => _structure_cell;
 
         private readonly ValueCell<Slot<UnitModel>> _unit_cell = new ValueCell<Slot<UnitModel>>(null);
@@ -22,48 +21,43 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         
         public bool Is_Occupied => Has_a_Unit() || Has_a_Structure();
 
-        public TileModel(Index2D position, LandscapeType landscapeType)
+        public TileModel(Index2D position, LandscapeType landscape_type, StructureModelFactory structure_factory)
         {
             Position = position;
-            Landscape = new LandscapeModel(landscapeType);
-
-            Wire_Current_Unit_Destruction();
-            
-            void Wire_Current_Unit_Destruction() => 
-                Unit_Cell
-                    .SkipEmpty()
-                    .SelectMany(u => u.Stream_Of_Destroyed_Events)
-                    .Subscribe(_ => ResetUnit());
+            _structure_factory = structure_factory;
+            Landscape = new LandscapeModel(landscape_type);
         }
 
-        public void Init(AdjacentRef<TileModel> adjacentTiles)
+        public void Init(AdjacentRef<TileModel> adjacent_tiles)
         {
-            Adjacent = adjacentTiles;
+            Adjacent = adjacent_tiles;
         }
 
         public bool Has_a_Unit(out UnitModel unit) => Unit_Cell.Has_a_Value(out unit);
-
-        public bool IsPassableBy(ChassisType chassisType) => Landscape.Is_Passable_By(chassisType) && !Is_Occupied;
+        public bool Is_Passable_By(ChassisType chassis_type) => Landscape.Is_Passable_By(chassis_type) && !Is_Occupied;
         public bool Is_Adjacent_To(TileModel destination) => Position.Is_Adjacent_To(destination.Position);
         public Direction2D GetDirectionTo(TileModel destination) => Position.Direction_To(destination.Position);
         public bool Has_a_Structure(out StructureModel structure) => Structure_Cell.Has_a_Value(out structure);
         
-        public void ResetUnit()
+        public void Reset_Unit()
         {
             _unit_cell.Value = null;
         }
 
-        public void SetUnit(UnitModel model)
+        public void Set_Unit(UnitModel model)
         {
             _unit_cell.Value = model;
         }
-        
-        public void Set_Structure(Slot<StructureModel> structure)
+
+        public void Set_Structure(StructureDescription? possible_structure_desc)
         {
-            _structure_cell.Value = structure;
+            _structure_cell.Value = possible_structure_desc.SelectRef(structure_desc => _structure_factory.Create(structure_desc, this));
         }
         
         private bool Has_a_Structure() => Structure_Cell.Has_a_Value();
         private bool Has_a_Unit() => Unit_Cell.Has_a_Value();
+        
+        private readonly StructureModelFactory _structure_factory;
+        private readonly ValueCell<Slot<StructureModel>> _structure_cell = new ValueCell<Slot<StructureModel>>(null);
     }
 }

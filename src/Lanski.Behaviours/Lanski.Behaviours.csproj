@@ -47,10 +47,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClickSource.cs" />
     <Compile Include="EditorInitializable.cs" />
     <Compile Include="FPS\FpsCounter.cs" />
     <Compile Include="FPS\FpsPresenter.cs" />
     <Compile Include="Input\Drag.cs" />
+    <Compile Include="IntStringsCache.cs" />
     <Compile Include="Meshes\ISharedMeshBehaviour.cs" />
     <Compile Include="Meshes\SharedMeshInstance.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

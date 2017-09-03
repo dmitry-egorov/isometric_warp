@@ -52,6 +52,9 @@ Shader "Custom/Isometric Striped"
             float _AmbientRise;
             fixed4 _StripeColor;
             float _StripeWidth;
+            
+            //Global
+            float _PixelScale;
 
             v2f vert (appdata v)
             {
@@ -70,7 +73,7 @@ Shader "Custom/Isometric Striped"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                fixed fraction = abs(frac((i.vertex.y) * _StripeWidth));
+                fixed fraction = abs(frac(i.vertex.y * _StripeWidth / _PixelScale));
                 fixed up_degree = normalize(i.normal).y;
                 fixed4 stripe = up_degree > 0.1 && fraction < 0.5 ? _StripeColor : fixed4(0, 0, 0, 0);
                 return lerp(i.c, stripe, stripe.w);

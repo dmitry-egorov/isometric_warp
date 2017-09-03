@@ -33,7 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Common\ClickSource.cs" />
+    <Compile Include="Gameplay\Inventory\InventoryPresenter.cs" />
     <Compile Include="Gameplay\ShowOnlyWhenAUnitIsSelected.cs" />
     <Compile Include="Gameplay\Units\HealthComponent.cs" />
     <Compile Include="Gameplay\Units\UiUnitComponent.cs" />
@@ -52,6 +52,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Lanski.Behaviours\Lanski.Behaviours.csproj">
+      <Project>{062EC63A-CE31-4FB1-BF65-0F65A1B3E6FB}</Project>
+      <Name>Lanski.Behaviours</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lanski.Geometry\Lanski.Geometry.csproj">
       <Project>{D581D1F2-8332-44D4-8799-0C0E1690635C}</Project>
       <Name>Lanski.Geometry</Name>
@@ -67,6 +71,10 @@
     <ProjectReference Include="..\Lanski.UnityExtensions\Lanski.UnityExtensions.csproj">
       <Project>{56177DAE-76CF-4796-A02D-F4C0833CF22C}</Project>
       <Name>Lanski.UnityExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WarpSpace.Common\WarpSpace.Common.csproj">
+      <Project>{8151E833-B7CD-4CD5-8CE0-4B0EF66B89F3}</Project>
+      <Name>WarpSpace.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\WarpSpace.Descriptions\WarpSpace.Descriptions.csproj">
       <Project>{0127FC72-7C5D-434B-8EFE-4313ED9824E0}</Project>

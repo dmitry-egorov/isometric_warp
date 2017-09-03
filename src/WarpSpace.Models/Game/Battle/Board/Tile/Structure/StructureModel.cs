@@ -7,11 +7,11 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile.Structure
     {
         public readonly StructureDescription Description;
         public readonly IInteractor Interactor;
-        
-        public StructureModel(StructureDescription description, GameModel game, TileModel tile)
+
+        internal StructureModel(StructureDescription description, IInteractor interactor)
         {
             Description = description;
-            Interactor = Factory.From(description.Type, game, tile);
+            Interactor = interactor;
         }
     }
 }

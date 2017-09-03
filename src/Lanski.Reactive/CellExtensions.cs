@@ -5,28 +5,16 @@ namespace Lanski.Reactive
 {
     public static class CellExtensions
     {
-        public static ICell<TOut> Select<TIn, TOut>(this ICell<TIn> cell, Func<TIn, TOut> selector)
-        {
-            return new SelectCell<TIn, TOut>(cell, selector);
-        }
-        
-        public static ICell<TOut> SelectMany<TIn, TOut>(this ICell<TIn> cell, Func<TIn, ICell<TOut>> selector)
-        {
-            return new SelectManyCell<TIn, TOut>(cell, selector);
-        }
+        public static ICell<TOut> Select<TIn, TOut>(this ICell<TIn> cell, Func<TIn, TOut> selector) => new SelectCell<TIn, TOut>(cell, selector);
+
+        public static ICell<TOut> SelectMany<TIn, TOut>(this ICell<TIn> cell, Func<TIn, ICell<TOut>> selector) => new SelectManyCell<TIn, TOut>(cell, selector);
 
         public static ICell<Tuple<T1, T2>> Merge<T1, T2>(this ICell<T1> cell, ICell<T2> other) 
             where T1 : IEquatable<T1> 
-            where T2 : IEquatable<T2>
-        {
-            return new MergeCell<T1, T2>(cell, other);
-        }
+            where T2 : IEquatable<T2> => new MergeCell<T1, T2>(cell, other);
 
-        public static ICell<int> Sum(this ICell<int> cell, ICell<int> other)
-        {
-            return cell.Merge(other).Select(x => x.Item1 + x.Item2);
-        }
-
+        public static ICell<int> Sum(this ICell<int> cell, ICell<int> other) => cell.Merge(other).Select(x => x.Item1 + x.Item2);
+        
         private class SelectCell<TIn, TOut> : ICell<TOut>
         {
             private readonly ICell<TIn> _inCell;
