@@ -1,8 +1,8 @@
 ﻿using Lanski.Reactive;
 using Lanski.Structures;
+using WarpSpace.Models;
 using WarpSpace.Models.Game.Battle.Board;
 using WarpSpace.Models.Game.Battle.Board.Tile;
-using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Player;
 
 namespace WarpSpace.Unity.World.Battle.Board
@@ -11,32 +11,39 @@ namespace WarpSpace.Unity.World.Battle.Board
     {
         public static void Wire(PlayerModel player, BoardModel board, Tile.TileComponent[,] tile_components)
         {
+            //TODO: fix a bug with updating highlight (prev tile is not highlighted)
             player
                 .Selected_Unit_Cell
-                .SelectMany(Get_Tiles_Stream)
-                .DelayByOne()
-                .Subscribe(prev_tile_slot =>
+                .SelectMany(pu => pu.Select(u => u.Stream_Of_Movements).Value_Or(StreamCache.Empty_Stream_of_Unit_Movements))
+                .Subscribe(moved =>
                 {
-                    Update_Neighbourhood_Of(prev_tile_slot);
-                    Update_Neighborhood_Of_Current_Tile();
-                });
+                    Update_Neighborhood_Of(moved.Source.As_a_Tile());
+                    Update_Neighborhood_Of(moved.Destination.As_a_Tile());
+                })
+            ;
+
+            player
+                .Selected_Unit_Cell
+                .Select(pu => pu.SelectMany(u => u.Location.As_a_Tile()))
+                .IncludePrevious()
+                .Subscribe(tuple => Handle_Selection_Change(tuple.previous, tuple.current))
+            ;
 
             board
-                .Stream_Of_Destroyed_Units
-                .Select(destroyed => destroyed.Location)
-                .Subscribe(Update_Highlight_Of);
+                .Stream_Of_Unit_Destructions
+                .Select(destroyed => destroyed.Last_Location.As_a_Tile())
+                .Subscribe(Update_Neighborhood_Of)
+            ;
 
-            void Update_Neighborhood_Of_Current_Tile()
+            void Handle_Selection_Change(Slot<TileModel> previous, Slot<TileModel> current)
             {
-                if (!player.Selected_Unit_Cell.Has_a_Value(out var selected_unit)) return;
-
-                var tile = selected_unit.Current_Tile;
-                Update_Neighbourhood_Of(tile);
+                Update_Neighborhood_Of(previous);
+                Update_Neighborhood_Of(current);
             }
-            
-            void Update_Neighbourhood_Of(Slot<TileModel> prev_tile_slot)
+
+            void Update_Neighborhood_Of(Slot<TileModel> possible_tile)
             {
-                if (!prev_tile_slot.Has_a_Value(out var prev_tile))
+                if (!possible_tile.Has_a_Value(out var prev_tile))
                     return;
 
                 Update_Highlight_Of(prev_tile);
@@ -48,11 +55,6 @@ namespace WarpSpace.Unity.World.Battle.Board
                 Get_the_Highlight_Element_Of(tile).Update_the_Highlight()
             ;
 
-            IStream<Slot<TileModel>> Get_Tiles_Stream(Slot<UnitModel> selected_unit_slot) =>
-                selected_unit_slot
-                    .Select(u => u.Cell_of_the_Current_Tile.Select(x => x.AsSlot()))
-                    .Cell_Or_Single_Default()
-            ;
 
             Tile.HighlightElement Get_the_Highlight_Element_Of(TileModel tile) => 
                 tile_components.Get(tile.Position).Highlight

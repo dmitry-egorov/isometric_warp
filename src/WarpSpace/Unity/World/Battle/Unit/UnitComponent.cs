@@ -13,8 +13,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
     public class UnitComponent : MonoBehaviour
     {
         public OwnSettings Settings;
-        private Action _outline_wiring;
-        private Action _movement_wiring;
+        private Action _wirings;
 
         public Mover Mover { get; private set; }
         public UnitModel Unit { get; private set; }
@@ -35,14 +34,13 @@ namespace WarpSpace.Unity.World.Battle.Unit
 
         public void OnDestroy()
         {
-            _movement_wiring();
-            _outline_wiring();
+            _wirings();
         }
 
         private void Init(UnitModel unit, TileModel source_tile, PlayerModel player, Board.Tile.TileComponent[,] tile_components)
         {
-            var unitSettings = SelectSettings(unit.Type);
-            var factionSettings = SelectFactionSettings(unit.Faction);
+            var unitSettings = Select_Settings(unit.Type);
+            var factionSettings = Select_Faction_Settings(unit.Faction);
 
             var outline = GetComponentInChildren<OutlineComponent>();
             var filter = GetComponentInChildren<MeshComponent>();
@@ -51,8 +49,12 @@ namespace WarpSpace.Unity.World.Battle.Unit
 
             filter.Init(unitSettings.Mesh, factionSettings.Material);
             outline.Init(unitSettings.Mesh);
-            _outline_wiring = Wire_Selections_to_Outline();
-            _movement_wiring = Wire_Movements();
+            
+            transform.localRotation = source_tile.Get_Direction_To(unit.Must_Be_At_a_Tile()).To_Rotation();
+            
+            var outline_wiring = Wire_Selections_to_Outline();
+            var movement_wiring = Wire_Movements();
+            _wirings = () => { movement_wiring(); outline_wiring(); };
             
             Wire_the_Destruction();
 
@@ -78,22 +80,21 @@ namespace WarpSpace.Unity.World.Battle.Unit
             {
                 return
                     unit
-                        .Cell_of_the_Current_Tile
-                        .IncludePrevious()
-                        .Subscribe(x => MoveUnitComponent(x.previous, x.current));
+                        .Stream_Of_Movements
+                        .Subscribe(x => MoveUnitComponent(x.Source, x.Destination));
 
-                void MoveUnitComponent(Slot<TileModel> previousSlot, TileModel current)
+                void MoveUnitComponent(LocationModel previous_slot, LocationModel current_slot)
                 {
-                    if (previousSlot.Has_a_Value(out var previous))
+                    if (previous_slot.Is_a_Tile(out var previous_tile) && current_slot.Is_a_Tile(out var current_tile))
                     {
-                        var cur_tile_component = tile_components.Get(current.Position);
-                        var orientation = previous.GetDirectionTo(current);
+                        var cur_tile_component = tile_components.Get(current_tile.Position);
+                        var orientation = previous_tile.Get_Direction_To(current_tile);
 
                         Mover.ScheduleMovement(cur_tile_component, orientation);
                     }
                     else
                     {
-                        transform.localRotation = source_tile.GetDirectionTo(current).ToRotation();
+                        //TODO: Handle bays
                     }
                     
                 }
@@ -102,13 +103,13 @@ namespace WarpSpace.Unity.World.Battle.Unit
             void Wire_the_Destruction()
             {
                 unit
-                    .Stream_Of_Single_Destroyed_Event
+                    .Signal_Of_the_Destruction
                     .First()
                     .Subscribe(isAlive => Destroy(gameObject));
             }
         }
 
-        private OwnSettings.FactionsSettings.FactionSettings SelectFactionSettings(Faction unitFaction)
+        private OwnSettings.FactionsSettings.FactionSettings Select_Faction_Settings(Faction unitFaction)
         {
             switch (unitFaction)
             {
@@ -121,7 +122,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
             }
         }
 
-        private OwnSettings.UnitsSettings.UnitSettings SelectSettings(UnitType unitType)
+        private OwnSettings.UnitsSettings.UnitSettings Select_Settings(UnitType unitType)
         {
             switch (unitType)
             {

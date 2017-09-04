@@ -1,5 +1,6 @@
 Plan
 - deploy own units
+- gates have a bay
 - end turn
 - enemy ai
 - cooldowns

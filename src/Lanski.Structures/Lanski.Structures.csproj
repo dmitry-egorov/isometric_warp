@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lanski.Structures</RootNamespace>
     <AssemblyName>Lanski.Structures</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -43,17 +43,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Array2dExtensions.cs" />
+    <Compile Include="BooleanSemanticExtensions.cs" />
     <Compile Include="DictionarySemanticExtensions.cs" />
     <Compile Include="EnumerableOfNullableExtensions.cs" />
+    <Compile Include="FunctionalExtensions.cs" />
     <Compile Include="NullableExtensions.cs" />
-    <Compile Include="BooleanFlowSemanticExtensionss.cs" />
     <Compile Include="NullableSemantics.cs" />
     <Compile Include="Option.cs" />
+    <Compile Include="Or.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Semantics.cs" />
     <Compile Include="SingleValueFuncCache.cs" />
     <Compile Include="Slot.cs" />
     <Compile Include="TheVoid.cs" />
-    <Compile Include="Tuple.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lanski.Maths\Lanski.Maths.csproj">

@@ -9,7 +9,7 @@ namespace Lanski.Reactive
 
         public static ICell<TOut> SelectMany<TIn, TOut>(this ICell<TIn> cell, Func<TIn, ICell<TOut>> selector) => new SelectManyCell<TIn, TOut>(cell, selector);
 
-        public static ICell<Tuple<T1, T2>> Merge<T1, T2>(this ICell<T1> cell, ICell<T2> other) 
+        public static ICell<(T1, T2)> Merge<T1, T2>(this ICell<T1> cell, ICell<T2> other) 
             where T1 : IEquatable<T1> 
             where T2 : IEquatable<T2> => new MergeCell<T1, T2>(cell, other);
 
@@ -61,7 +61,7 @@ namespace Lanski.Reactive
         }
 
 
-        private class MergeCell<T1, T2> : ICell<Tuple<T1, T2>> 
+        private class MergeCell<T1, T2> : ICell<(T1, T2)> 
             where T1 : IEquatable<T1> 
             where T2 : IEquatable<T2>
         {
@@ -74,10 +74,10 @@ namespace Lanski.Reactive
                 _cell2 = cell2;
             }
 
-            public Action Subscribe(Action<Tuple<T1, T2>> action)
+            public Action Subscribe(Action<(T1, T2)> action)
             {
-                var sub1 = _cell1.Subscribe(x => action(new Tuple<T1, T2>(x, _cell2.Value)));
-                var sub2 = _cell2.Subscribe(x => action(new Tuple<T1, T2>(_cell1.Value, x)));
+                var sub1 = _cell1.Subscribe(x => action((x, _cell2.Value)));
+                var sub2 = _cell2.Subscribe(x => action((_cell1.Value, x)));
 
                 return () =>
                 {
@@ -86,7 +86,7 @@ namespace Lanski.Reactive
                 };
             }
 
-            public Tuple<T1, T2> Value => Tuple.From(_cell1.Value, _cell2.Value);
+            public (T1, T2) Value => (_cell1.Value, _cell2.Value);
         }
     }
 }

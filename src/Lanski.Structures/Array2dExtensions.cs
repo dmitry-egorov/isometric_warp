@@ -175,8 +175,8 @@ namespace Lanski.Structures
         public static Slot<T> TryGetRef<T>(this T[,] array, Index2D i)
             where T: class
         {
-            return i.Fits(array) ? array.Get(i) 
-                                 : default(T);
+            return i.Fits(array) ? array.Get(i).As_a_Slot() 
+                                 : Slot.Empty<T>();
         }
         
         public static T? TryGet<T>(this T[,] array, Index2D i)
@@ -398,7 +398,7 @@ namespace Lanski.Structures
             return dr == 0 && dc == 1 || dr == 1 && dc == 0;
         }
 
-        public Direction2D Direction_To(Index2D other)
+        [Pure] public Direction2D Direction_To(Index2D other)
         {
             var dr = other.Row - Row;
             var dc = other.Column - Column;
@@ -409,10 +409,10 @@ namespace Lanski.Structures
             if (dr > 0)
                 return Direction2D.Down;
 
-            if (dc < 0) 
-                return Direction2D.Left;
+            if (dc > 0) 
+                return Direction2D.Right;
             
-            return Direction2D.Right;
+            return Direction2D.Left;
         }
     }
 

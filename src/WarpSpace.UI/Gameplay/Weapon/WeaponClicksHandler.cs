@@ -26,7 +26,6 @@ namespace WarpSpace.UI.Gameplay.Weapon
             void HandleClick(Slot<PlayerModel> player) => 
                 player
                 .Must_Have_a_Value()
-                .Otherwise_Throw()
                 .Toggle_Weapon_Selection()
             ;
         }

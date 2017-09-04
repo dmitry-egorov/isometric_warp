@@ -20,7 +20,7 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile
             _tile = tile;
             _landscape = landscape;
 
-            tile.Structure_Cell.Subscribe(_ => Update_the_Highlight());
+            tile.Site_Cell.Subscribe(_ => Update_the_Highlight());
         }
 
         public void Update_the_Highlight()
@@ -29,32 +29,23 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile
 
             _landscape.Set_the_Highlight_To(highlight_type);
             
-            HighlightType Get_the_Highlight_Type()
-            {
-                if (A_Unit_Is_Selected(out var selected_unit) && selected_unit.Is_At(_tile))
-                    return Unit_Placeholder;
-                
-                var command_slot = _player.Try_Get_Command_At(_tile);
-
-                if (!command_slot.Has_a_Value(out var command))
-                    return None;
-
-                switch (command.TheType)
-                {
-                    case PlayerCommand.Type.Fire:
-                        return Fire_Weapon;
-                    case PlayerCommand.Type.Move:
-                        return Move;
-                    case PlayerCommand.Type.Interact:
-                        return Interaction;
-                    default:
-                        return None;
-                }
-            }
-
-            bool A_Unit_Is_Selected(out UnitModel selected_unit) => 
-                _player.Selected_Unit_Cell.Has_a_Value(out selected_unit)
+            HighlightType Get_the_Highlight_Type() =>
+                  Selected_Unit_Is_At_the_Tile()              ? Unit_Placeholder
+                : !Has_A_Command_At_the_Tile(out var command) ? None  
+                : command.Is_Fire()                           ? Fire_Weapon
+                : command.Is_Move()                           ? Move 
+                : command.Is_Interact()                       ? Interaction 
+                                                              : None
             ;
         }
+
+        private bool Has_A_Command_At_the_Tile(out Command command) => 
+            _player.Possible_Command_At(_tile).Has_a_Value(out command)
+        ;
+
+        private bool Selected_Unit_Is_At_the_Tile() => 
+            _player.Selected_Unit_Cell.Has_a_Value(out var selected_unit) 
+            && selected_unit.Is_At(_tile)
+        ;
     }
 }

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WarpSpace.Descriptions</RootNamespace>
     <AssemblyName>WarpSpace.Descriptions</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -37,10 +37,6 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\lib\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoardDescription.cs" />
@@ -51,7 +47,6 @@
     <Compile Include="LandscapeType.cs" />
     <Compile Include="InventoryContent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandomBoardGenerator.cs" />
     <Compile Include="Spacial2D.cs" />
     <Compile Include="StructureDescription.cs" />
     <Compile Include="TileDescription.cs" />
@@ -64,10 +59,6 @@
     <ProjectReference Include="..\Lanski.Linq\Lanski.Linq.csproj">
       <Project>{044D53C7-AFD3-4FD0-9E0D-63FF7CD1DFC0}</Project>
       <Name>Lanski.Linq</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Lanski.Sharp7\Lanski.Sharp7.csproj">
-      <Project>{8c681d57-a09d-4f42-a6ec-81e2e0ffa882}</Project>
-      <Name>Lanski.Sharp7</Name>
     </ProjectReference>
     <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
       <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>

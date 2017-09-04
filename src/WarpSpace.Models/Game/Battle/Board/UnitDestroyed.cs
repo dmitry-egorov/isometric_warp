@@ -1,16 +1,16 @@
-﻿using WarpSpace.Models.Game.Battle.Board.Tile;
+﻿using WarpSpace.Models.Game.Battle.Board.Unit;
 
-namespace WarpSpace.Models.Game.Battle.Board.Unit
+namespace WarpSpace.Models.Game.Battle.Board
 {
     public struct UnitDestroyed
     {
         public readonly UnitModel Unit;
-        public readonly TileModel Location;
+        public readonly LocationModel Last_Location;
 
-        public UnitDestroyed(UnitModel unit, TileModel location)
+        public UnitDestroyed(UnitModel unit, LocationModel last_location)
         {
             Unit = unit;
-            Location = location;
+            Last_Location = last_location;
         }
     }
 }

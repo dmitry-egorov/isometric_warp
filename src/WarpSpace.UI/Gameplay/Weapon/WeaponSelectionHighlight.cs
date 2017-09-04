@@ -3,6 +3,7 @@ using Lanski.Structures;
 using UnityEngine;
 using UnityEngine.UI;
 using WarpSpace.Models.Game.Battle.Board.Unit.Weapon;
+using WarpSpace.Models.Game.Battle.Board.Weapon;
 
 namespace WarpSpace.UI.Gameplay.Weapon
 {
@@ -21,8 +22,7 @@ namespace WarpSpace.UI.Gameplay.Weapon
             void Wire_Player_Slot_Variable() =>
                 battle
                     .Player_Cell
-                    .SkipEmpty()
-                    .SelectMany(p => p.Selected_Weapon_Cell)
+                    .SelectMany(pp => pp.Select(p => p.Selected_Weapon_Cell).Cell_Or_Single_Default())
                     .Subscribe(Handle_Weapon_Selection)
             ;
             

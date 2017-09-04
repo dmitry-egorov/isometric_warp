@@ -64,14 +64,14 @@ namespace Lanski.Reactive
             return channel;
         }
 
-        public static void PublishTo<T>(this IStream<T> stream, IConsumer<T> consumer)
+        public static Action PublishTo<T>(this IStream<T> stream, IConsumer<T> consumer)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
             if (consumer == null)
                 throw new ArgumentNullException(nameof(consumer));
             
-            stream.Subscribe(consumer.Next);
+            return stream.Subscribe(consumer.Next);
         }
 
         public static IStream<T> First<T>(this IStream<T> stream, Func<T, bool> filter)
@@ -95,7 +95,13 @@ namespace Lanski.Reactive
         public static ICell<bool> IsInProgress<T>(this IStream<T> events, Func<T, bool> startCondition, Func<T, bool> finishCondition) => 
             new InProgressCell<T>(events, startCondition, finishCondition);
 
-        public static IStream<T> SkipEmpty<T>(this IStream<Slot<T>> stream) where T : class => stream.Where(r => r.Has_a_Value()).Select(r => r.Must_Have_a_Value().Otherwise_Throw());
+        public static IStream<T> Skip<T>(this IStream<T> stream, int count) => new SkipStream<T>(stream, count);
+
+        public static IStream<T> SkipEmpty<T>(this IStream<Slot<T>> stream) where T : class => 
+            stream
+                .Where(r => r.Has_a_Value())
+                .Select(r => r.Must_Have_a_Value())
+        ;
 
         public static IStream<Slot<T>> DelayByOne<T>(this IStream<T> stream) where T : class => new DelayByOneStream<T>(stream);
         public static IStream<Slot<T>> DelayByOne<T>(this IStream<Slot<T>> stream) where T : class => new DelayByOneSlotStream<T>(stream);
@@ -103,6 +109,8 @@ namespace Lanski.Reactive
         public static IStream<(Slot<T> previous, Slot<T> current)> IncludePrevious<T>(this IStream<Slot<T>> stream) where T : class => new PairsRefStream<T>(stream);
         public static IStream<(T? previous, T current)> IncludePreviousVal<T>(this IStream<T> stream) where T : struct => new PairsValStream<T>(stream);
         public static IStream<(Slot<T> previous, T current)> IncludePrevious<T>(this IStream<T> stream) where T : class => new PairsStream<T>(stream);
+
+        public static Action<T> Invocation<T>(this IConsumer<T> consumer) => x => consumer.Next(x);
 
         public class InProgressCell<T> : ICell<bool>
         {
@@ -240,19 +248,11 @@ namespace Lanski.Reactive
             public Action Subscribe(Action<T> action)
             {
                 var unsubscribe = false;
-                Action s = null;
+                Action s = () => unsubscribe = true;
                 s = _inStream.Subscribe(x =>
                 {
                     action(x);
-
-                    if (s != null)
-                    {
-                        s();
-                    }
-                    else
-                    {
-                        unsubscribe = true;
-                    }
+                    s();
                 });
 
                 if (unsubscribe)
@@ -304,7 +304,7 @@ namespace Lanski.Reactive
             return _stream.Subscribe(v =>
             {
                 action(prev);
-                prev = v;
+                prev = v.As_a_Slot();
             });
         }
     }
@@ -344,7 +344,7 @@ namespace Lanski.Reactive
             return _stream.Subscribe(v =>
             {
                 action((prev, v));
-                prev = v;
+                prev = v.As_a_Slot();
             });
         }
     }
@@ -405,6 +405,36 @@ namespace Lanski.Reactive
             {
                 action((prev, v));
                 prev = v;
+            });
+        }
+    }
+
+    public class SkipStream<T> : IStream<T>
+    {
+        private readonly IStream<T> _stream;
+        private readonly int _count;
+
+        public SkipStream(IStream<T> stream, int count)
+        {
+            _stream = stream;
+            _count = count;
+        }
+
+        public Action Subscribe(Action<T> action)
+        {
+            var i = 0;
+
+            return _stream.Subscribe(item =>
+            {
+                if (i < _count)
+                {
+                    i++;
+                }
+                else
+                {
+                    action(item);
+                }
+
             });
         }
     }

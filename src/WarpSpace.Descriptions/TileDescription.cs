@@ -3,12 +3,12 @@
     public struct TileDescription
     {
         public readonly LandscapeType Type;
-        public readonly StructureDescription? Structure;
+        public readonly StructureDescription? Initial_Structure;
 
-        public TileDescription(LandscapeType type, StructureDescription? structure)
+        public TileDescription(LandscapeType type, StructureDescription? initial_structure)
         {
             Type = type;
-            Structure = structure;
+            Initial_Structure = initial_structure;
         }
 
         public bool Equals(TileDescription other)

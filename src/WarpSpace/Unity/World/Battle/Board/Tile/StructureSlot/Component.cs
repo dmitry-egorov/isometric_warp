@@ -1,11 +1,9 @@
 ﻿using System;
-using Lanski.Structures;
 using Lanski.UnityExtensions;
 using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
-using WarpSpace.Models.Game.Battle.Board.Tile.Structure;
 
 namespace WarpSpace.Unity.World.Battle.Board.Tile.StructureSlot
 {
@@ -15,19 +13,19 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.StructureSlot
 
         public void Init(TileModel tile)
         {
-            tile.Structure_Cell.Subscribe(CreateStructure);
+            tile.Site_Cell.Subscribe(CreateStructure);
         }
 
-        private void CreateStructure(Slot<StructureModel> possible_structure)
+        private void CreateStructure(TileSite tile_site)
         {
             gameObject.DestroyChildren();
             
-            if (!possible_structure.Has_a_Value(out var structure))
+            if (!tile_site.Is_a_Structure(out var structure))
                 return;
 
             var description = structure.Description;
             var prefab = GetPrefab(description.TheType);
-            var rotation = description.Orientation.ToRotation();
+            var rotation = description.Orientation.To_Rotation();
 
             var structure_component = Instantiate(prefab, transform);
             structure_component.transform.localRotation = rotation;

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
 using Lanski.Geometry;
-using Lanski.Reactive;
 using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
@@ -18,7 +16,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
             
         private readonly Queue<MovementTarget> _movementQueue = new Queue<MovementTarget>(16);
 
-        private MovementTarget? _currentTarget;
+        private Slot<MovementTarget> _currentTarget;
         private float _speed;
         private float _angularSpeed;
 
@@ -43,7 +41,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
         public void ScheduleMovement(Board.Tile.TileComponent tile, Direction2D orientation)
         {
             var parent = tile.UnitSlot.transform;
-            var rotation = orientation.ToRotation();
+            var rotation = orientation.To_Rotation();
             var target = new MovementTarget(parent, Vector3.zero, rotation);
 
             _movementQueue.Enqueue(target);
@@ -79,8 +77,8 @@ namespace WarpSpace.Unity.World.Battle.Unit
                     There_Is_a_Target(out var current_target) 
                     && current_target.Rotation == _movementQueue.Peek().Rotation;
                     
-                void Update_Target_From_the_Queue() => _currentTarget = _movementQueue.Dequeue();
-                bool there_Is_No_Target() => _currentTarget.doesnt_have_a_value();
+                void Update_Target_From_the_Queue() => _currentTarget = _movementQueue.Dequeue().As_a_Slot();
+                bool there_Is_No_Target() => _currentTarget.Has_Nothing();
             }
 
                 
@@ -149,7 +147,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
                 if (dr != 0f) 
                     return;
                     
-                _currentTarget = null;
+                _currentTarget = Slot.Empty<MovementTarget>();
                 Update();
             }
 

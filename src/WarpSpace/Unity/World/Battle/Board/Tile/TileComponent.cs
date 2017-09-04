@@ -21,6 +21,7 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile
 
         private void Init(TileModel tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, PlayerModel player)
         {
+            _tile = tile;
             var position = tile.Position;
 
             transform.localPosition = GetPosition(position, dimensions);
@@ -48,9 +49,8 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile
                 .Subscribe(() => player.Execute_Command_At(tile));
         }
 
-        private static Vector3 GetPosition(Index2D i, Dimensions2D dimensions)
-        {
-            return new Vector3(i.Column - dimensions.Columns * 0.5f, 0, dimensions.Rows * 0.5f - i.Row);
-        }
+        private static Vector3 GetPosition(Index2D i, Dimensions2D dimensions) => new Vector3(i.Column - dimensions.Columns * 0.5f, 0, dimensions.Rows * 0.5f - i.Row);
+        
+        private TileModel _tile;//For debug
     }
 }

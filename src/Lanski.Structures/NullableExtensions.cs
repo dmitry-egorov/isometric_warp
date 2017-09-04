@@ -18,12 +18,6 @@ namespace Lanski.Structures
                 action(nullable);
         }
         
-        public static bool Is<T>(this T nullable, Func<T, bool> selector)
-            where T : class
-        {
-            return nullable.SelectValue(selector).GetValueOrDefault(false);
-        }
-        
         public static TResult? SelectValue<T, TResult>(this T nullable, Func<T, TResult> selector)
             where T : class 
             where TResult: struct 
@@ -55,7 +49,7 @@ namespace Lanski.Structures
             where T : struct
             where TResult: class 
         => 
-            nullable.HasValue ? selector(nullable.Value) : default(Slot<TResult>)
+            nullable.HasValue ? selector(nullable.Value).As_a_Slot() : default(Slot<TResult>)
         ;
 
         public static TResult? Select<T, TResult>(this T? nullable, Func<T, TResult> selector)
@@ -66,11 +60,8 @@ namespace Lanski.Structures
         }
 
         public static T GetValueOr<T>(this T? nullable, Func<T> defaultFactory)
-            where T : struct
-        {
-            return nullable ?? defaultFactory();
-        }
-        
+            where T : struct => nullable ?? defaultFactory();
+
         public static bool doesnt_have_a_value<T>(this T? nullable) where T: struct => !nullable.Has_a_Value();
         public static bool Has_a_Value<T>(this T? nullable) where T: struct => nullable != null;
         public static bool doesnt_contain_a<T>(this T? nullable, out T v) where T : struct => !nullable.Has_a_Value(out v);
@@ -82,19 +73,10 @@ namespace Lanski.Structures
             return result;
         }
         
-        public static MustHave<T> Must_Have_a_Value<T>(this T? nullable) where T: struct => new MustHave<T>(nullable);
-
-        public struct MustHave<T>
-            where T : struct
-        {
-            private readonly T? _nullable;
-
-            public MustHave(T? nullable)
-            {
-                _nullable = nullable;
-            }
-
-            public T Otherwise_Throw() => _nullable.Has_a_Value(out var value) ? value : throw new InvalidOperationException();
-        }
+        public static T Must_Have_a_Value<T>(this T? nullable) where T: struct => 
+            nullable.Has_a_Value(out var value) 
+                ? value 
+                : throw new InvalidOperationException()
+        ;
     }
 }

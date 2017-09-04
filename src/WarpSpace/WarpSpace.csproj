@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WarpSpace</RootNamespace>
     <AssemblyName>WarpSpace</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -50,6 +50,7 @@
     <Compile Include="Experiment\TileTransformer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Unity\DebugComponent.cs" />
+    <Compile Include="Unity\UnityRandom.cs" />
     <Compile Include="Unity\World\Battle\Board\Component.cs" />
     <Compile Include="Unity\World\Battle\Board\TileCreationHelper.cs" />
     <Compile Include="Unity\World\Battle\Board\TileHighlightsWiring.cs" />

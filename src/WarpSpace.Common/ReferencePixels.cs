@@ -11,8 +11,11 @@ namespace WarpSpace.Common
         
         private ICell<float> _pixel_perfect_scale_cell;
         private ValueCell<float> _pixel_scale_cell;
+
+        public float PixelPerfectScale => PixelPerfectScaleCell.Value;
+        public float PixelScale => PixelScaleCell.Value;
         
-        public ICell<float> PixelPixelPerfectScaleCell
+        public ICell<float> PixelPerfectScaleCell
         {
             get
             {
@@ -21,7 +24,7 @@ namespace WarpSpace.Common
             }
         }
         
-        public ICell<float> PixelPixelScaleCell
+        public ICell<float> PixelScaleCell
         {
             get
             {
@@ -45,7 +48,7 @@ namespace WarpSpace.Common
             _changes = new ChangeStream<float, int>();
             _pixel_scale_cell = new ValueCell<float>(Calculate_Pixel_Perfect_Scale());
             _changes.Subscribe(() => _pixel_scale_cell.Value = Calculate_Pixel_Perfect_Scale());
-            _pixel_perfect_scale_cell = _pixel_scale_cell.Select(scale => Mathf.Floor(scale * 2f) / 2f);
+            _pixel_perfect_scale_cell = _pixel_scale_cell.Select(scale => Mathf.Max(1f, Mathf.Floor(scale)));
         }
 
 

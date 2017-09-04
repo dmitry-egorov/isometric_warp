@@ -8,7 +8,11 @@ namespace Lanski.Reflection
     {
         public static bool IsToStringOverriden(this Type type)
         {
-            var declaringType = type.GetMethod("ToString").DeclaringType;
+            var methodInfo = type.GetMethod("ToString");
+            if (methodInfo == null)
+                return false;
+            
+            var declaringType = methodInfo.DeclaringType;
             return declaringType != typeof(object) && declaringType != typeof(ValueType);
         }
         

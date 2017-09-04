@@ -12,14 +12,14 @@ namespace WarpSpace.Unity.World.Battle.Board
         public static void Wire(BoardModel board, Tile.TileComponent[,] tile_components, GameObject prefab, PlayerModel player, IConsumer<UnitComponent> stream_of_created_units)
         {
             board
-                .Stream_Of_Added_Units
+                .Stream_Of_Unit_Creations
                 .Subscribe(Create_and_Wire_a_Component_For_the_Unit);
                 
-            void Create_and_Wire_a_Component_For_the_Unit(UnitAdded unit_added)
+            void Create_and_Wire_a_Component_For_the_Unit(UnitCreated unit_added)
             {
                 var unit = unit_added.Unit;
-                var tile = unit.Cell_of_the_Current_Tile.Value;
-                var source_tile = unit_added.SourceTile;
+                var tile = unit.Location.Must_Be_a_Tile();//TODO: handle bays
+                var source_tile = unit_added.Initial_Location.Must_Be_a_Tile();//TODO: handle bays
                 var tile_component = tile_components.Get(tile.Position);
 
                 var unit_component = UnitComponent.Create(prefab, tile_component.UnitSlot.transform, unit, source_tile, tile_components, player);

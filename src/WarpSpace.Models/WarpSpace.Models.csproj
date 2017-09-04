@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WarpSpace.Models</RootNamespace>
     <AssemblyName>WarpSpace.Models</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -43,30 +43,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Debug.cs" />
+    <Compile Include="Game\Battle\Board\Structure\Interactor.cs" />
+    <Compile Include="Game\Battle\Board\Unit\ChangeSignal.cs" />
+    <Compile Include="StreamCache.cs" />
     <Compile Include="Game\Battle\Board\BoardModel.cs" />
-    <Compile Include="Game\Battle\Board\Tile\Landscape\LandscapeModel.cs" />
-    <Compile Include="Game\Battle\Board\Tile\Structure\Interactors\DebrieInteractor.cs" />
-    <Compile Include="Game\Battle\Board\Tile\Structure\StructureModelFactory.cs" />
+    <Compile Include="Game\Battle\Board\Structure\StructureDestroyed.cs" />
+    <Compile Include="Game\Battle\Board\Structure\StructureModel.cs" />
+    <Compile Include="Game\Battle\Board\Structure\InteractorFactory.cs" />
+    <Compile Include="Game\Battle\Board\Tile\LandscapeModel.cs" />
     <Compile Include="Game\Battle\Board\Tile\TileModel.cs" />
-    <Compile Include="Game\Battle\Board\Tile\Structure\Interactors\Empty.cs" />
-    <Compile Include="Game\Battle\Board\Tile\Structure\Interactors\Exiter.cs" />
-    <Compile Include="Game\Battle\Board\Tile\Structure\Interactors\IInteractor.cs" />
-    <Compile Include="Game\Battle\Board\Tile\Structure\Interactors\InteractorBase.cs" />
-    <Compile Include="Game\Battle\Board\Tile\Structure\StructureModel.cs" />
-    <Compile Include="Game\Battle\Board\UnitAdded.cs" />
+    <Compile Include="Game\Battle\Board\Tile\TileSite.cs" />
+    <Compile Include="Game\Battle\Board\Tile\UnitMoved.cs" />
+    <Compile Include="Game\Battle\Board\UnitCreated.cs" />
     <Compile Include="Game\Battle\Board\UnitDestroyed.cs" />
+    <Compile Include="Game\Battle\Board\Unit\BayModel.cs" />
     <Compile Include="Game\Battle\Board\Unit\ChassisModel.cs" />
-    <Compile Include="Game\Battle\Board\Unit\DestructorModel.cs" />
     <Compile Include="Game\Battle\Board\Unit\HealthModel.cs" />
     <Compile Include="Game\Battle\Board\Unit\InventoryModel.cs" />
     <Compile Include="Game\Battle\Board\Unit\UnitModel.cs" />
     <Compile Include="Game\Battle\BattleFactory.cs" />
     <Compile Include="Game\Battle\BattleModel.cs" />
-    <Compile Include="Game\Battle\Board\Unit\Weapon\WeaponModel.cs" />
-    <Compile Include="Game\Battle\Player\PlayerCommand.cs" />
+    <Compile Include="Game\Battle\Board\Unit\LocationModel.cs" />
+    <Compile Include="Game\Battle\Board\Weapon\WeaponModel.cs" />
+    <Compile Include="Game\Battle\Player\Command.cs" />
     <Compile Include="Game\Battle\Player\PlayerModel.cs" />
+    <Compile Include="Game\Battle\RandomBoardGenerator.cs" />
     <Compile Include="Game\GameModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Randomness\IRandom.cs" />
+    <Compile Include="Randomness\RandomExtensions.cs" />
+    <Compile Include="Randomness\RandomnessExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lanski.Linq\Lanski.Linq.csproj">

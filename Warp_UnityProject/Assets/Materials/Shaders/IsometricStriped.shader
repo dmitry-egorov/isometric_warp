@@ -38,7 +38,7 @@ Shader "Custom/Isometric Striped"
 				float4 vertex : SV_POSITION;
                 fixed4 c: COLOR;
                 float3 normal: NORMAL;
-                float3 wpos: TEXCOORD1;
+                float3 wpos: TEXCOORD0;
 			};
             
             fixed3 _Color;

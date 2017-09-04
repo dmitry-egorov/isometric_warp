@@ -35,7 +35,7 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.Water
 
             Quaternion GetRotation()
             {
-                return TileHelper.GetOrientation(index).ToRotation();
+                return TileHelper.GetOrientation(index).To_Rotation();
             }
         }
         

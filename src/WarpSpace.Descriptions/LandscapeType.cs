@@ -56,14 +56,6 @@ namespace WarpSpace.Descriptions
         Free
     }
 
-    public static class LandscapeTypeEx
-    {
-        public static LandscapeType Random()
-        {
-            return (LandscapeType)UnityEngine.Random.Range(0, 4);
-        }
-    }
-    
     public enum LandscapeType
     {
         Mountain,

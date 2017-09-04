@@ -1,4 +1,6 @@
-﻿namespace WarpSpace.Models.Game.Battle.Board.Unit.Weapon
+﻿using WarpSpace.Models.Game.Battle.Board.Unit.Weapon;
+
+namespace WarpSpace.Descriptions
 {
     public struct DamageDescription
     {

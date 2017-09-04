@@ -43,7 +43,7 @@ namespace WarpSpace.Unity.World.Battle
 
             var game = Create_the_Game();
             Wire_Board_Component_to_the_Game();
-            _gameCell.Value = game;
+            _gameCell.Value = game.As_a_Slot();
 
             Start_the_Game();
 
@@ -60,14 +60,16 @@ namespace WarpSpace.Unity.World.Battle
                     PredefinedBoards
                         .Nullable
                         .Select(x => x.GetPredefinedBoard())
-                        .GetValueOr(RandomBoardGenerator.GenerateRandomMap);
+                        .GetValueOr(GenerateRandomMap);
+
+                BoardDescription GenerateRandomMap() => new RandomBoardGenerator(new UnityRandom()).GenerateRandomMap();
             }
             
             void Wire_Board_Component_to_the_Game()
             {
                 game.Current_Battle.Subscribe(battle_ref =>
                 {
-                    if (battle_ref.doesnt_have(out var battle))
+                    if (battle_ref.Doesnt_Have(out var battle))
                         return;
                     
                     board.Init(battle.Board, battle.Player);
@@ -86,7 +88,7 @@ namespace WarpSpace.Unity.World.Battle
                 return;
             _initialized = true;
             
-            _gameCell = new ValueCell<Slot<GameModel>>(null);
+            _gameCell = ValueCellExtensions.Empty<GameModel>();
             Player_Cell = Game_Cell.SelectMany(gc => gc.Select(g => g.Current_Player).Cell_Or_Single_Default());
             Battle_Cell = Game_Cell.SelectMany(gc => gc.Select(g => g.Current_Battle).Cell_Or_Single_Default());
         }

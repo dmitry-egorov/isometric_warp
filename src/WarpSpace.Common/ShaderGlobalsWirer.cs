@@ -26,11 +26,11 @@ namespace WarpSpace.Common
             var reference = FindObjectOfType<ReferencePixels>();
             
             reference
-                .PixelPixelPerfectScaleCell
+                .PixelPerfectScaleCell
                 .Subscribe(scale => Shader.SetGlobalFloat("_PixelPerfectScale", scale));
 
             reference
-                .PixelPixelScaleCell
+                .PixelScaleCell
                 .Subscribe(scale => Shader.SetGlobalFloat("_PixelScale", scale));
         }
     }

@@ -17,7 +17,7 @@ namespace WarpSpace.Models.Game
         public GameModel(BoardDescription boardDescription)
         {
             _boardDescription = boardDescription;
-            _currentBattle = new ValueCell<Slot<BattleModel>>(null);
+            _currentBattle = ValueCellExtensions.Empty<BattleModel>();
             Current_Player = _currentBattle.Select(b => b.Select(x => x.Player));
         }
 
@@ -30,7 +30,7 @@ namespace WarpSpace.Models.Game
         {
             var battle = BattleFactory.From(_boardDescription, this);
 
-            _currentBattle.Value = battle;
+            _currentBattle.Value = battle.As_a_Slot();
             
             battle.Start();
         }

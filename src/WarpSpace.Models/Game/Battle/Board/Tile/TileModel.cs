@@ -1,8 +1,7 @@
 ﻿using Lanski.Reactive;
 using Lanski.Structures;
 using WarpSpace.Descriptions;
-using WarpSpace.Models.Game.Battle.Board.Tile.Landscape;
-using WarpSpace.Models.Game.Battle.Board.Tile.Structure;
+using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Models.Game.Battle.Board.Tile
@@ -14,18 +13,23 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         public AdjacentRef<TileModel> Adjacent { get; private set; }
         
-        public ICell<Slot<StructureModel>> Structure_Cell => _structure_cell;
+        public ICell<TileSite> Site_Cell => _site_cell;
 
-        private readonly ValueCell<Slot<UnitModel>> _unit_cell = new ValueCell<Slot<UnitModel>>(null);
-        public ICell<Slot<UnitModel>> Unit_Cell => _unit_cell;
-        
-        public bool Is_Occupied => Has_a_Unit() || Has_a_Structure();
+        public bool Is_Occupied => Site.Is_Occupied();
 
-        public TileModel(Index2D position, LandscapeType landscape_type, StructureModelFactory structure_factory)
+        public TileModel(Index2D position, TileDescription desc, InteractorFactory interactor_factory)
         {
             Position = position;
-            _structure_factory = structure_factory;
-            Landscape = new LandscapeModel(landscape_type);
+            _interactor_factory = interactor_factory;
+            Landscape = new LandscapeModel(desc.Type);
+
+            _site_cell = new ValueCell<TileSite>(Create_Site());
+            
+            TileSite Create_Site() => 
+                desc.Initial_Structure.Has_a_Value(out var structure_description) 
+                ? Create_Structure_Site(structure_description) 
+                : Create_Unit_Slot_Site()
+            ;
         }
 
         public void Init(AdjacentRef<TileModel> adjacent_tiles)
@@ -33,31 +37,51 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
             Adjacent = adjacent_tiles;
         }
 
-        public bool Has_a_Unit(out UnitModel unit) => Unit_Cell.Has_a_Value(out unit);
+        public LocationModel Must_Have_a_Location() => Site.Must_Be_a_Unit_Slot();
+        public bool Has_a_Unit_Slot(out LocationModel unit) => Site.Is_a_Unit_Slot(out unit);
+        public bool Has_a_Unit(out UnitModel unit) => Site.Has_a_Unit(out unit);
         public bool Is_Passable_By(ChassisType chassis_type) => Landscape.Is_Passable_By(chassis_type) && !Is_Occupied;
         public bool Is_Adjacent_To(TileModel destination) => Position.Is_Adjacent_To(destination.Position);
-        public Direction2D GetDirectionTo(TileModel destination) => Position.Direction_To(destination.Position);
-        public bool Has_a_Structure(out StructureModel structure) => Structure_Cell.Has_a_Value(out structure);
-        
-        public void Reset_Unit()
+        public Direction2D Get_Direction_To(TileModel destination) => Position.Direction_To(destination.Position);
+        public bool Has_a_Structure(out StructureModel structure) => Site.Is_a_Structure(out structure);
+
+        internal void Create_Debris(InventoryContent? inventory_content)
         {
-            _unit_cell.Value = null;
+            var debris = StructureDescription.Debris(TileHelper.GetOrientation(Position), inventory_content);
+            Set_Structure(debris);
+        }
+        
+        internal void Reset_Structure()
+        {
+            Site.Is_a_Structure().Otherwise_Throw("Can't reset structure on a tile, since the tile doesn't conatin a structure");
+            Site = Create_Unit_Slot_Site();
         }
 
-        public void Set_Unit(UnitModel model)
+        private TileSite Site
         {
-            _unit_cell.Value = model;
+            get => _site_cell.Value;
+            set => _site_cell.Value = value;
         }
 
-        public void Set_Structure(StructureDescription? possible_structure_desc)
+        private void Set_Structure(StructureDescription debris)
         {
-            _structure_cell.Value = possible_structure_desc.SelectRef(structure_desc => _structure_factory.Create(structure_desc, this));
+            Site.Is_Empty().Otherwise_Throw("Site must be empty before it can contain a structure");
+            Site = Create_Structure_Site(debris);
         }
-        
-        private bool Has_a_Structure() => Structure_Cell.Has_a_Value();
-        private bool Has_a_Unit() => Unit_Cell.Has_a_Value();
-        
-        private readonly StructureModelFactory _structure_factory;
-        private readonly ValueCell<Slot<StructureModel>> _structure_cell = new ValueCell<Slot<StructureModel>>(null);
+
+        private TileSite Create_Unit_Slot_Site()
+        {
+            var unit_slot = new LocationModel(this, Slot.Empty<UnitModel>());
+            return new TileSite(unit_slot);
+        }
+
+        private TileSite Create_Structure_Site(StructureDescription structure_description)
+        {
+            var structure = new StructureModel(structure_description, this, _interactor_factory);
+            return new TileSite(structure);
+        }
+
+        private readonly InteractorFactory _interactor_factory;
+        private readonly ValueCell<TileSite> _site_cell;
     }
 }

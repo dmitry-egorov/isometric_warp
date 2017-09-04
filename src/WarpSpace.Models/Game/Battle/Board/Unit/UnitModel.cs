@@ -1,8 +1,9 @@
 ﻿using Lanski.Reactive;
+using Lanski.Structures;
 using WarpSpace.Descriptions;
+using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Tile;
-using WarpSpace.Models.Game.Battle.Board.Tile.Structure;
-using WarpSpace.Models.Game.Battle.Board.Unit.Weapon;
+using WarpSpace.Models.Game.Battle.Board.Weapon;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
@@ -14,37 +15,85 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public readonly HealthModel Health;
         public readonly InventoryModel Inventory;
 
-        public ICell<TileModel> Cell_of_the_Current_Tile => _chassis.Current_Tile;
-        public TileModel Current_Tile => Cell_of_the_Current_Tile.Value;
-        public IStream<UnitDestroyed> Stream_Of_Single_Destroyed_Event => _destructor.Stream_Of_Single_Destroyed_Event;
+        public LocationModel Location => _chassis.Location;
+        
+        public IStream<UnitMoved> Stream_Of_Movements => _stream_of_movements;
+        public IStream<UnitDestroyed> Signal_Of_the_Destruction => _signal_of_the_destruction;
+        
         public Faction Faction { get; }
         public bool Is_Alive => Health.Is_Alive;
+        public bool Is_Dead => Health.Is_Dead;
 
-        public UnitModel(UnitType type, TileModel initial_tile, Faction faction, InventoryContent? initial_inventory_content)
+        public UnitModel(UnitType type, LocationModel initial_unit_slot, Faction faction, InventoryContent? initial_inventory_content)
         {
             Type = type;
 
-            var destructor = new DestructorModel(this);
-            
             Weapon = new WeaponModel(type.Get_Weapon_Type(), this);
-            Health = HealthModel.From(type, destructor);
+            Health = HealthModel.From(type, this);
             Faction = faction;
             Inventory = InventoryModel.From(initial_inventory_content);
 
-            _chassis = ChassisModel.From(this, initial_tile);
-            _destructor = destructor;
+            _chassis = new ChassisModel(initial_unit_slot, this.Type);
         }
 
-        public bool Try_to_Move_To(TileModel tile) => _chassis.Try_to_Move_To(tile);
-        public bool Try_to_Interact_With(StructureModel structure) => structure.Interactor.Try_to_Interact_With(this);
-        public void Take(DamageDescription damage) => Health.Take(damage);
-        public void Take(InventoryContent? loot) => Inventory.Add(loot);
+        public bool Is_At(TileModel the_tile) => Location.Is(the_tile); 
+        public bool Can_Move_To(TileModel the_destination) => _chassis.Can_Move_To(the_destination); 
+        public bool Can_Interact_With(StructureModel the_structure) => the_structure.Interactor.Can_Interact_With(this);
+        public bool Is_Adjacent_To(StructureModel the_structure) => Location.Is_Adjacent_To(the_structure); 
+        public TileModel Must_Be_At_a_Tile() => Location.Must_Be_a_Tile();
+
+        public void Move_To(TileModel destination)
+        {
+            Can_Move_To(destination).Otherwise_Throw("Can't move the unit to the destination");
+
+            var new_location = destination.Must_Have_a_Location(); //Shouldn't be able to move to a tile without a location 
+            var old_location = Location;
+
+            _chassis.Update_the_Location(new_location);
+            old_location.Reset_the_Occupant();
+            new_location.Set_the_Occupant_To(this);
+            
+            _stream_of_movements.Next(new UnitMoved(this, old_location, new_location));
+        }
+
+        public void Interact_With(StructureModel the_structure)
+        {
+            the_structure.Interactor.Interact_With(this);
+        }
+
+        public void Take(DamageDescription the_damage)
+        {
+            Health.Take(the_damage);
+            if (Is_Dead)
+            {
+                Destruct();
+            }
+        }
+
+        internal void Take(InventoryContent? the_loot) => Inventory.Add(the_loot);
         
-        public bool Can_Move_To(TileModel destination) => _chassis.Can_Move_To(destination);
-        public bool Can_Interact_With(StructureModel structure) => structure.Interactor.Can_Interact_With(this);
-        public bool Is_At(TileModel tile) => Current_Tile == tile;
-        
-        private readonly DestructorModel _destructor;
+        private void Destruct()
+        {
+            var loot = Inventory.Content;
+
+            Location.Reset_the_Occupant();
+            
+            if (Location.Is_a_Tile(out TileModel tile_model))
+                tile_model.Create_Debris(loot);
+
+            if (Location.Is_a_Bay(out var bay))
+                bay.Owner.Take(loot);
+
+            Send_Destruction();
+        }
+
+        private void Send_Destruction()
+        {
+            _signal_of_the_destruction.Next(new UnitDestroyed(this, Location));
+        }
+
         private readonly ChassisModel _chassis;
+        private readonly Stream<UnitMoved> _stream_of_movements = new Stream<UnitMoved>();
+        private readonly Signal<UnitDestroyed> _signal_of_the_destruction = new Signal<UnitDestroyed>();
     }
 }

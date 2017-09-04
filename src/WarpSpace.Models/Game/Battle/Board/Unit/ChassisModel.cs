@@ -1,4 +1,6 @@
-﻿using Lanski.Reactive;
+﻿using System;
+using Lanski.Reactive;
+using Lanski.Structures;
 using WarpSpace.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 
@@ -6,44 +8,30 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public class ChassisModel
     {
-        public static ChassisModel From(UnitModel unit, TileModel initial_tile) => new ChassisModel(unit, unit.Type.Get_Chassis_Type(), initial_tile);
+        public LocationModel Location { get; private set; }
 
-        public ICell<TileModel> Current_Tile => _current_tile;
+        public ChassisModel(LocationModel initial_location, UnitType owner_type)
+        {
+            _chassis_type = owner_type.Get_Chassis_Type();
+            Location = initial_location;
+        }
 
         public bool Can_Move_To(TileModel destination)
         {
-            var source = _current_tile.Value;
+            var source = Location;
 
             return destination.Is_Passable_By(_chassis_type)
-                   && source.Is_Adjacent_To(destination);
+                && source.Is_Adjacent_To(destination)
+            ;
         }
 
-        public bool Try_to_Move_To(TileModel tile)
+        internal void Update_the_Location(LocationModel new_location)
         {
-            if (!Can_Move_To(tile))
-                return false;
-
-            var prev_tile = _current_tile.Value;
-            prev_tile.Reset_Unit();
-            tile.Set_Unit(_unit);
-            
-            _current_tile.Value = tile;
-
-            return true;
-        }
-        
-        private ChassisModel(UnitModel unit, ChassisType chassis_type, TileModel initial_tile)
-        {
-            _chassis_type = chassis_type;
-            _unit = unit;
-            
-            _current_tile = new RefCell<TileModel>(initial_tile);
-            
-            initial_tile.Set_Unit(unit);
+            new_location.Is_Empty().Otherwise_Throw("Location is not empty");
+                
+            Location = new_location;
         }
 
-        private readonly UnitModel _unit;
         private readonly ChassisType _chassis_type;
-        private readonly RefCell<TileModel> _current_tile;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Lanski.Geometry;
 using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Unity.World.Battle.Unit;
@@ -10,13 +11,15 @@ namespace WarpSpace.UI.Gameplay.Units
         private Camera _camera;
         private RectTransform _rect_transform;
         private UnitComponent _unit_component;
-        
+        private ReferencePixels _reference_pixels;
+
         private Action _scale_wiring;
         private Action _health_wiring;
 
         public void Init(UnitComponent unitComponent)
         {
             _camera = FindObjectOfType<Camera>();
+            _reference_pixels = FindObjectOfType<ReferencePixels>();
             _rect_transform = GetComponent<RectTransform>();
             _unit_component = unitComponent;
             
@@ -26,7 +29,7 @@ namespace WarpSpace.UI.Gameplay.Units
 
             Action Wire_Scale() => 
                 FindObjectOfType<ReferencePixels>()
-                .PixelPixelPerfectScaleCell
+                .PixelPerfectScaleCell
                 .Subscribe(scale => _rect_transform.localScale = new Vector3(scale, scale, 1))
             ;
 
@@ -50,7 +53,7 @@ namespace WarpSpace.UI.Gameplay.Units
             {
                 unitComponent
                     .Unit
-                    .Stream_Of_Single_Destroyed_Event
+                    .Signal_Of_the_Destruction
                     .Subscribe(_ => Destroy(gameObject));
             }
         }
@@ -64,9 +67,11 @@ namespace WarpSpace.UI.Gameplay.Units
         public void LateUpdate()
         {
             var transformPosition = _unit_component.transform.position;
-            var screen_position = _camera.WorldToScreenPoint(transformPosition);
+            var screen_position = _camera.WorldToScreenPoint(transformPosition).XY();
 
-            _rect_transform.anchoredPosition = screen_position;
+            var scale = _reference_pixels.PixelPerfectScale;
+
+            _rect_transform.anchoredPosition = screen_position.Floor(); //(screen_position * scale).Floor() / scale;
         }
     }
 }

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Lanski.Reactive</RootNamespace>
     <AssemblyName>Lanski.Reactive</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -51,6 +51,7 @@
     <Compile Include="LastValueRepeatStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepeatAllStream.cs" />
+    <Compile Include="Signal.cs" />
     <Compile Include="Stream.cs" />
     <Compile Include="StreamExtensions.cs" />
     <Compile Include="ValueCell.cs" />
