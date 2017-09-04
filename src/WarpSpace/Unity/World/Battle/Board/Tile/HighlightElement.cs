@@ -1,7 +1,6 @@
 ﻿using Lanski.Reactive;
 using Lanski.Structures;
 using WarpSpace.Models.Game.Battle.Board.Tile;
-using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Player;
 using WarpSpace.Unity.World.Battle.Board.Tile.Landscape;
 using static WarpSpace.Unity.World.Battle.Board.Tile.Landscape.HighlightType;

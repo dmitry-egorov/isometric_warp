@@ -7,13 +7,11 @@ namespace WarpSpace.Descriptions
     {
         public readonly TileDescription[,] Tiles;
         public readonly Spacial2D EntranceSpacial;
-        public readonly UnitDescription?[,] Units;
 
-        public BoardDescription(TileDescription[,] tiles, Spacial2D entranceSpacial, UnitDescription?[,] units)
+        public BoardDescription(TileDescription[,] tiles, Spacial2D entranceSpacial)
         {
             Tiles = tiles;
             EntranceSpacial = entranceSpacial;
-            Units = units;
         }
 
         public bool Equals(BoardDescription other)

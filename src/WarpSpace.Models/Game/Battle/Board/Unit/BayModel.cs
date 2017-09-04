@@ -10,7 +10,6 @@
             _slots = new LocationModel[slots_count];
         }
 
-
         public bool Can_Accept(UnitModel unit)
         {
             foreach (var slot in _slots) //Any is empty

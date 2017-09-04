@@ -11,11 +11,11 @@ namespace WarpSpace.Models.Game.Battle.Board
 
         public bool Can_Create_a_Unit_At(LocationModel location) => location.Is_Empty();
         
-        public void Create_a_Unit(UnitType type, LocationModel initial_location, Faction faction, InventoryContent? initial_inventory_content)
+        public void Create_a_Unit(UnitDescription desc, LocationModel initial_location)
         {
             Can_Create_a_Unit_At(initial_location).Otherwise_Throw("Can't create a unit at the location");
             
-            var unit = new UnitModel(type, initial_location, faction, initial_inventory_content);
+            var unit = new UnitModel(desc, initial_location);
 
             initial_location.Set_the_Occupant_To(unit);
             

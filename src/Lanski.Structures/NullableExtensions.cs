@@ -59,7 +59,7 @@ namespace Lanski.Structures
             return nullable.HasValue ? selector(nullable.Value) : default(TResult?);
         }
 
-        public static T GetValueOr<T>(this T? nullable, Func<T> defaultFactory)
+        public static T Value_Or<T>(this T? nullable, Func<T> defaultFactory)
             where T : struct => nullable ?? defaultFactory();
 
         public static bool doesnt_have_a_value<T>(this T? nullable) where T: struct => !nullable.Has_a_Value();

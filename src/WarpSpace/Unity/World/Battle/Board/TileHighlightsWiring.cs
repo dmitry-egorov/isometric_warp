@@ -11,10 +11,9 @@ namespace WarpSpace.Unity.World.Battle.Board
     {
         public static void Wire(PlayerModel player, BoardModel board, Tile.TileComponent[,] tile_components)
         {
-            //TODO: fix a bug with updating highlight (prev tile is not highlighted)
             player
                 .Selected_Unit_Cell
-                .SelectMany(pu => pu.Select(u => u.Stream_Of_Movements).Value_Or(StreamCache.Empty_Stream_of_Unit_Movements))
+                .SelectMany(pu => pu.Select(u => u.Stream_Of_Movements).Value_Or(StreamCache.Empty_Stream_of_Movements))
                 .Subscribe(moved =>
                 {
                     Update_Neighborhood_Of(moved.Source.As_a_Tile());
@@ -26,7 +25,7 @@ namespace WarpSpace.Unity.World.Battle.Board
                 .Selected_Unit_Cell
                 .Select(pu => pu.SelectMany(u => u.Location.As_a_Tile()))
                 .IncludePrevious()
-                .Subscribe(tuple => Handle_Selection_Change(tuple.previous, tuple.current))
+                .Subscribe(tuple => Handle_New_Selected_Unit(tuple.previous, tuple.current))
             ;
 
             board
@@ -35,7 +34,7 @@ namespace WarpSpace.Unity.World.Battle.Board
                 .Subscribe(Update_Neighborhood_Of)
             ;
 
-            void Handle_Selection_Change(Slot<TileModel> previous, Slot<TileModel> current)
+            void Handle_New_Selected_Unit(Slot<TileModel> previous, Slot<TileModel> current)
             {
                 Update_Neighborhood_Of(previous);
                 Update_Neighborhood_Of(current);
@@ -47,6 +46,7 @@ namespace WarpSpace.Unity.World.Battle.Board
                     return;
 
                 Update_Highlight_Of(prev_tile);
+                
                 foreach (var adjacent in prev_tile.Adjacent.NotEmpty)
                     Update_Highlight_Of(adjacent);
             }
@@ -54,7 +54,6 @@ namespace WarpSpace.Unity.World.Battle.Board
             void Update_Highlight_Of(TileModel tile) => 
                 Get_the_Highlight_Element_Of(tile).Update_the_Highlight()
             ;
-
 
             Tile.HighlightElement Get_the_Highlight_Element_Of(TileModel tile) => 
                 tile_components.Get(tile.Position).Highlight

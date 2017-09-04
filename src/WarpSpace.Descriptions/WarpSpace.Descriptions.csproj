@@ -49,6 +49,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Spacial2D.cs" />
     <Compile Include="StructureDescription.cs" />
+    <Compile Include="TileContentDescription.cs" />
     <Compile Include="TileDescription.cs" />
     <Compile Include="TileHelper.cs" />
     <Compile Include="UnitDescription.cs" />

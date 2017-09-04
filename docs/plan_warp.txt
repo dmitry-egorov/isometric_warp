@@ -20,6 +20,8 @@ Plan
 - forests, other decals
 - better terrain generation
 - smoother unit movement (start rotating to the next tile, before reaching previous one)
+- loot animation
+- hp material animation on damage
 
 * Landscape
 - different types of terrain

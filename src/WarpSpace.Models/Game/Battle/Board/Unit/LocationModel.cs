@@ -39,7 +39,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool Is_Adjacent_To(StructureModel structure) => Is_Adjacent_To(structure.Location);
         public Slot<TileModel> As_a_Tile() => Owner.As_a_T1();
         public bool Is(TileModel tile) => Is_a_Tile(out var own_tile) && own_tile == tile;
-        public TileModel Must_Be_a_Tile() => Owner.Must_be_a_T1();
+        public TileModel Must_Be_a_Tile() => Owner.Must_Be_a_T1();
         public bool Is_a_Tile(out TileModel tile) => Owner.Is_a_T1(out tile);
         public bool Is_a_Bay(out BayModel bay) => Owner.Is_a_T2(out bay);
         

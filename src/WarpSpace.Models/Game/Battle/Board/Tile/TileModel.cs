@@ -17,18 +17,29 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         public bool Is_Occupied => Site.Is_Occupied();
 
-        public TileModel(Index2D position, TileDescription desc)
+        public TileModel(Index2D position, TileDescription desc, UnitFactory unit_factory)
         {
             Position = position;
             Landscape = new LandscapeModel(desc.Type);
 
+            var content = desc.Initial_Content;
             _site_cell = new ValueCell<TileSite>(Create_Site());
-            
-            TileSite Create_Site() => 
-                desc.Initial_Structure.Has_a_Value(out var structure_description) 
-                ? Create_Structure_Site(structure_description) 
-                : Create_Unit_Slot_Site()
-            ;
+
+            TileSite Create_Site()
+            {
+                if (content.Is_a_Structure(out var structure_description))
+                    return Create_Structure_Site(structure_description);
+
+                var location = new LocationModel(this, Slot.Empty<UnitModel>());
+
+                if (content.Is_Empty())
+                    return location;
+
+                var unit = content.Must_Be_a_Unit();
+                unit_factory.Create_a_Unit(unit, location);
+                
+                return location;
+            }
         }
 
         public void Init(AdjacentRef<TileModel> adjacent_tiles)
@@ -36,8 +47,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
             Adjacent = adjacent_tiles;
         }
 
-        public LocationModel Must_Have_a_Location() => Site.Must_Be_a_Unit_Slot();
-        public bool Has_a_Location(out LocationModel unit) => Site.Is_a_Unit_Slot(out unit);
+        public LocationModel Must_Have_a_Location() => Site.Must_Be_a_Location();
+        public bool Has_a_Location(out LocationModel unit) => Site.Is_a_Location(out unit);
         public bool Has_a_Unit(out UnitModel unit) => Site.Has_a_Unit(out unit);
         public bool Is_Passable_By(ChassisType chassis_type) => Landscape.Is_Passable_By(chassis_type) && !Is_Occupied;
         public bool Is_Adjacent_To(TileModel destination) => Position.Is_Adjacent_To(destination.Position);
@@ -53,7 +64,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         internal void Reset_Structure()
         {
             Site.Is_a_Structure().Otherwise_Throw("Can't reset structure on a tile, since the tile doesn't conatin a structure");
-            Site = Create_Unit_Slot_Site();
+            Site = Create_Location_Empty_Site();
         }
 
         private TileSite Site
@@ -68,7 +79,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
             Site = Create_Structure_Site(debris);
         }
 
-        private TileSite Create_Unit_Slot_Site()
+        private TileSite Create_Location_Empty_Site()
         {
             var unit_slot = new LocationModel(this, Slot.Empty<UnitModel>());
             return new TileSite(unit_slot);

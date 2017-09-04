@@ -60,7 +60,7 @@ namespace WarpSpace.Unity.World.Battle
                     PredefinedBoards
                         .Nullable
                         .Select(x => x.GetPredefinedBoard())
-                        .GetValueOr(GenerateRandomMap);
+                        .Value_Or(GenerateRandomMap);
 
                 BoardDescription GenerateRandomMap() => new RandomBoardGenerator(new UnityRandom()).GenerateRandomMap();
             }

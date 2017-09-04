@@ -27,9 +27,9 @@ namespace WarpSpace.Models.Game.Battle
             var entranceStructure = StructureDescription.Create.Entrance(entranceSpacial.Orientation);
             var exitStructure = StructureDescription.Create.Exit(exitSpacial.Orientation);
 
-            var tiles = types.Map((t, i) => new TileDescription(t, SelectStructure(i)));
+            var tiles = types.Map((t, i) => new TileDescription(t, SelectContent(i)));
             
-            return new BoardDescription(tiles, entranceSpacial, new UnitDescription?[Rows, Columns]);
+            return new BoardDescription(tiles, entranceSpacial);
             
             LandscapeType[,] GenerateTiles() => 
                 Array2D.Create(new Dimensions2D(Rows, Columns), p => _random.Random_Landscape_Type());
@@ -47,14 +47,14 @@ namespace WarpSpace.Models.Game.Battle
                 .ToArray()
             ;
 
-            StructureDescription? SelectStructure(Index2D i)
+            TileContentDescription SelectContent(Index2D i)
             {
                 if (i == entranceSpacial.Position) 
                     return entranceStructure;
                 if (i == exitSpacial.Position)
                     return exitStructure;
                 
-                return null;
+                return TheVoid.Instance;
             }
         }
 

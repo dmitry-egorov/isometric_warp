@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Lanski.Reactive;
 using Lanski.Structures;
 using WarpSpace.Descriptions;
@@ -21,17 +20,16 @@ namespace WarpSpace.Models.Game.Battle.Board
         {
             _entrance_spacial = description.EntranceSpacial;
             _unit_factory = new UnitFactory();
-            
-            Tiles = CreaTiles();
 
             Stream_Of_Exits = Create_Exits_Stream();
             Wire_Unit_Creation();
-            Create_Units();
 
-            IStream<MothershipExited> Create_Exits_Stream() => 
+            Tiles = CreaTiles();
+
+            IStream<MothershipExited> Create_Exits_Stream() =>
                 Stream_Of_Unit_Creations
-                .Select(x => x.Unit.Stream_Of_Exits)
-                .Merge();
+                    .Select(x => x.Unit.Stream_Of_Exits)
+                    .Merge();
 
             TileModel[,] CreaTiles()
             {
@@ -40,11 +38,11 @@ namespace WarpSpace.Models.Game.Battle.Board
                 {
                     var adjacent = tiles.GetAdjacent(i);
                     tiles.Get(i).Init(adjacent);
-                    new List<int>().Clear();
                 }
                 return tiles;
-                
-                TileModel CreateTile(Index2D position, TileDescription desc) => new TileModel(position, desc);
+
+                TileModel CreateTile(Index2D position, TileDescription desc) =>
+                    new TileModel(position, desc, _unit_factory);
             }
 
             void Wire_Unit_Creation()
@@ -59,7 +57,7 @@ namespace WarpSpace.Models.Game.Battle.Board
                         _units_hashset.Add(unit);
                     });
             }
-            
+
             void Wire_Unit_Destruction(UnitModel unit)
             {
                 unit
@@ -70,42 +68,28 @@ namespace WarpSpace.Models.Game.Battle.Board
                         _stream_of_unit_destructions.Next(new UnitDestroyed(unit, unit.Location));
                     });
             }
-
-            void Create_Units()
-            {
-                var units = description
-                    .Units
-                    .EnumerateWithIndex()
-                    .Select(x => x.element.Select(unit => (unit, x.index)))
-                    .SkipNull();
-                
-                foreach (var x in units)
-                {
-                    var unit = x.Item1;
-                    var index = x.Item2;
-                    Create_a_Unit(unit.Type, index, Faction.Natives, unit.Inventory_Content);
-                }
-            }
         }
 
         public void Warp_In_the_Mothership()
         {
             var position = _entrance_spacial.Position;
             var orientation = _entrance_spacial.Orientation;
-            
-            Create_a_Unit(UnitType.Mothership, position + orientation, Faction.Players, null);
+
+            var desc = new UnitDescription(UnitType.Mothership, Faction.Players, null);
+            Create_a_Unit(desc, position + orientation);
         }
 
-        private void Create_a_Unit(UnitType type, Index2D position, Faction faction, InventoryContent? initial_inventory_content)
+        private void Create_a_Unit(UnitDescription desc, Index2D position)
         {
-            Tiles.Get(position).Has_a_Location(out var location).Otherwise_Throw("Can't add a unit to a tile occupied by a structure");
-            
-            _unit_factory.Create_a_Unit(type, location, faction, initial_inventory_content);
+            Tiles.Get(position).Has_a_Location(out var location)
+                .Otherwise_Throw("Can't add a unit to a tile occupied by a structure");
+
+            _unit_factory.Create_a_Unit(desc, location);
         }
 
         private readonly Stream<UnitDestroyed> _stream_of_unit_destructions = new Stream<UnitDestroyed>();
         private readonly Spacial2D _entrance_spacial;
-        
+
         private readonly HashSet<UnitModel> _units_hashset = new HashSet<UnitModel>();
         private readonly UnitFactory _unit_factory;
     }

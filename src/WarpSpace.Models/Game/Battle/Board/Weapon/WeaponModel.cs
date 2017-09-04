@@ -6,10 +6,12 @@ namespace WarpSpace.Models.Game.Battle.Board.Weapon
 {
     public class WeaponModel
     {
-        public WeaponModel(WeaponType type, UnitModel mountingUnit)
+        public static WeaponModel From(UnitType type, UnitModel mounting_unit) => new WeaponModel(type.Get_Weapon_Type().Get_Damage_Description(), mounting_unit);
+
+        public WeaponModel(DamageDescription desc, UnitModel mountingUnit)
         {
             _mountingUnit = mountingUnit;
-            _damage = type.Get_Damage_Description();
+            _damage = desc;
         }
 
         public void Fire_At(UnitModel unit)
@@ -30,7 +32,12 @@ namespace WarpSpace.Models.Game.Battle.Board.Weapon
         }
 
         private Target The(UnitModel unit) => new Target(unit, _mountingUnit);
-        
+
+
+        private readonly UnitModel _mountingUnit;
+        private readonly DamageDescription _damage;
+
+
         private struct Target
         {
             private readonly UnitModel _target_unit;
@@ -52,8 +59,5 @@ namespace WarpSpace.Models.Game.Battle.Board.Weapon
                 return source_tile.Is_Adjacent_To(targets_tile);
             }
         }
-        
-        private readonly UnitModel _mountingUnit;
-        private readonly DamageDescription _damage;
     }
 }

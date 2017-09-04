@@ -13,6 +13,13 @@ namespace WarpSpace.Unity.World.Battle
             var entrance = ToSpacial2D(boardData.Entrance);
             var exit = ToSpacial2D(boardData.Exit);
 
+            var units = boardData
+                    .Units
+                    .ToArray2D()
+                    .Map(ParseUnitChar)
+                    .Map(CreateUnitDescritpion)
+                ;
+            
             var tiles = boardData
                     .Tiles
                     .ToArray2D()
@@ -20,33 +27,30 @@ namespace WarpSpace.Unity.World.Battle
                     .Map(CreateTile)
                 ;
 
-            var units = boardData
-                .Units
-                .ToArray2D()
-                .Map(ParseUnitChar)
-                .Map(CreateUnitDescritpion)
-                ;
-    
-            return new BoardDescription(tiles, entrance, units);
+            return new BoardDescription(tiles, entrance);
     
             LandscapeType ParseLandscapeChar(char c) => c.ToLandscapeType();
 
             UnitType? ParseUnitChar(char c) => c.ToUnitType();
                 
             TileDescription CreateTile(LandscapeType t, Index2D i) => 
-                new TileDescription(t,
-                SelectStructure(i));
+                new TileDescription(t, SelectContent(i));
 
-            UnitDescription? CreateUnitDescritpion(UnitType? arg) => arg.Select(t => new UnitDescription(t, InventoryContent.InitialFor(t)));//TODO: generate random loot from description? 
+            //TODO: generate random loot from settings?
+            UnitDescription? CreateUnitDescritpion(UnitType? arg) => 
+                arg.Select(type => new UnitDescription(type, Faction.Natives, InventoryContent.InitialFor(type)))
+            ; 
             
-            StructureDescription? SelectStructure(Index2D i)
+            TileContentDescription SelectContent(Index2D i)
             {
                 if (i == entrance.Position)
                     return StructureDescription.Create.Entrance(entrance.Orientation);
                 if (i == exit.Position)
                     return StructureDescription.Create.Exit(exit.Orientation);
-                
-                return null;
+
+                return units.Get(i).Has_a_Value(out var unit) 
+                    ? (TileContentDescription) unit 
+                    : TheVoid.Instance;
             }
             
             Spacial2D ToSpacial2D(Spacial2DData data) => new Spacial2D(data.Position.ToIndex2D(), data.Orientation);

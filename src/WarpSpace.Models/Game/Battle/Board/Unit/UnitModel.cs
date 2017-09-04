@@ -27,14 +27,14 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         public IStream<MothershipExited> Stream_Of_Exits => _stream_of_exits;
 
-        public UnitModel(UnitType type, LocationModel initial_location, Faction faction, InventoryContent? initial_inventory_content)
+        public UnitModel(UnitDescription desc, LocationModel initial_location)
         {
-            Type = type;
+            Type = desc.Type;
+            Faction = desc.Faction;
 
-            Weapon = new WeaponModel(type.Get_Weapon_Type(), this);
-            Health = HealthModel.From(type, this);
-            Faction = faction;
-            Inventory = InventoryModel.From(initial_inventory_content);
+            Weapon = WeaponModel.From(Type, this);
+            Health = HealthModel.From(Type, this);
+            Inventory = InventoryModel.From(desc.Inventory_Content);
 
             _chassis = new ChassisModel(initial_location, this.Type);
         }
