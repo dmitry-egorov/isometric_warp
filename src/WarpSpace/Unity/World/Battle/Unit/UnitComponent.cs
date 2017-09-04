@@ -4,7 +4,6 @@ using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Descriptions;
-using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Player;
 
@@ -18,11 +17,11 @@ namespace WarpSpace.Unity.World.Battle.Unit
         public Mover Mover { get; private set; }
         public UnitModel Unit { get; private set; }
 
-        public static UnitComponent Create(GameObject prefab, Transform parent, UnitModel unit, TileModel source_tile, Board.Tile.TileComponent[,] tile_components, PlayerModel player)
+        public static UnitComponent Create(GameObject prefab, Transform parent, UnitModel unit, Board.Tile.TileComponent[,] tile_components, PlayerModel player)
         {
             var obj = Instantiate(prefab, parent).GetComponent<UnitComponent>();
 
-            obj.Init(unit, source_tile, player, tile_components);
+            obj.Init(unit, player, tile_components);
 
             return obj;
         }
@@ -37,7 +36,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
             _wirings();
         }
 
-        private void Init(UnitModel unit, TileModel source_tile, PlayerModel player, Board.Tile.TileComponent[,] tile_components)
+        private void Init(UnitModel unit, PlayerModel player, Board.Tile.TileComponent[,] tile_components)
         {
             var unitSettings = Select_Settings(unit.Type);
             var factionSettings = Select_Faction_Settings(unit.Faction);
@@ -50,7 +49,7 @@ namespace WarpSpace.Unity.World.Battle.Unit
             filter.Init(unitSettings.Mesh, factionSettings.Material);
             outline.Init(unitSettings.Mesh);
             
-            transform.localRotation = source_tile.Get_Direction_To(unit.Must_Be_At_a_Tile()).To_Rotation();
+            transform.localRotation = Direction2D.Left.To_Rotation();
             
             var outline_wiring = Wire_Selections_to_Outline();
             var movement_wiring = Wire_Movements();

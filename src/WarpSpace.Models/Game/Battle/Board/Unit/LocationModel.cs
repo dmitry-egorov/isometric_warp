@@ -1,4 +1,5 @@
 ﻿using System;
+using Lanski.Reactive;
 using Lanski.Structures;
 using WarpSpace.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Structure;
@@ -46,13 +47,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool Has_a_Unit(out UnitModel unit) => Possible_Occupant.Has_a_Value(out unit);
         public bool Is_Occupied() => !Is_Empty();
         public bool Is_Empty() => Possible_Occupant.Has_Nothing();
-
-        public UnitModel Create_A_Unit(UnitType type, Faction faction, InventoryContent? initial_inventory_content)
-        {
-            var unit = new UnitModel(type, this, faction, initial_inventory_content);
-            Set_the_Occupant_To(unit);
-            return unit;//TODO: send an event instead
-        }
 
         internal void Set_the_Occupant_To(UnitModel unit)
         {

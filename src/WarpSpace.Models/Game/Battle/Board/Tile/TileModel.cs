@@ -17,10 +17,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         public bool Is_Occupied => Site.Is_Occupied();
 
-        public TileModel(Index2D position, TileDescription desc, InteractorFactory interactor_factory)
+        public TileModel(Index2D position, TileDescription desc)
         {
             Position = position;
-            _interactor_factory = interactor_factory;
             Landscape = new LandscapeModel(desc.Type);
 
             _site_cell = new ValueCell<TileSite>(Create_Site());
@@ -38,7 +37,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         }
 
         public LocationModel Must_Have_a_Location() => Site.Must_Be_a_Unit_Slot();
-        public bool Has_a_Unit_Slot(out LocationModel unit) => Site.Is_a_Unit_Slot(out unit);
+        public bool Has_a_Location(out LocationModel unit) => Site.Is_a_Unit_Slot(out unit);
         public bool Has_a_Unit(out UnitModel unit) => Site.Has_a_Unit(out unit);
         public bool Is_Passable_By(ChassisType chassis_type) => Landscape.Is_Passable_By(chassis_type) && !Is_Occupied;
         public bool Is_Adjacent_To(TileModel destination) => Position.Is_Adjacent_To(destination.Position);
@@ -47,7 +46,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         internal void Create_Debris(InventoryContent? inventory_content)
         {
-            var debris = StructureDescription.Debris(TileHelper.GetOrientation(Position), inventory_content);
+            var debris = StructureDescription.Create.Debris(TileHelper.GetOrientation(Position), inventory_content);
             Set_Structure(debris);
         }
         
@@ -77,11 +76,10 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         private TileSite Create_Structure_Site(StructureDescription structure_description)
         {
-            var structure = new StructureModel(structure_description, this, _interactor_factory);
+            var structure = new StructureModel(structure_description, this);
             return new TileSite(structure);
         }
 
-        private readonly InteractorFactory _interactor_factory;
         private readonly ValueCell<TileSite> _site_cell;
     }
 }

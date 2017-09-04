@@ -43,13 +43,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Debug.cs" />
-    <Compile Include="Game\Battle\Board\Structure\Interactor.cs" />
+    <Compile Include="Game\Battle\Board\MothershipExited.cs" />
+    <Compile Include="Game\Battle\Board\UnitFactory.cs" />
     <Compile Include="Game\Battle\Board\Unit\ChangeSignal.cs" />
     <Compile Include="StreamCache.cs" />
     <Compile Include="Game\Battle\Board\BoardModel.cs" />
     <Compile Include="Game\Battle\Board\Structure\StructureDestroyed.cs" />
     <Compile Include="Game\Battle\Board\Structure\StructureModel.cs" />
-    <Compile Include="Game\Battle\Board\Structure\InteractorFactory.cs" />
     <Compile Include="Game\Battle\Board\Tile\LandscapeModel.cs" />
     <Compile Include="Game\Battle\Board\Tile\TileModel.cs" />
     <Compile Include="Game\Battle\Board\Tile\TileSite.cs" />
@@ -61,7 +61,6 @@
     <Compile Include="Game\Battle\Board\Unit\HealthModel.cs" />
     <Compile Include="Game\Battle\Board\Unit\InventoryModel.cs" />
     <Compile Include="Game\Battle\Board\Unit\UnitModel.cs" />
-    <Compile Include="Game\Battle\BattleFactory.cs" />
     <Compile Include="Game\Battle\BattleModel.cs" />
     <Compile Include="Game\Battle\Board\Unit\LocationModel.cs" />
     <Compile Include="Game\Battle\Board\Weapon\WeaponModel.cs" />

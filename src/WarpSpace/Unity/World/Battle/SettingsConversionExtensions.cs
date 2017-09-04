@@ -42,9 +42,9 @@ namespace WarpSpace.Unity.World.Battle
             StructureDescription? SelectStructure(Index2D i)
             {
                 if (i == entrance.Position)
-                    return StructureDescription.Entrance(entrance.Orientation);
+                    return StructureDescription.Create.Entrance(entrance.Orientation);
                 if (i == exit.Position)
-                    return StructureDescription.Exit(exit.Orientation);
+                    return StructureDescription.Create.Exit(exit.Orientation);
                 
                 return null;
             }

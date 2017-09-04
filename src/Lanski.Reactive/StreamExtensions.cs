@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Lanski.Structures;
 
 namespace Lanski.Reactive
@@ -112,7 +114,9 @@ namespace Lanski.Reactive
 
         public static Action<T> Invocation<T>(this IConsumer<T> consumer) => x => consumer.Next(x);
 
-        public class InProgressCell<T> : ICell<bool>
+        public static IStream<T> AsStream<T>(this IEnumerable<T> enumerable) => new EnumerableStream<T>(enumerable);
+
+         public class InProgressCell<T> : ICell<bool>
         {
             private readonly IStream<T> _events;
             private readonly Func<T, bool> _startCondition;
@@ -189,12 +193,18 @@ namespace Lanski.Reactive
             {
                 Action lastSubscription = null;
 
-                return _inStream.Subscribe(x =>
+                var s = _inStream.Subscribe(x =>
                 {
                     lastSubscription?.Invoke();
 
                     lastSubscription = x != null ? _selector(x).Subscribe(action) : null;
                 });
+                
+                return () =>
+                {
+                    s();
+                    lastSubscription?.Invoke();
+                };
             }
         }
 
@@ -436,6 +446,25 @@ namespace Lanski.Reactive
                 }
 
             });
+        }
+    }
+    
+    public class EnumerableStream<T> : IStream<T>
+    {
+        private readonly IEnumerable<T> _enumerable;
+
+        public EnumerableStream(IEnumerable<T> enumerable)
+        {
+            _enumerable = enumerable;
+        }
+
+        public Action Subscribe(Action<T> action)
+        {
+            foreach (var item in _enumerable)
+            {
+                action(item);
+            }
+            return () => { };
         }
     }
 }

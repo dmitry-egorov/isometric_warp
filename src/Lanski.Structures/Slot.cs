@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 using JetBrains.Annotations;
 
 namespace Lanski.Structures
@@ -24,6 +25,7 @@ namespace Lanski.Structures
             _has_a_value = has_a_value;
             _obj = obj;
         }
+
 
         [Pure]public bool Has_Nothing() => !Has_a_Value();
         [Pure]public bool Has_a_Value() => _has_a_value;

@@ -17,18 +17,22 @@ namespace WarpSpace.Models.Game
         public GameModel(BoardDescription boardDescription)
         {
             _boardDescription = boardDescription;
-            _currentBattle = ValueCellExtensions.Empty<BattleModel>();
+            _currentBattle = ValueCellEx.Empty<BattleModel>();
             Current_Player = _currentBattle.Select(b => b.Select(x => x.Player));
+
+            Current_Battle
+                .SelectMany(b => b.Select(x => x.Stream_Of_Exits).Value_Or_Empty())
+                .Subscribe(_ => Restart_Battle());
         }
 
         public void Start()
         {
-            RestartBattle();
+            Restart_Battle();
         }
-        
-        public void RestartBattle()
+
+        private void Restart_Battle()
         {
-            var battle = BattleFactory.From(_boardDescription, this);
+            var battle = new BattleModel(_boardDescription);
 
             _currentBattle.Value = battle.As_a_Slot();
             

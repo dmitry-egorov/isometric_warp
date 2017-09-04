@@ -88,7 +88,7 @@ namespace WarpSpace.Unity.World.Battle
                 return;
             _initialized = true;
             
-            _gameCell = ValueCellExtensions.Empty<GameModel>();
+            _gameCell = ValueCellEx.Empty<GameModel>();
             Player_Cell = Game_Cell.SelectMany(gc => gc.Select(g => g.Current_Player).Cell_Or_Single_Default());
             Battle_Cell = Game_Cell.SelectMany(gc => gc.Select(g => g.Current_Battle).Cell_Or_Single_Default());
         }

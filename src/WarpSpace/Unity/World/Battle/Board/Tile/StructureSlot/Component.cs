@@ -24,26 +24,23 @@ namespace WarpSpace.Unity.World.Battle.Board.Tile.StructureSlot
                 return;
 
             var description = structure.Description;
-            var prefab = GetPrefab(description.TheType);
+            var prefab = GetPrefab(description);
             var rotation = description.Orientation.To_Rotation();
 
             var structure_component = Instantiate(prefab, transform);
             structure_component.transform.localRotation = rotation;
         }
 
-        private GameObject GetPrefab(StructureDescription.Type type)
+        private GameObject GetPrefab(StructureDescription structure)
         {
-            switch (type)
-            {
-                case StructureDescription.Type.Entrance:
-                    return Settings.EntrancePrefab;
-                case StructureDescription.Type.Exit:
-                    return Settings.ExitPrefab;
-                case StructureDescription.Type.Debris:
-                    return Settings.DebriePrefab;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
+            if (structure.Is_An_Entrance())
+                return Settings.EntrancePrefab;
+            if (structure.Is_An_Exit())
+                return Settings.ExitPrefab;
+            if (structure.Is_A_Debris())
+                return Settings.DebriePrefab;
+            
+            throw new ArgumentOutOfRangeException(nameof(structure), structure, null);
         }
         
         [Serializable]

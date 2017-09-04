@@ -24,8 +24,8 @@ namespace WarpSpace.Models.Game.Battle
             var entranceSpacial = Get_Structure_Spacial();
             var exitSpacial = Get_Structure_Spacial();
 
-            var entranceStructure = StructureDescription.Entrance(entranceSpacial.Orientation);
-            var exitStructure = StructureDescription.Exit(exitSpacial.Orientation);
+            var entranceStructure = StructureDescription.Create.Entrance(entranceSpacial.Orientation);
+            var exitStructure = StructureDescription.Create.Exit(exitSpacial.Orientation);
 
             var tiles = types.Map((t, i) => new TileDescription(t, SelectStructure(i)));
             

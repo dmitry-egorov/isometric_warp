@@ -43,6 +43,7 @@
     <Compile Include="EmptyStream.cs" />
     <Compile Include="NullableCell.cs" />
     <Compile Include="NullableCellExtensions.cs" />
+    <Compile Include="NullableStreamExtensions.cs" />
     <Compile Include="RefCell.cs" />
     <Compile Include="CellExtensions.cs" />
     <Compile Include="ICell.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Signal.cs" />
     <Compile Include="Stream.cs" />
     <Compile Include="StreamExtensions.cs" />
+    <Compile Include="StreamMergeExtensions.cs" />
     <Compile Include="ValueCell.cs" />
     <Compile Include="VoidStreamExtensions.cs" />
   </ItemGroup>

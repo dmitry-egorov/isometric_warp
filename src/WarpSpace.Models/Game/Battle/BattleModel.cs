@@ -1,14 +1,21 @@
-﻿namespace WarpSpace.Models.Game.Battle
+﻿using Lanski.Reactive;
+using WarpSpace.Descriptions;
+using WarpSpace.Models.Game.Battle.Board;
+using WarpSpace.Models.Game.Battle.Player;
+
+namespace WarpSpace.Models.Game.Battle
 {
     public class BattleModel
     {
-        public readonly Board.BoardModel Board;
-        public readonly Player.PlayerModel Player;
+        public readonly BoardModel Board;
+        public readonly PlayerModel Player;
 
-        public BattleModel(Board.BoardModel board, Player.PlayerModel player)
+        public IStream<MothershipExited> Stream_Of_Exits => Board.Stream_Of_Exits;
+
+        public BattleModel(BoardDescription board_description)
         {
-            Board = board;
-            Player = player;
+            Board = new BoardModel(board_description);
+            Player = new PlayerModel();
         }
 
         public void Start()
