@@ -23,10 +23,15 @@ namespace WarpSpace.Models.Game.Battle.Board
             _unit_factory = new UnitFactory();
             
             Tiles = CreaTiles();
-            Stream_Of_Exits = Stream_Of_Unit_Creations.Select(x => x.Unit.Stream_Of_Exits).Merge();
 
+            Stream_Of_Exits = Create_Exits_Stream();
             Wire_Unit_Creation();
             Create_Units();
+
+            IStream<MothershipExited> Create_Exits_Stream() => 
+                Stream_Of_Unit_Creations
+                .Select(x => x.Unit.Stream_Of_Exits)
+                .Merge();
 
             TileModel[,] CreaTiles()
             {
