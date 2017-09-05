@@ -4,11 +4,11 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 {
     public struct UnitMoved
     {
-        public readonly UnitModel Unit;
-        public readonly LocationModel Source;
-        public readonly LocationModel Destination;
+        public readonly MUnit Unit;
+        public readonly MLocation Source;
+        public readonly MLocation Destination;
 
-        public UnitMoved(UnitModel unit, LocationModel source, LocationModel destination)
+        public UnitMoved(MUnit unit, MLocation source, MLocation destination)
         {
             Unit = unit;
             Source = source;

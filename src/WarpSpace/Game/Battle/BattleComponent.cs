@@ -21,10 +21,10 @@ namespace WarpSpace.Game.Battle
         private BoardDescription _lastMap;//For inspector
 
         private bool _initialized;
-        private ValueCell<Slot<GameModel>> _gameCell;
-        public ICell<Slot<GameModel>> Game_Cell => _gameCell;
-        public ICell<Slot<PlayerModel>> Player_Cell { get; private set; }
-        public ICell<Slot<BattleModel>> Battle_Cell { get; private set; }
+        private ValueCell<Possible<MGame>> _gameCell;
+        public ICell<Possible<MGame>> Game_Cell => _gameCell;
+        public ICell<Possible<MPlayer>> Player_Cell { get; private set; }
+        public ICell<Possible<MBattle>> Battle_Cell { get; private set; }
 
         void Awake()
         {
@@ -49,14 +49,14 @@ namespace WarpSpace.Game.Battle
 
             Start_the_Game();
 
-            GameModel Create_the_Game()
+            MGame Create_the_Game()
             {
                 var boardDescription = GetBoardDescription();
 
                 _lastMap = boardDescription;
                 LastMapString = boardDescription.Display();
                 
-                return new GameModel(boardDescription);
+                return new MGame(boardDescription);
                 
                 BoardDescription GetBoardDescription() => 
                     PredefinedBoards
@@ -90,7 +90,7 @@ namespace WarpSpace.Game.Battle
                 return;
             _initialized = true;
             
-            _gameCell = ValueCellEx.Empty<GameModel>();
+            _gameCell = ValueCellEx.Empty<MGame>();
             Player_Cell = Game_Cell.SelectMany(gc => gc.Select(g => g.Current_Player).Cell_Or_Single_Default());
             Battle_Cell = Game_Cell.SelectMany(gc => gc.Select(g => g.Current_Battle).Cell_Or_Single_Default());
         }

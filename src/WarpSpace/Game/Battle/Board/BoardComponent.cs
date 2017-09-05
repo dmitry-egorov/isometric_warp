@@ -16,7 +16,7 @@ namespace WarpSpace.Game.Battle.Board
         private RepeatAllStream<UnitComponent> _stream_of_created_units;
         public IStream<UnitComponent> Stream_Of_Created_Units => _stream_of_created_units;
 
-        public void Init(BoardModel board, PlayerModel player)
+        public void Init(MBoard board, MPlayer player)
         {
             gameObject.DestroyChildren();
             
@@ -30,7 +30,7 @@ namespace WarpSpace.Game.Battle.Board
             Tile.TileComponent[,] CreateTiles() => 
                 board.Tiles.Map((tile, index) =>
                 {
-                    var n = board.Tiles.GetFitNeighbours(index).Map(t => t.Landscape.Type);
+                    var n = board.Tiles.GetFitNeighbours(index).Map(t => t.MLandscape.Type);
                     return Tile.TileComponent.Create(TilePrefab, transform, tile, n, board.Tiles.GetDimensions(), player);
                 })
             ;

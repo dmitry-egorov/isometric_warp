@@ -10,10 +10,10 @@ namespace WarpSpace.Models.Game.Battle.Player
     {
         public static class Create
         {
-            public static Command Fire(WeaponModel weapon, UnitModel target_unit) => new Command { _variant = new Fire(weapon, target_unit)};
-            public static Command Select_Unit(UnitModel target_unit) => new Command { _variant = new SelectUnit(target_unit) };
-            public static Command Move(UnitModel unit, TileModel destination) => new Command { _variant = new Move(unit, destination) };
-            public static Command Interact(UnitModel unit, StructureModel target_structure) => new Command { _variant = new Interact(unit, target_structure) };
+            public static Command Fire(MWeapon weapon, MUnit target_unit) => new Command { _variant = new Fire(weapon, target_unit)};
+            public static Command Select_Unit(MUnit target_unit) => new Command { _variant = new SelectUnit(target_unit) };
+            public static Command Move(MUnit unit, MTile destination) => new Command { _variant = new Move(unit, destination) };
+            public static Command Interact(MUnit unit, MStructure target_structure) => new Command { _variant = new Interact(unit, target_structure) };
         }
 
         public bool Is(out Fire fire) => _variant.Is_a_T1(out fire);
@@ -28,10 +28,10 @@ namespace WarpSpace.Models.Game.Battle.Player
 
         public struct Fire
         {
-            public readonly WeaponModel Weapon;
-            public readonly UnitModel Target_Unit;
+            public readonly MWeapon Weapon;
+            public readonly MUnit Target_Unit;
 
-            public Fire(WeaponModel weapon, UnitModel target_unit)
+            public Fire(MWeapon weapon, MUnit target_unit)
             {
                 Weapon = weapon;
                 Target_Unit = target_unit;
@@ -40,25 +40,25 @@ namespace WarpSpace.Models.Game.Battle.Player
 
         public struct SelectUnit
         {
-            public readonly UnitModel Target_Unit;
+            public readonly MUnit Target_Unit;
 
-            public SelectUnit(UnitModel target_unit) { Target_Unit = target_unit; }
+            public SelectUnit(MUnit target_unit) { Target_Unit = target_unit; }
         }
 
         public struct Move
         {
-            public readonly UnitModel Unit;
-            public readonly TileModel Destination;
+            public readonly MUnit Unit;
+            public readonly MTile Destination;
 
-            public Move(UnitModel unit, TileModel destination) { Unit = unit; Destination = destination; }
+            public Move(MUnit unit, MTile destination) { Unit = unit; Destination = destination; }
         }
 
         public struct Interact
         {
-            public readonly UnitModel Unit;
-            public readonly StructureModel Target_Structure;
+            public readonly MUnit Unit;
+            public readonly MStructure Target_Structure;
 
-            public Interact(UnitModel unit, StructureModel target_structure) { Unit = unit; Target_Structure = target_structure; }
+            public Interact(MUnit unit, MStructure target_structure) { Unit = unit; Target_Structure = target_structure; }
         }
 
         private Or<Fire, SelectUnit, Move, Interact> _variant;

@@ -4,14 +4,14 @@ using WarpSpace.Models.Game.Battle.Board.Tile;
 
 namespace WarpSpace.Models.Game.Battle.Board.Structure
 {
-    public class StructureModel
+    public class MStructure
     {
         public readonly StructureDescription Description;
-        public readonly TileModel Location;
+        public readonly MTile Location;
 
         public IStream<StructureDestroyed> Signal_Of_the_Destruction => _signal_of_the_destruction;
         
-        internal StructureModel(StructureDescription description, TileModel location)
+        internal MStructure(StructureDescription description, MTile location)
         {
             Description = description;
             Location = location;

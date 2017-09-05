@@ -11,7 +11,7 @@ namespace WarpSpace.Models.Descriptions
         {
             public static StructureDescription Entrance(Direction2D orientation) => new StructureDescription(orientation) { _variant = new Entrance() };
             public static StructureDescription Exit(Direction2D orientation) => new StructureDescription(orientation) { _variant = new Exit() };
-            public static StructureDescription Debris(Direction2D orientation, Slot<InventoryContent> loot) => new StructureDescription(orientation) { _variant = new Debris(loot) };            
+            public static StructureDescription Debris(Direction2D orientation, Possible<InventoryContent> loot) => new StructureDescription(orientation) { _variant = new Debris(loot) };            
         }
         
         private StructureDescription(Direction2D orientation): this() => Orientation = orientation;
@@ -26,8 +26,8 @@ namespace WarpSpace.Models.Descriptions
 
         public struct Debris
         {
-            public readonly Slot<InventoryContent> Loot;
-            public Debris(Slot<InventoryContent> possible_loot) => Loot = possible_loot;
+            public readonly Possible<InventoryContent> Loot;
+            public Debris(Possible<InventoryContent> possible_loot) => Loot = possible_loot;
         }
 
         private Or<Entrance, Exit, Debris> _variant;

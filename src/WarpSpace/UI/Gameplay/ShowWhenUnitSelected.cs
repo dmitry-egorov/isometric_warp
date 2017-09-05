@@ -21,7 +21,7 @@ namespace WarpSpace.UI.Gameplay
                     .Subscribe(Set_Is_Active)
             ;
 
-            void Set_Is_Active(Slot<UnitModel> selected_unit) => 
+            void Set_Is_Active(Possible<MUnit> selected_unit) => 
                 gameObject.SetActive(selected_unit.Has_a_Value())
             ;
         }

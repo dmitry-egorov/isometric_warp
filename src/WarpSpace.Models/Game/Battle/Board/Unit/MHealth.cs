@@ -3,7 +3,7 @@ using WarpSpace.Models.Descriptions;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
-    public class HealthModel
+    public class MHealth
     {
         public readonly int TotalHitPoints;
         public ICell<int> Current_Hit_Points_Cell => _current_hit_points_cell;
@@ -11,14 +11,14 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         internal bool Is_Alive => Is_Alive_Cell.Value;
         internal bool Is_Dead => !Is_Alive;
 
-        public static HealthModel From(UnitType type, UnitModel unit) => new HealthModel(type.GetHitPointsAmount(), unit);
+        public static MHealth From(UnitType type, MUnit unit) => new MHealth(type.GetHitPointsAmount(), unit);
 
         public void Take(DamageDescription damage)
         {
             _current_hit_points_cell.Value -= damage.Amount;
         }
 
-        private HealthModel(int total_hit_points, UnitModel unit)
+        private MHealth(int total_hit_points, MUnit unit)
         {
             TotalHitPoints = total_hit_points;
             _unit = unit;
@@ -27,7 +27,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             Is_Alive_Cell = Current_Hit_Points_Cell.Select(x => x > 0);
         }
 
-        private readonly UnitModel _unit;
+        private readonly MUnit _unit;
         private readonly ValueCell<int> _current_hit_points_cell;
     }
 }

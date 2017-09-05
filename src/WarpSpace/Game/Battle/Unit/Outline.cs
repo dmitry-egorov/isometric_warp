@@ -1,4 +1,6 @@
 using UnityEngine;
+using WarpSpace.Models.Descriptions;
+using WarpSpace.Settings;
 
 namespace WarpSpace.Game.Battle.Unit
 {
@@ -8,8 +10,11 @@ namespace WarpSpace.Game.Battle.Unit
         public void Enable() => gameObject.SetActive(true);
         public void Disable() => gameObject.SetActive(false);
 
-        public void Init(Mesh mesh)
+        public void Init(UnitType type)
         {
+            var settings_holder = FindObjectOfType<UnitSettingsHolder>();
+            var mesh = settings_holder.Get_Settings_For(type).Mesh;
+            
             GetComponent<OutlineMeshBuilder>().Build_From(mesh);
             Disable();
         }

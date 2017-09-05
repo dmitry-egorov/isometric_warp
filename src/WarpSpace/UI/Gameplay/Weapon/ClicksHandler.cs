@@ -23,7 +23,7 @@ namespace WarpSpace.UI.Gameplay.Weapon
                 .Subscribe(HandleClick);
             ;
             
-            void HandleClick(Slot<PlayerModel> player) => 
+            void HandleClick(Possible<MPlayer> player) => 
                 player
                 .Must_Have_a_Value()
                 .Toggle_Weapon_Selection()

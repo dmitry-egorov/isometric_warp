@@ -5,22 +5,22 @@ using JetBrains.Annotations;
 
 namespace Lanski.Structures
 {
-    public static class Slot
+    public static class Possible
     {
-        public static Slot<T> Empty<T>() => new Slot<T>();
-        public static Slot<T> From<T>(T obj) => new Slot<T>(true, obj);
-        public static Slot<T> As_a_Slot<T>(this T obj) => From(obj);
+        public static Possible<T> Empty<T>() => new Possible<T>();
+        public static Possible<T> From<T>(T obj) => new Possible<T>(true, obj);
+        public static Possible<T> As_a_Slot<T>(this T obj) => From(obj);
     }
     
     /// <summary>
     /// A nullable reference (for improved code semantics)
     /// </summary>
-    public struct Slot<T>
+    public struct Possible<T>
     {
         private readonly bool _has_a_value;
         private readonly T _obj;
 
-        public Slot(bool has_a_value, T obj)
+        public Possible(bool has_a_value, T obj)
         {
             _has_a_value = has_a_value;
             _obj = obj;
@@ -40,17 +40,17 @@ namespace Lanski.Structures
         
         [Pure] public T Must_Have_a_Value() => Has_a_Value(out var value) ? value : throw new InvalidOperationException("Must have a value");
 
-        public Slot<TResult> SelectMany<TResult>(Func<T, Slot<TResult>> selector) => Has_a_Value(out var value) ? selector(value) : default(Slot<TResult>);
-        public Slot<TResult> Select<TResult>(Func<T, TResult> selector) => Has_a_Value(out var value) ? new Slot<TResult>(true, selector(value)) : default(Slot<TResult>);
+        public Possible<TResult> SelectMany<TResult>(Func<T, Possible<TResult>> selector) => Has_a_Value(out var value) ? selector(value) : default(Possible<TResult>);
+        public Possible<TResult> Select<TResult>(Func<T, TResult> selector) => Has_a_Value(out var value) ? new Possible<TResult>(true, selector(value)) : default(Possible<TResult>);
         
         public T Value_Or(T defaultValue) => Has_a_Value(out var value) ? value : defaultValue;
         
-        public bool Equals(Slot<T> other) => _has_a_value == other._has_a_value && EqualityComparer<T>.Default.Equals(_obj, other._obj);
+        public bool Equals(Possible<T> other) => _has_a_value == other._has_a_value && EqualityComparer<T>.Default.Equals(_obj, other._obj);
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Slot<T> && Equals((Slot<T>) obj);
+            return obj is Possible<T> && Equals((Possible<T>) obj);
         }
 
         public override int GetHashCode()
@@ -61,6 +61,6 @@ namespace Lanski.Structures
             }
         }
 
-        public static implicit operator Slot<T>(T value) => value.As_a_Slot();
+        public static implicit operator Possible<T>(T value) => value.As_a_Slot();
     }
 }

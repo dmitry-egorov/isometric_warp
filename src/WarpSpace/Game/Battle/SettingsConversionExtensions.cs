@@ -32,14 +32,14 @@ namespace WarpSpace.Game.Battle
     
             LandscapeType ParseLandscapeChar(char c) => c.ToLandscapeType();
 
-            Slot<UnitType> ParseUnitChar(char c) => c.ToUnitType();
+            Possible<UnitType> ParseUnitChar(char c) => c.ToUnitType();
                 
             TileDescription CreateTile(LandscapeType t, Index2D i) => 
                 new TileDescription(t, SelectContent(i));
 
             //TODO: generate random loot from settings?
-            Slot<UnitDescription> CreateUnitDescritpion(Slot<UnitType> arg) => 
-                arg.Select(type => new UnitDescription(type, Faction.Natives, InventoryContent.Initial_For(type), Slot.Empty<IReadOnlyList<Slot<UnitDescription>>>()))
+            Possible<UnitDescription> CreateUnitDescritpion(Possible<UnitType> arg) => 
+                arg.Select(type => new UnitDescription(type, Faction.Natives, InventoryContent.Initial_For(type), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>()))
             ; 
             
             TileContentDescription SelectContent(Index2D i)

@@ -7,17 +7,16 @@ using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Models.Game.Battle.Board
 {
-
-    public class BoardModel
+    public class MBoard
     {
-        public readonly TileModel[,] Tiles;
-        public IReadOnlyCollection<UnitModel> Units => _units_hashset;
+        public readonly MTile[,] Tiles;
+        public IReadOnlyCollection<MUnit> Units => _units_hashset;
 
         public IStream<UnitCreated> Stream_Of_Unit_Creations => _unit_factory.Stream_Of_Unit_Creations;
         public IStream<UnitDestroyed> Stream_Of_Unit_Destructions => _stream_of_unit_destructions;
         public IStream<MothershipExited> Stream_Of_Exits { get; }
 
-        public BoardModel(BoardDescription description)
+        public MBoard(BoardDescription description)
         {
             _entrance_spacial = description.EntranceSpacial;
             _unit_factory = new UnitFactory();
@@ -32,7 +31,7 @@ namespace WarpSpace.Models.Game.Battle.Board
                     .Select(x => x.Unit.Stream_Of_Exits)
                     .Merge();
 
-            TileModel[,] CreaTiles()
+            MTile[,] CreaTiles()
             {
                 var tiles = description.Tiles.Map((tile_desc, position) => CreateTile(position, tile_desc));
                 foreach (var i in tiles.EnumerateIndex())
@@ -42,8 +41,8 @@ namespace WarpSpace.Models.Game.Battle.Board
                 }
                 return tiles;
 
-                TileModel CreateTile(Index2D position, TileDescription desc) =>
-                    new TileModel(position, desc, _unit_factory);
+                MTile CreateTile(Index2D position, TileDescription desc) =>
+                    new MTile(position, desc, _unit_factory);
             }
 
             void Wire_Unit_Creation()
@@ -59,7 +58,7 @@ namespace WarpSpace.Models.Game.Battle.Board
                     });
             }
 
-            void Wire_Unit_Destruction(UnitModel unit)
+            void Wire_Unit_Destruction(MUnit unit)
             {
                 unit
                     .Signal_Of_the_Destruction
@@ -73,25 +72,12 @@ namespace WarpSpace.Models.Game.Battle.Board
 
         public void Warp_In_the_Mothership()
         {
-            Debug.Log("Warp mothership");
             var position = _entrance_spacial.Position;
             var orientation = _entrance_spacial.Orientation;
 
-            var tank = new UnitDescription(UnitType.Tank, Faction.Players, Slot.Empty<InventoryContent>(), Slot.Empty<IReadOnlyList<Slot<UnitDescription>>>());
-            
-            var test1 = new UnitDescription();
-            Debug.Log("1");
-            var test2 = new UnitDescription[1];
-            Debug.Log("2");
-            var bay_units = new List<Slot<UnitDescription>> {tank.As_a_Slot()};
-            //var bay_units = new Slot<UnitDescription>[0].As_a_Slot();
-            Debug.Log("3");
-
-            Debug.Log("Created bay description");
-
-            var desc = new UnitDescription(UnitType.Mothership, Faction.Players, Slot.Empty<InventoryContent>(), bay_units);
-            
-            Debug.Log("Created mothership description");
+            var tank = new UnitDescription(UnitType.Tank, Faction.Players, Possible.Empty<InventoryContent>(), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>());
+            var bay_units = new List<Possible<UnitDescription>> {tank.As_a_Slot()};
+            var desc = new UnitDescription(UnitType.Mothership, Faction.Players, Possible.Empty<InventoryContent>(), bay_units);
 
             Create_a_Unit(desc, position + orientation);
         }
@@ -106,23 +92,7 @@ namespace WarpSpace.Models.Game.Battle.Board
         private readonly Stream<UnitDestroyed> _stream_of_unit_destructions = new Stream<UnitDestroyed>();
         private readonly Spacial2D _entrance_spacial;
 
-        private readonly HashSet<UnitModel> _units_hashset = new HashSet<UnitModel>();
+        private readonly HashSet<MUnit> _units_hashset = new HashSet<MUnit>();
         private readonly UnitFactory _unit_factory;
-    }
-    
-    public struct UnitDescription
-    {
-        public readonly UnitType Type;
-        public readonly Faction Faction;
-        public readonly Slot<InventoryContent> Inventory_Content;
-        public readonly Slot<IReadOnlyList<Slot<UnitDescription>>> Bay_Content;
-
-        public UnitDescription(UnitType type, Faction faction, Slot<InventoryContent> inventory_content, Slot<IReadOnlyList<Slot<UnitDescription>>> bay_content)
-        {
-            Type = type;
-            Inventory_Content = inventory_content;
-            Bay_Content = bay_content;
-            Faction = faction;
-        }
     }
 }

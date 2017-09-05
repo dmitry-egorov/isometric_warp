@@ -5,7 +5,7 @@ namespace Lanski.Reactive
 {
     public static class ValueCellEx
     {
-        public static ValueCell<Slot<T>> Empty<T>() => new ValueCell<Slot<T>>(Slot.Empty<T>());
+        public static ValueCell<Possible<T>> Empty<T>() => new ValueCell<Possible<T>>(Possible.Empty<T>());
         public static ValueCell<T> Create<T>(T initial) where T : struct => new ValueCell<T>(initial);
     }
     

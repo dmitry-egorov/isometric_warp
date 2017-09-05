@@ -25,7 +25,7 @@ namespace WarpSpace.Overlay.Units
             unit.Init(obj);
         }
 
-        private IStream<UnitComponent> SelectWorldUnitsStream(Slot<BattleModel> arg)
+        private IStream<UnitComponent> SelectWorldUnitsStream(Possible<MBattle> arg)
         {
             gameObject.DestroyChildren();
             

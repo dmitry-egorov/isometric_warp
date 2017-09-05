@@ -5,14 +5,14 @@ namespace WarpSpace.Models.Descriptions
 {
     public static class UnitTypeExtensions
     {
-        public static Slot<UnitType> ToUnitType(this char c)
+        public static Possible<UnitType> ToUnitType(this char c)
         {
             switch (c)
             {
                 case 'T':
                     return UnitType.Tank;
                 default:
-                    return Slot.Empty<UnitType>();
+                    return Possible.Empty<UnitType>();
             }
         }
 

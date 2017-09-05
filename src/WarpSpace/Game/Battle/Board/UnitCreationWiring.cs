@@ -10,7 +10,7 @@ namespace WarpSpace.Game.Battle.Board
 {
     internal static class UnitCreationWiring
     {
-        public static void Wire(BoardModel board, Tile.TileComponent[,] tile_components, GameObject prefab, PlayerModel player, IConsumer<UnitComponent> stream_of_created_units)
+        public static void Wire(MBoard board, Tile.TileComponent[,] tile_components, GameObject prefab, MPlayer player, IConsumer<UnitComponent> stream_of_created_units)
         {
             foreach (var unit in board.Units)
             {
@@ -22,7 +22,7 @@ namespace WarpSpace.Game.Battle.Board
                 .Where(u => u.Initial_Location.Is_a_Tile())
                 .Subscribe(added => Create_and_Wire_a_Component_For_the_Unit(added.Unit));
                 
-            void Create_and_Wire_a_Component_For_the_Unit(UnitModel unit)
+            void Create_and_Wire_a_Component_For_the_Unit(MUnit unit)
             {
                 var tile = unit.Location.Must_Be_a_Tile();
                 var tile_component = tile_components.Get(tile.Position);

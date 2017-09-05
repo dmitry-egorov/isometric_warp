@@ -6,18 +6,18 @@ using WarpSpace.Models.Game.Battle.Player;
 
 namespace WarpSpace.Models.Game
 {
-    public class GameModel
+    public class MGame
     {
         private readonly BoardDescription _boardDescription;
 
-        private readonly ValueCell<Slot<BattleModel>> _currentBattle;
-        public ICell<Slot<BattleModel>> Current_Battle => _currentBattle;
-        public ICell<Slot<PlayerModel>> Current_Player { get; }
+        private readonly ValueCell<Possible<MBattle>> _currentBattle;
+        public ICell<Possible<MBattle>> Current_Battle => _currentBattle;
+        public ICell<Possible<MPlayer>> Current_Player { get; }
 
-        public GameModel(BoardDescription boardDescription)
+        public MGame(BoardDescription boardDescription)
         {
             _boardDescription = boardDescription;
-            _currentBattle = ValueCellEx.Empty<BattleModel>();
+            _currentBattle = ValueCellEx.Empty<MBattle>();
             Current_Player = _currentBattle.Select(b => b.Select(x => x.Player));
 
             Current_Battle
@@ -32,7 +32,7 @@ namespace WarpSpace.Models.Game
 
         private void Restart_Battle()
         {
-            var battle = new BattleModel(_boardDescription);
+            var battle = new MBattle(_boardDescription);
 
             _currentBattle.Value = battle.As_a_Slot();
             

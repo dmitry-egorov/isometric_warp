@@ -6,7 +6,7 @@ namespace Lanski.Structures
 {
     public static class EnumerableOfNullableExtensions
     {
-        public static IEnumerable<T> SkipEmpty<T>(this IEnumerable<Slot<T>> enumerable) where T : class => 
+        public static IEnumerable<T> SkipEmpty<T>(this IEnumerable<Possible<T>> enumerable) where T : class => 
             enumerable
                 .Where(x => x.Has_a_Value())
                 .Select(x => x.Must_Have_a_Value())

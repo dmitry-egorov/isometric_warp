@@ -3,11 +3,11 @@ using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Models.Game.Battle.Board.Tile
 {
-    public class LandscapeModel
+    public class MLandscape
     {
         public readonly LandscapeType Type;
 
-        public LandscapeModel(LandscapeType type)
+        public MLandscape(LandscapeType type)
         {
             Type = type; //Note: can check value here
         }

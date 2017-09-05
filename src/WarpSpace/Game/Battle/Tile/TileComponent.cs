@@ -12,14 +12,14 @@ namespace WarpSpace.Game.Battle.Tile
         public UnitSlot UnitSlot { get; private set; }
         public HighlightElement Highlight { get; private set; }
         
-        public static TileComponent Create(GameObject prefab, Transform parent, TileModel tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, PlayerModel player)
+        public static TileComponent Create(GameObject prefab, Transform parent, MTile tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, MPlayer player)
         {
             var component = Instantiate(prefab, parent).GetComponent<TileComponent>();
             component.Init(tile, neighbourhood, dimensions, player);
             return component;
         }
 
-        private void Init(TileModel tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, PlayerModel player)
+        private void Init(MTile tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, MPlayer player)
         {
             _tile = tile;
             var position = tile.Position;
@@ -51,6 +51,6 @@ namespace WarpSpace.Game.Battle.Tile
 
         private static Vector3 GetPosition(Index2D i, Dimensions2D dimensions) => new Vector3(i.Column - dimensions.Columns * 0.5f, 0, dimensions.Rows * 0.5f - i.Row);
         
-        private TileModel _tile;//For debug
+        private MTile _tile;//For debug
     }
 }

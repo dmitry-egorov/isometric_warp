@@ -38,18 +38,18 @@ namespace Lanski.Structures
             return nullable.Select(selector).GetValueOrDefault();
         }
 
-        public static Slot<TResult> SelectManyRef<T, TResult>(this T? nullable, Func<T, Slot<TResult>> selector)
+        public static Possible<TResult> SelectManyRef<T, TResult>(this T? nullable, Func<T, Possible<TResult>> selector)
             where T : struct
             where TResult : class
         {
-            return nullable.HasValue ? selector(nullable.Value) : default(Slot<TResult>);
+            return nullable.HasValue ? selector(nullable.Value) : default(Possible<TResult>);
         }
         
-        public static Slot<TResult> SelectRef<T, TResult>(this T? nullable, Func<T, TResult> selector)
+        public static Possible<TResult> SelectRef<T, TResult>(this T? nullable, Func<T, TResult> selector)
             where T : struct
             where TResult: class 
         => 
-            nullable.HasValue ? selector(nullable.Value).As_a_Slot() : default(Slot<TResult>)
+            nullable.HasValue ? selector(nullable.Value).As_a_Slot() : default(Possible<TResult>)
         ;
 
         public static TResult? Select<T, TResult>(this T? nullable, Func<T, TResult> selector)

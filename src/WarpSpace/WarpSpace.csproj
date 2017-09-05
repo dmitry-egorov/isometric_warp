@@ -78,8 +78,16 @@
     <Compile Include="Game\Battle\Unit\Mover.cs" />
     <Compile Include="Game\Battle\Unit\Outline.cs" />
     <Compile Include="Game\Battle\Unit\UnitComponent.cs" />
+    <Compile Include="Settings\FactionSettings.cs" />
+    <Compile Include="Settings\FactionsSettings.cs" />
+    <Compile Include="Settings\MovementSettings.cs" />
+    <Compile Include="Settings\UnitSettingsHolder.cs" />
+    <Compile Include="Settings\UnitSettings.cs" />
+    <Compile Include="Settings\UnitsSettings.cs" />
     <Compile Include="System\DebugComponent.cs" />
     <Compile Include="System\ShaderGlobalsWirer.cs" />
+    <Compile Include="UI\Gameplay\Bay\BayPresenter.cs" />
+    <Compile Include="UI\Gameplay\Bay\BaySlotPresenter.cs" />
     <Compile Include="UI\Gameplay\Inventory\InventoryPresenter.cs" />
     <Compile Include="UI\Gameplay\ShowWhenUnitSelected.cs" />
     <Compile Include="UI\Gameplay\Weapon\ClicksHandler.cs" />

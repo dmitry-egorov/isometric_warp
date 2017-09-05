@@ -26,7 +26,7 @@ namespace WarpSpace.UI.Gameplay.Weapon
                     .Subscribe(Handle_Weapon_Selection)
             ;
             
-            void Handle_Weapon_Selection(Slot<WeaponModel> weapon) => 
+            void Handle_Weapon_Selection(Possible<MWeapon> weapon) => 
                 image.material = weapon.Has_a_Value() 
                     ? SelectedMaterial 
                     : NormalMaterial

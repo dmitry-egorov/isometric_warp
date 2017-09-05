@@ -2,9 +2,9 @@
 {
     public struct StructureDestroyed
     {
-        private readonly StructureModel _structure;
+        private readonly MStructure _structure;
 
-        public StructureDestroyed(StructureModel structure)
+        public StructureDestroyed(MStructure structure)
         {
             _structure = structure;
         }

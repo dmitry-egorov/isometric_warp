@@ -8,16 +8,16 @@ using WarpSpace.Models.Game.Battle.Board.Weapon;
 
 namespace WarpSpace.Models.Game.Battle.Player
 {
-    public class PlayerModel
+    public class MPlayer
     {
-        public ICell<Slot<UnitModel>> Selected_Unit_Cell { get; }
-        public ICell<Slot<WeaponModel>> Selected_Weapon_Cell { get; }
+        public ICell<Possible<MUnit>> Selected_Unit_Cell { get; }
+        public ICell<Possible<MWeapon>> Selected_Weapon_Cell { get; }
 
-        public PlayerModel()
+        public MPlayer()
         {
             _selection_cell = new NullableCell<PlayersSelection>(null);
             Selected_Unit_Cell = _selection_cell.Select(x => x.SelectRef(s => s.Unit));
-            Selected_Weapon_Cell = _selection_cell.Select(x => x.SelectManyRef(s => s.WeaponSlot));
+            Selected_Weapon_Cell = _selection_cell.Select(x => x.SelectManyRef(s => s.PossibleWeapon));
 
             Wire_Selected_Unit_Destruction();
             
@@ -32,7 +32,7 @@ namespace WarpSpace.Models.Game.Battle.Player
             }
         }
 
-        public void Execute_Command_At(TileModel tile)
+        public void Execute_Command_At(MTile tile)
         {
             if (!Possible_Command_At(tile).Has_a_Value(out var command)) 
                 return;
@@ -59,7 +59,7 @@ namespace WarpSpace.Models.Game.Battle.Player
             }
         }
 
-        public Command? Possible_Command_At(TileModel tile)
+        public Command? Possible_Command_At(MTile tile)
         {
             if (A_Weapon_Is_Selected(out var weapon))
             {
@@ -84,7 +84,7 @@ namespace WarpSpace.Models.Game.Battle.Player
             return null;
         }
 
-        public void Select_a_Unit(UnitModel unit) => _selection_cell.Value = new PlayersSelection(unit, Slot.Empty<WeaponModel>());
+        public void Select_a_Unit(MUnit unit) => _selection_cell.Value = new PlayersSelection(unit, Possible.Empty<MWeapon>());
 
         public void Toggle_Weapon_Selection()
         {
@@ -117,24 +117,24 @@ namespace WarpSpace.Models.Game.Battle.Player
             if (!A_Unit_Is_Selected(out var selected_unit))
                 return;
             
-            _selection_cell.Value = new PlayersSelection(selected_unit, Slot.Empty<WeaponModel>());
+            _selection_cell.Value = new PlayersSelection(selected_unit, Possible.Empty<MWeapon>());
         }
 
-        private bool A_Unit_Is_Selected(out UnitModel selected_unit) => Selected_Unit_Cell.Has_a_Value(out selected_unit);
-        private bool A_Weapon_Is_Selected(out WeaponModel selected_weapon) => Selected_Weapon_Cell.Has_a_Value(out selected_weapon); 
+        private bool A_Unit_Is_Selected(out MUnit selected_unit) => Selected_Unit_Cell.Has_a_Value(out selected_unit);
+        private bool A_Weapon_Is_Selected(out MWeapon selected_weapon) => Selected_Weapon_Cell.Has_a_Value(out selected_weapon); 
         private bool A_Weapon_Is_Not_Selected() => Selected_Weapon_Cell.Does_Not_Have_a_Value(); 
         private bool There_Is_No_Selection() => Selection_Cell.Does_Not_Have_a_Value();
-        private bool Can_Select(UnitModel unit) => unit.Faction == Faction.Players;
+        private bool Can_Select(MUnit unit) => unit.Faction == Faction.Players;
         
         private struct PlayersSelection
         {
-            public readonly UnitModel Unit;
-            public readonly Slot<WeaponModel> WeaponSlot;
+            public readonly MUnit Unit;
+            public readonly Possible<MWeapon> PossibleWeapon;
 
-            public PlayersSelection(UnitModel unit, Slot<WeaponModel> weaponSlot)
+            public PlayersSelection(MUnit unit, Possible<MWeapon> possible_weapon)
             {
                 Unit = unit;
-                WeaponSlot = weaponSlot;
+                PossibleWeapon = possible_weapon;
             }
         }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Lanski.Geometry;
 using Lanski.Structures;
 using UnityEngine;
@@ -17,7 +16,7 @@ namespace WarpSpace.Game.Battle.Unit
             
         private readonly Queue<MovementTarget> _movementQueue = new Queue<MovementTarget>(16);
 
-        private Slot<MovementTarget> _currentTarget;
+        private Possible<MovementTarget> _currentTarget;
         private float _speed;
         private float _angularSpeed;
 
@@ -148,7 +147,7 @@ namespace WarpSpace.Game.Battle.Unit
                 if (dr != 0f) 
                     return;
                     
-                _currentTarget = Slot.Empty<MovementTarget>();
+                _currentTarget = Possible.Empty<MovementTarget>();
                 Update();
             }
 
@@ -171,17 +170,6 @@ namespace WarpSpace.Game.Battle.Unit
                 Position = position;
                 Rotation = rotation;
             }
-        }
-
-        [Serializable]
-        public struct MovementSettings
-        {
-            public float MaxAngularSpeed;
-            public float MinAngularSpeed;
-            public float AnglularAccelerationDistance;
-            public float MaxSpeed;
-            public float MinSpeed;
-            public float AccelerationDistance;
         }
     }
 }

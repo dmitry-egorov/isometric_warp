@@ -6,7 +6,7 @@ namespace Lanski.Reactive
     public class Signal<T> : IStream<T>, IConsumer<T>
     {
         private readonly Stream<T> _stream = new Stream<T>();
-        private Slot<T> _last_value;
+        private Possible<T> _last_value;
 
         public Action Subscribe(Action<T> action)
         {

@@ -8,7 +8,6 @@ using WarpSpace.Game.Battle;
 namespace WarpSpace.UI.Gameplay.Inventory
 {
     [RequireComponent(typeof(Text))]
-    [RequireComponent(typeof(ShowWhenUnitSelected))]
     public class InventoryPresenter: MonoBehaviour
     {
         void Start()

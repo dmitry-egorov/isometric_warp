@@ -6,21 +6,21 @@ using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Models.Game.Battle.Board.Tile
 {
-    public class TileModel
+    public class MTile
     {
         public readonly Index2D Position;
-        public readonly LandscapeModel Landscape;
+        public readonly MLandscape MLandscape;
 
-        public AdjacentRef<TileModel> Adjacent { get; private set; }
+        public AdjacentRef<MTile> Adjacent { get; private set; }
         
         public ICell<TileSite> Site_Cell => _site_cell;
 
         public bool Is_Occupied => Site.Is_Occupied();
 
-        public TileModel(Index2D position, TileDescription desc, UnitFactory unit_factory)
+        public MTile(Index2D position, TileDescription desc, UnitFactory unit_factory)
         {
             Position = position;
-            Landscape = new LandscapeModel(desc.Type);
+            MLandscape = new MLandscape(desc.Type);
 
             var content = desc.Initial_Content;
             _site_cell = new ValueCell<TileSite>(Create_Site());
@@ -30,7 +30,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
                 if (content.Is_a_Structure(out var structure_description))
                     return Create_Structure_Site(structure_description);
 
-                var location = new LocationModel(this, Slot.Empty<UnitModel>());
+                var location = new MLocation(this, Possible.Empty<MUnit>());
 
                 if (content.Is_Empty())
                     return location;
@@ -42,20 +42,20 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
             }
         }
 
-        public void Init(AdjacentRef<TileModel> adjacent_tiles)
+        public void Init(AdjacentRef<MTile> adjacent_tiles)
         {
             Adjacent = adjacent_tiles;
         }
 
-        public LocationModel Must_Have_a_Location() => Site.Must_Be_a_Location();
-        public bool Has_a_Location(out LocationModel unit) => Site.Is_a_Location(out unit);
-        public bool Has_a_Unit(out UnitModel unit) => Site.Has_a_Unit(out unit);
-        public bool Is_Passable_By(ChassisType chassis_type) => Landscape.Is_Passable_By(chassis_type) && !Is_Occupied;
-        public bool Is_Adjacent_To(TileModel destination) => Position.Is_Adjacent_To(destination.Position);
-        public Direction2D Get_Direction_To(TileModel destination) => Position.Direction_To(destination.Position);
-        public bool Has_a_Structure(out StructureModel structure) => Site.Is_a_Structure(out structure);
+        public MLocation Must_Have_a_Location() => Site.Must_Be_a_Location();
+        public bool Has_a_Location(out MLocation unit) => Site.Is_a_Location(out unit);
+        public bool Has_a_Unit(out MUnit unit) => Site.Has_a_Unit(out unit);
+        public bool Is_Passable_By(ChassisType chassis_type) => MLandscape.Is_Passable_By(chassis_type) && !Is_Occupied;
+        public bool Is_Adjacent_To(MTile destination) => Position.Is_Adjacent_To(destination.Position);
+        public Direction2D Get_Direction_To(MTile destination) => Position.Direction_To(destination.Position);
+        public bool Has_a_Structure(out MStructure structure) => Site.Is_a_Structure(out structure);
 
-        internal void Create_Debris(Slot<InventoryContent> inventory_content)
+        internal void Create_Debris(Possible<InventoryContent> inventory_content)
         {
             var debris = StructureDescription.Create.Debris(TileHelper.GetOrientation(Position), inventory_content);
             Set_Structure(debris);
@@ -81,13 +81,13 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         private TileSite Create_Location_Empty_Site()
         {
-            var unit_slot = new LocationModel(this, Slot.Empty<UnitModel>());
+            var unit_slot = new MLocation(this, Possible.Empty<MUnit>());
             return new TileSite(unit_slot);
         }
 
         private TileSite Create_Structure_Site(StructureDescription structure_description)
         {
-            var structure = new StructureModel(structure_description, this);
+            var structure = new MStructure(structure_description, this);
             return new TileSite(structure);
         }
 

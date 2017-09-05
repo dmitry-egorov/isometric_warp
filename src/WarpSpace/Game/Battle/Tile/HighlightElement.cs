@@ -7,11 +7,11 @@ namespace WarpSpace.Game.Battle.Tile
 {
     public class HighlightElement
     {
-        private readonly PlayerModel _player;
-        private readonly TileModel _tile;
+        private readonly MPlayer _player;
+        private readonly MTile _tile;
         private readonly Landscape _landscape;
 
-        public HighlightElement(PlayerModel player, TileModel tile, Landscape landscape)
+        public HighlightElement(MPlayer player, MTile tile, Landscape landscape)
         {
             _player = player;
             _tile = tile;

@@ -4,24 +4,24 @@ using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Models.Game.Battle.Board.Weapon
 {
-    public class WeaponModel
+    public class MWeapon
     {
-        public static WeaponModel From(UnitType type, UnitModel mounting_unit) => new WeaponModel(type.Get_Weapon_Type().Get_Damage_Description(), mounting_unit);
+        public static MWeapon From(UnitType type, MUnit mounting_unit) => new MWeapon(type.Get_Weapon_Type().Get_Damage_Description(), mounting_unit);
 
-        public WeaponModel(DamageDescription desc, UnitModel mountingUnit)
+        public MWeapon(DamageDescription desc, MUnit mountingUnit)
         {
             _mountingUnit = mountingUnit;
             _damage = desc;
         }
 
-        public void Fire_At(UnitModel unit)
+        public void Fire_At(MUnit unit)
         {
             Can_Fire_At(unit).Otherwise_Throw("Can't fire at the unit");
 
             unit.Take(_damage);
         }
 
-        public bool Can_Fire_At(UnitModel unit)
+        public bool Can_Fire_At(MUnit unit)
         {
             var target = The(unit);
             
@@ -31,19 +31,19 @@ namespace WarpSpace.Models.Game.Battle.Board.Weapon
             ;
         }
 
-        private Target The(UnitModel unit) => new Target(unit, _mountingUnit);
+        private Target The(MUnit unit) => new Target(unit, _mountingUnit);
 
 
-        private readonly UnitModel _mountingUnit;
+        private readonly MUnit _mountingUnit;
         private readonly DamageDescription _damage;
 
 
         private struct Target
         {
-            private readonly UnitModel _target_unit;
-            private readonly UnitModel _mounting_unit;
+            private readonly MUnit _target_unit;
+            private readonly MUnit _mounting_unit;
 
-            public Target(UnitModel targetUnit, UnitModel mountingUnit)
+            public Target(MUnit targetUnit, MUnit mountingUnit)
             {
                 _target_unit = targetUnit;
                 _mounting_unit = mountingUnit;

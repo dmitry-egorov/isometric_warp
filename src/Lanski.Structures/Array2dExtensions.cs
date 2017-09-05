@@ -143,7 +143,7 @@ namespace Lanski.Structures
         {
             return new AdjacentRef<T>(Neighbours().ToArray());
             
-            IEnumerable<Slot<T>> Neighbours()
+            IEnumerable<Possible<T>> Neighbours()
             {
                 yield return array.TryGetRef(i.Left());
                 yield return array.TryGetRef(i.Up());
@@ -172,11 +172,11 @@ namespace Lanski.Structures
             return array.TryGet(i).Select(condition).GetValueOrDefault(defaultValue);
         }
 
-        public static Slot<T> TryGetRef<T>(this T[,] array, Index2D i)
+        public static Possible<T> TryGetRef<T>(this T[,] array, Index2D i)
             where T: class
         {
             return i.Fits(array) ? array.Get(i).As_a_Slot() 
-                                 : Slot.Empty<T>();
+                                 : Possible.Empty<T>();
         }
         
         public static T? TryGet<T>(this T[,] array, Index2D i)
@@ -251,14 +251,14 @@ namespace Lanski.Structures
         where T: class
     {
         public readonly T[] NotEmpty;
-        public readonly Slot<T>[] Items;
-        public AdjacentRef(Slot<T>[] adjacent)
+        public readonly Possible<T>[] Items;
+        public AdjacentRef(Possible<T>[] adjacent)
         {
             Items = adjacent;
             NotEmpty = adjacent.SkipEmpty().ToArray();
         }
 
-        public Slot<T> this[Direction2D d]
+        public Possible<T> this[Direction2D d]
         {
             get
             {
@@ -278,7 +278,7 @@ namespace Lanski.Structures
             }
         }
 
-        public AdjacentRef<TResult> Map<TResult>(Func<Slot<T>, Slot<TResult>> selector) where TResult : class => 
+        public AdjacentRef<TResult> Map<TResult>(Func<Possible<T>, Possible<TResult>> selector) where TResult : class => 
             new AdjacentRef<TResult>(Items.Select(selector).ToArray())
         ;
     }

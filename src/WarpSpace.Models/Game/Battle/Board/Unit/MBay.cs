@@ -4,24 +4,24 @@ using Lanski.Structures;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
-    public class BayModel
+    public class MBay
     {
-        public readonly UnitModel Owner;
+        public readonly MUnit Owner;
         public int Size => _slots.Count;
-        public LocationModel this[int i] => _slots[i];
+        public MLocation this[int i] => _slots[i];
 
-        public BayModel(int size, UnitModel owner)
+        public MBay(int size, MUnit owner)
         {
             Owner = owner;
             _slots = Create_Slots(size);
         }
 
-        private List<LocationModel> Create_Slots(int size)
+        private List<MLocation> Create_Slots(int size)
         {
-            return Enumerable.Range(0, size).Select(x => new LocationModel(this, Slot.Empty<UnitModel>())).ToList();
+            return Enumerable.Range(0, size).Select(x => new MLocation(this, Possible.Empty<MUnit>())).ToList();
         }
 
-        public bool Can_Accept(UnitModel unit)
+        public bool Can_Accept(MUnit unit)
         {
             foreach (var slot in _slots) //Any is empty
             {
@@ -31,7 +31,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             return false;
         }
         
-        private readonly IReadOnlyList<LocationModel> _slots;
+        private readonly IReadOnlyList<MLocation> _slots;
 
     }
 }

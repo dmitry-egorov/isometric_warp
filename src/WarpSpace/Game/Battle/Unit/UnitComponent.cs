@@ -4,21 +4,19 @@ using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Game.Battle.Tile;
-using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Player;
+using WarpSpace.Settings;
 
 namespace WarpSpace.Game.Battle.Unit
 {
     public class UnitComponent : MonoBehaviour
     {
-        public OwnSettings Settings;
-        private Action _wirings;
 
         public Mover Mover { get; private set; }
-        public UnitModel Unit { get; private set; }
+        public MUnit Unit { get; private set; }
 
-        public static UnitComponent Create(GameObject prefab, Transform parent, UnitModel unit, TileComponent[,] tile_components, PlayerModel player)
+        public static UnitComponent Create(GameObject prefab, Transform parent, MUnit unit, TileComponent[,] tile_components, MPlayer player)
         {
             var obj = Instantiate(prefab, parent).GetComponent<UnitComponent>();
 
@@ -37,18 +35,21 @@ namespace WarpSpace.Game.Battle.Unit
             _wirings();
         }
 
-        private void Init(UnitModel unit, PlayerModel player, TileComponent[,] tile_components)
+        private void Init(MUnit unit, MPlayer player, TileComponent[,] tile_components)
         {
-            var unitSettings = Select_Settings(unit.Type);
-            var factionSettings = Select_Faction_Settings(unit.Faction);
+            var settings_holder = FindObjectOfType<UnitSettingsHolder>();
 
-            var outline = GetComponentInChildren<Outline>();
-            var filter = GetComponentInChildren<UnitMesh>();
-            Mover = new Mover(unitSettings.Movement, transform);
+            var unit_type = unit.Type;
+            
             Unit = unit;
 
-            filter.Init(unitSettings.Mesh, factionSettings.Material);
-            outline.Init(unitSettings.Mesh);
+            var unitSettings = settings_holder.Get_Settings_For(unit_type);
+            Mover = new Mover(unitSettings.Movement, transform);
+
+            var outline = GetComponentInChildren<Outline>();
+            outline.Init(unit_type);
+            var filter = GetComponentInChildren<UnitMesh>();
+            filter.Present(unit_type, unit.Faction);
             
             transform.localRotation = Direction2D.Left.To_Rotation();
             
@@ -66,7 +67,7 @@ namespace WarpSpace.Game.Battle.Unit
                     .Subscribe(x => SetOutline(x.previous, x.current))
                 ;
 
-                void SetOutline(Slot<UnitModel> possible_prev_unit, Slot<UnitModel> possible_cur_unit)
+                void SetOutline(Possible<MUnit> possible_prev_unit, Possible<MUnit> possible_cur_unit)
                 {
                     if (possible_prev_unit.Has_a_Value(out var prev_unit) && prev_unit == unit)
                         outline.Disable();
@@ -83,7 +84,7 @@ namespace WarpSpace.Game.Battle.Unit
                         .Stream_Of_Movements
                         .Subscribe(x => MoveUnitComponent(x.Source, x.Destination));
 
-                void MoveUnitComponent(LocationModel previous_slot, LocationModel current_slot)
+                void MoveUnitComponent(MLocation previous_slot, MLocation current_slot)
                 {
                     if (previous_slot.Is_a_Tile(out var previous_tile) && current_slot.Is_a_Tile(out var current_tile))
                     {
@@ -96,7 +97,6 @@ namespace WarpSpace.Game.Battle.Unit
                     {
                         //TODO: Handle bays
                     }
-                    
                 }
             }
             
@@ -108,65 +108,7 @@ namespace WarpSpace.Game.Battle.Unit
                     .Subscribe(isAlive => Destroy(gameObject));
             }
         }
-
-        private OwnSettings.FactionsSettings.FactionSettings Select_Faction_Settings(Faction unitFaction)
-        {
-            switch (unitFaction)
-            {
-                case Faction.Players:
-                    return Settings.Factions.Player;
-                case Faction.Natives:
-                    return Settings.Factions.Natives;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(unitFaction), unitFaction, null);
-            }
-        }
-
-        private OwnSettings.UnitsSettings.UnitSettings Select_Settings(UnitType unitType)
-        {
-            switch (unitType)
-            {
-                case UnitType.Mothership:
-                    return Settings.Units.Mothership;
-                case UnitType.Tank:
-                    return Settings.Units.Tank;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(unitType), unitType, null);
-            }
-        }
         
-        [Serializable]
-        public struct OwnSettings
-        {
-            public FactionsSettings Factions;
-            public UnitsSettings Units;
-
-            [Serializable]
-            public struct UnitsSettings
-            {
-                public UnitSettings Mothership;
-                public UnitSettings Tank;
-            
-                [Serializable]
-                public struct UnitSettings
-                {
-                    public Mover.MovementSettings Movement;
-                    public Mesh Mesh;
-                }
-            }
-
-            [Serializable]
-            public struct FactionsSettings
-            {
-                public FactionSettings Player;
-                public FactionSettings Natives;
-                
-                [Serializable]
-                public struct FactionSettings
-                {
-                    public Material Material;
-                }
-            }
-        }
+        private Action _wirings;
     }
 }

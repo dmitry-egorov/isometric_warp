@@ -66,7 +66,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _OutlineWidth: 2
+    - _OutlineWidth: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -74,8 +74,8 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _BottomColor: {r: 0.63988, g: 0.70010406, b: 0.941, a: 0.191}
+    - _BottomColor: {r: 0.23921569, g: 0.2627451, b: 0.3529412, a: 0.78431374}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _OutlineColor: {r: 0.8897059, g: 0.37289143, b: 0.40496954, a: 1}
-    - _TopColor: {r: 0.52937055, g: 0.5380965, b: 0.573, a: 0.19}
+    - _TopColor: {r: 0.16349551, g: 0.129456, b: 0.186, a: 0.7529412}

@@ -11,7 +11,7 @@ namespace WarpSpace.Game.Battle.Tile
     {
         public OwnSettings Settings;
 
-        public void Init(TileModel tile)
+        public void Init(MTile tile)
         {
             tile.Site_Cell.Subscribe(CreateStructure);
         }
