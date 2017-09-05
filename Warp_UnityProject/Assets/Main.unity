@@ -334,7 +334,7 @@ MonoBehaviour:
     Units:
       Mothership:
         Movement:
-          MaxAngularSpeed: 4
+          MaxAngularSpeed: 45
           MinAngularSpeed: 5
           AnglularAccelerationDistance: 15
           MaxSpeed: 0.45

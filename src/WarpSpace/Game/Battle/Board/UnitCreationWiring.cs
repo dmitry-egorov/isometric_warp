@@ -19,11 +19,12 @@ namespace WarpSpace.Game.Battle.Board
             
             board
                 .Stream_Of_Unit_Creations
+                .Where(u => u.Initial_Location.Is_a_Tile())
                 .Subscribe(added => Create_and_Wire_a_Component_For_the_Unit(added.Unit));
                 
             void Create_and_Wire_a_Component_For_the_Unit(UnitModel unit)
             {
-                var tile = unit.Location.Must_Be_a_Tile();//TODO: handle bays
+                var tile = unit.Location.Must_Be_a_Tile();
                 var tile_component = tile_components.Get(tile.Position);
 
                 var unit_component = UnitComponent.Create(prefab, tile_component.UnitSlot.transform, unit, tile_components, player);

@@ -77,21 +77,15 @@ namespace WarpSpace.Models.Game.Battle.Board
             var position = _entrance_spacial.Position;
             var orientation = _entrance_spacial.Orientation;
 
-            var tank = new UnitDescription(UnitType.Tank, Faction.Players, Slot.Empty<InventoryContent>(), Slot.Empty<Slot<UnitDescription>[]>());
+            var tank = new UnitDescription(UnitType.Tank, Faction.Players, Slot.Empty<InventoryContent>(), Slot.Empty<IReadOnlyList<Slot<UnitDescription>>>());
             
             var test1 = new UnitDescription();
             Debug.Log("1");
             var test2 = new UnitDescription[1];
             Debug.Log("2");
-            var test3 = new Slot<UnitDescription>[1].As_a_Slot();
-            Debug.Log("3");
-
-            var tanks_slot = tank.As_a_Slot();
-            Debug.Log("4");
-
-            //var bay_units = new [] { tanks_slot };
-            var bay_units = new Slot<UnitDescription>[1].As_a_Slot();
+            var bay_units = new List<Slot<UnitDescription>> {tank.As_a_Slot()};
             //var bay_units = new Slot<UnitDescription>[0].As_a_Slot();
+            Debug.Log("3");
 
             Debug.Log("Created bay description");
 
@@ -104,8 +98,7 @@ namespace WarpSpace.Models.Game.Battle.Board
 
         private void Create_a_Unit(UnitDescription desc, Index2D position)
         {
-            Tiles.Get(position).Has_a_Location(out var location)
-                .Otherwise_Throw("Can't add a unit to a tile occupied by a structure");
+            Tiles.Get(position).Has_a_Location(out var location).Otherwise_Throw("Can't add a unit to a tile occupied by a structure");
 
             _unit_factory.Create_a_Unit(desc, location);
         }
@@ -122,9 +115,9 @@ namespace WarpSpace.Models.Game.Battle.Board
         public readonly UnitType Type;
         public readonly Faction Faction;
         public readonly Slot<InventoryContent> Inventory_Content;
-        public readonly Slot<Slot<UnitDescription>[]> Bay_Content;
+        public readonly Slot<IReadOnlyList<Slot<UnitDescription>>> Bay_Content;
 
-        public UnitDescription(UnitType type, Faction faction, Slot<InventoryContent> inventory_content, Slot<Slot<UnitDescription>[]> bay_content)
+        public UnitDescription(UnitType type, Faction faction, Slot<InventoryContent> inventory_content, Slot<IReadOnlyList<Slot<UnitDescription>>> bay_content)
         {
             Type = type;
             Inventory_Content = inventory_content;

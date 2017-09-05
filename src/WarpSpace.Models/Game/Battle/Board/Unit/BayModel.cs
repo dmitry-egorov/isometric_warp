@@ -1,15 +1,24 @@
-﻿namespace WarpSpace.Models.Game.Battle.Board.Unit
+﻿using System.Collections.Generic;
+using System.Linq;
+using Lanski.Structures;
+
+namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public class BayModel
     {
         public readonly UnitModel Owner;
-        public int Size => _slots.Length;
+        public int Size => _slots.Count;
         public LocationModel this[int i] => _slots[i];
 
         public BayModel(int size, UnitModel owner)
         {
             Owner = owner;
-            _slots = new LocationModel[size];
+            _slots = Create_Slots(size);
+        }
+
+        private List<LocationModel> Create_Slots(int size)
+        {
+            return Enumerable.Range(0, size).Select(x => new LocationModel(this, Slot.Empty<UnitModel>())).ToList();
         }
 
         public bool Can_Accept(UnitModel unit)
@@ -22,7 +31,7 @@
             return false;
         }
         
-        private readonly LocationModel[] _slots;
+        private readonly IReadOnlyList<LocationModel> _slots;
 
     }
 }

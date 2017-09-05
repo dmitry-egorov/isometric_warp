@@ -34,9 +34,15 @@ namespace WarpSpace.Models.Game.Battle.Board
 
         private static string ToString(LocationModel initial_location)
         {
-            return initial_location.Is_a_Tile(out var tile) 
-                ? tile.Position.ToString() 
-                : initial_location.Must_Be_a_Bay().Owner.Type.ToString();
+            Debug.Log($"Not null loc: {initial_location != null}");
+            Debug.Log(initial_location.ToString());
+            if (initial_location.Is_a_Tile(out var tile)) return tile.Position.ToString();
+
+
+            var must_be_a_bay = initial_location.Must_Be_a_Bay();
+            Debug.Log((must_be_a_bay != null).ToString());
+            Debug.Log(must_be_a_bay.ToString());
+            return must_be_a_bay.Owner.Type.ToString();
         }
 
         private void Create_Units_In_The_Bay(UnitDescription desc, UnitModel unit)
@@ -45,9 +51,9 @@ namespace WarpSpace.Models.Game.Battle.Board
                 return;
             
             var content = desc.Bay_Content.Must_Have_a_Value();
-            (bay.Size >= content.Length).Otherwise_Throw("Actual unit's bay size is smaller then the described content size");
+            (bay.Size >= content.Count).Otherwise_Throw("Actual unit's bay size is smaller then the described content size");
 
-            for (var i = 0; i < content.Length; i++)
+            for (var i = 0; i < content.Count; i++)
             {
                 Debug.Log($"Creating unit {i}");
                 var possible_unit_in_the_bay = content[i];
