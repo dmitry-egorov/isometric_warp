@@ -34,12 +34,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Gameplay\Inventory\InventoryPresenter.cs" />
-    <Compile Include="Gameplay\ShowOnlyWhenAUnitIsSelected.cs" />
-    <Compile Include="Gameplay\Units\HealthComponent.cs" />
-    <Compile Include="Gameplay\Units\UiUnitComponent.cs" />
-    <Compile Include="Gameplay\Units\UIUnitsComponent.cs" />
-    <Compile Include="Gameplay\Weapon\WeaponClicksHandler.cs" />
-    <Compile Include="Gameplay\Weapon\WeaponSelectionHighlight.cs" />
+    <Compile Include="Gameplay\ShowWhenUnitSelected.cs" />
+    <Compile Include="Gameplay\Weapon\ClicksHandler.cs" />
+    <Compile Include="Gameplay\Weapon\SelectionHighlight.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">

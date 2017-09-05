@@ -79,11 +79,12 @@ namespace WarpSpace.Models.Game.Battle.Board
 
             var tank = new UnitDescription(UnitType.Tank, Faction.Players, null, Slot.Empty<Slot<UnitDescription>[]>());
 
-            var bay = new [] { tank.As_a_Slot() }.As_a_Slot();
+            //var bay = new [] { tank.As_a_Slot() }.As_a_Slot();
+            var bay_units = new Slot<UnitDescription>[1].As_a_Slot();
 
             Debug.Log("Created bay description");
 
-            var desc = new UnitDescription(UnitType.Mothership, Faction.Players, null, bay);
+            var desc = new UnitDescription(UnitType.Mothership, Faction.Players, null, bay_units);
             
             Debug.Log("Created mothership description");
 

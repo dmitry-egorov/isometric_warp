@@ -183,6 +183,9 @@
     <Reference Include="WarpSpace.UI">
       <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Scripts/WarpSpace.UI.dll</HintPath>
     </Reference>
+    <Reference Include="WarpSpace.Overlay">
+      <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Scripts/WarpSpace.Overlay.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

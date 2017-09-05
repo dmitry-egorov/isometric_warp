@@ -33,7 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AdjacentRef.cs" />
     <Compile Include="Direction2DEx.cs" />
     <Compile Include="Direction2DExtensions.cs" />
     <Compile Include="Index2DData.cs" />
