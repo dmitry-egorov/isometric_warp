@@ -2696,7 +2696,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1306729195}
-  - component: {fileID: 1306729197}
   - component: {fileID: 1306729196}
   m_Layer: 0
   m_Name: Tile
@@ -2732,17 +2731,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 441185114, guid: fcafea95b38176f4ba590a132dc151c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1306729197
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1306729194}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1922587698, guid: 558360f3551f347ac8dfffcf1b3e3516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!43 &1340893135
@@ -2912,7 +2900,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1528309350}
-  - component: {fileID: 1528309351}
   - component: {fileID: 1528309352}
   m_Layer: 5
   m_Name: Unit
@@ -2940,17 +2927,6 @@ RectTransform:
   m_AnchoredPosition: {x: 300, y: 300}
   m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1528309351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1528309349}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1453091287, guid: 653cd56de714941b387b8a27078497a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1528309352
 MonoBehaviour:
   m_ObjectHideFlags: 0
