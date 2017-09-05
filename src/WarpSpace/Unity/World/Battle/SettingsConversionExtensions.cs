@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Lanski.Structures;
+﻿using Lanski.Structures;
 using WarpSpace.Common;
 using WarpSpace.Common.MapParsing;
 using WarpSpace.Descriptions;
@@ -37,8 +36,8 @@ namespace WarpSpace.Unity.World.Battle
                 new TileDescription(t, SelectContent(i));
 
             //TODO: generate random loot from settings?
-            UnitDescription? CreateUnitDescritpion(UnitType? arg) => 
-                arg.Select(type => new UnitDescription(type, Faction.Natives, InventoryContent.InitialFor(type)))
+            UnitDescription? CreateUnitDescritpion(UnitType? arg) => //TODO: match bay size
+                arg.Select(type => new UnitDescription(type, Faction.Natives, InventoryContent.InitialFor(type), Slot.Empty<Slot<UnitDescription>[]>()))
             ; 
             
             TileContentDescription SelectContent(Index2D i)

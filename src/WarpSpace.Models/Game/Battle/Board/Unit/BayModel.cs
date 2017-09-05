@@ -3,12 +3,15 @@
     public class BayModel
     {
         public readonly UnitModel Owner;
+        public int Size => _slots.Length;
+        public LocationModel this[int i] => _slots[i];
 
-        public BayModel(int slots_count, UnitModel owner)
+        public BayModel(int size, UnitModel owner)
         {
             Owner = owner;
-            _slots = new LocationModel[slots_count];
+            _slots = new LocationModel[size];
         }
+
 
         public bool Can_Accept(UnitModel unit)
         {
@@ -21,5 +24,6 @@
         }
         
         private readonly LocationModel[] _slots;
+
     }
 }

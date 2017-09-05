@@ -126,6 +126,9 @@
     <Reference Include="Lanski.Reflection">
       <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Editor/Lanski.Reflection.dll</HintPath>
     </Reference>
+    <Reference Include="Lanski.Sharp7">
+      <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Editor/Lanski.Sharp7.dll</HintPath>
+    </Reference>
     <Reference Include="Lanski.Structures">
       <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Editor/Lanski.Structures.dll</HintPath>
     </Reference>
@@ -153,6 +156,9 @@
     <Reference Include="Lanski.Reflection">
       <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Scripts/Lanski.Reflection.dll</HintPath>
     </Reference>
+    <Reference Include="Lanski.Sharp7">
+      <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Scripts/Lanski.Sharp7.dll</HintPath>
+    </Reference>
     <Reference Include="Lanski.Structures">
       <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Scripts/Lanski.Structures.dll</HintPath>
     </Reference>
@@ -176,12 +182,6 @@
     </Reference>
     <Reference Include="WarpSpace.UI">
       <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Scripts/WarpSpace.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="Lanski.Sharp7">
-      <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Scripts/Lanski.Sharp7.dll</HintPath>
-    </Reference>
-    <Reference Include="Lanski.Sharp7">
-      <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Editor/Lanski.Sharp7.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

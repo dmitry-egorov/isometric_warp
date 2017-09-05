@@ -1,4 +1,5 @@
 ﻿using System;
+using Lanski.Structures;
 
 namespace WarpSpace.Descriptions
 {
@@ -49,6 +50,21 @@ namespace WarpSpace.Descriptions
                     return ChassisType.Hower;
                 case UnitType.Tank:
                     return ChassisType.Tread;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        public static bool Has_a_Bay(this UnitType type, out int size)
+        {
+            switch (type)
+            {
+                case UnitType.Mothership:
+                    size = 4;
+                    return true;
+                case UnitType.Tank:
+                    size = 0;
+                    return false;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

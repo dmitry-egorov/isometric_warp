@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Lanski.Reactive;
 using Lanski.Structures;
 using WarpSpace.Descriptions;
@@ -72,10 +73,20 @@ namespace WarpSpace.Models.Game.Battle.Board
 
         public void Warp_In_the_Mothership()
         {
+            Debug.Log("Warp mothership");
             var position = _entrance_spacial.Position;
             var orientation = _entrance_spacial.Orientation;
 
-            var desc = new UnitDescription(UnitType.Mothership, Faction.Players, null);
+            var tank = new UnitDescription(UnitType.Tank, Faction.Players, null, Slot.Empty<Slot<UnitDescription>[]>());
+
+            var bay = new [] { tank.As_a_Slot() }.As_a_Slot();
+
+            Debug.Log("Created bay description");
+
+            var desc = new UnitDescription(UnitType.Mothership, Faction.Players, null, bay);
+            
+            Debug.Log("Created mothership description");
+
             Create_a_Unit(desc, position + orientation);
         }
 

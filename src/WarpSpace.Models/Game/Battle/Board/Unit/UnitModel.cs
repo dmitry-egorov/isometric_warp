@@ -12,11 +12,13 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
     {
         public readonly UnitType Type;
         
-        public readonly WeaponModel Weapon;
         public readonly HealthModel Health;
+        public readonly ChassisModel Chassis;
+        public readonly WeaponModel Weapon;
         public readonly InventoryModel Inventory;
+        public readonly Slot<BayModel> Possible_Bay;
 
-        public LocationModel Location => _chassis.Location;
+        public LocationModel Location => Chassis.Location;
 
         public IStream<UnitMoved> Stream_Of_Movements => _stream_of_movements;
         public IStream<UnitDestroyed> Signal_Of_the_Destruction => _signal_of_the_destruction;
@@ -27,21 +29,23 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         public IStream<MothershipExited> Stream_Of_Exits => _stream_of_exits;
 
-        public UnitModel(UnitDescription desc, LocationModel initial_location)
+        public UnitModel(UnitType unit_type, Faction faction, InventoryContent? inventory, LocationModel initial_location)
         {
-            Type = desc.Type;
-            Faction = desc.Faction;
+            Type = unit_type;
+            Faction = faction;
 
             Weapon = WeaponModel.From(Type, this);
             Health = HealthModel.From(Type, this);
-            Inventory = InventoryModel.From(desc.Inventory_Content);
+            Inventory = InventoryModel.From(inventory);
 
-            _chassis = new ChassisModel(initial_location, this.Type);
+            Chassis = new ChassisModel(initial_location, this.Type);
+            Possible_Bay = Type.Has_a_Bay(out var size) ? new BayModel(size, this).As_a_Slot() : Slot.Empty<BayModel>();
         }
 
         public bool Is_At(TileModel the_tile) => Location.Is(the_tile); 
-        public bool Can_Move_To(TileModel the_destination) => _chassis.Can_Move_To(the_destination); 
-        public bool Is_Adjacent_To(StructureModel the_structure) => Location.Is_Adjacent_To(the_structure); 
+        public bool Can_Move_To(TileModel the_destination) => Chassis.Can_Move_To(the_destination); 
+        public bool Is_Adjacent_To(StructureModel the_structure) => Location.Is_Adjacent_To(the_structure);
+        public bool Has_a_Bay(out BayModel bay) => Possible_Bay.Has_a_Value(out bay);
         public TileModel Must_Be_At_a_Tile() => Location.Must_Be_a_Tile();
         public bool Can_Interact_With(StructureModel the_structure) => 
             Is_Adjacent_To(the_structure) && 
@@ -58,7 +62,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             var new_location = destination.Must_Have_a_Location(); //Shouldn't be able to move to a tile without a location 
             var old_location = Location;
 
-            _chassis.Update_the_Location(new_location);
+            Chassis.Update_the_Location(new_location);
             old_location.Reset_the_Occupant();
             new_location.Set_the_Occupant_To(this);
             
@@ -111,9 +115,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         private void Send_Destruction() => _signal_of_the_destruction.Next(new UnitDestroyed(this, Location));
         private void Send_Movement(LocationModel old_location, LocationModel new_location) => _stream_of_movements.Next(new UnitMoved(this, old_location, new_location));
 
-        private readonly ChassisModel _chassis;
         private readonly Stream<UnitMoved> _stream_of_movements = new Stream<UnitMoved>();
         private readonly Signal<UnitDestroyed> _signal_of_the_destruction = new Signal<UnitDestroyed>();
         private readonly Stream<MothershipExited> _stream_of_exits = new Stream<MothershipExited>();
+
     }
 }

@@ -38,7 +38,7 @@ namespace Lanski.Structures
             return Has_a_Value();
         }
         
-        public T Must_Have_a_Value() => Has_a_Value(out var value) ? value : throw new InvalidOperationException();
+        [Pure] public T Must_Have_a_Value() => Has_a_Value(out var value) ? value : throw new InvalidOperationException();
 
         public Slot<TResult> SelectMany<TResult>(Func<T, Slot<TResult>> selector) => Has_a_Value(out var value) ? selector(value) : default(Slot<TResult>);
         public Slot<TResult> Select<TResult>(Func<T, TResult> selector) => Has_a_Value(out var value) ? new Slot<TResult>(true, selector(value)) : default(Slot<TResult>);
