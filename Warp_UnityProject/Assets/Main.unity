@@ -2268,6 +2268,7 @@ GameObject:
   - component: {fileID: 1159536342}
   - component: {fileID: 1159536343}
   - component: {fileID: 1159536344}
+  - component: {fileID: 1159536345}
   m_Layer: 5
   m_Name: Bay
   m_TagString: Untagged
@@ -2373,6 +2374,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 0
+--- !u!114 &1159536345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1159536338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -675665475, guid: b5035fe32e8853442beb87cb342037d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SlotPrefab: {fileID: 2046171333}
 --- !u!1 &1171155199
 GameObject:
   m_ObjectHideFlags: 0
@@ -3402,16 +3415,16 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2010438975}
-  m_LocalRotation: {x: 0.35355338, y: 0.35355338, z: -0.1464466, w: 0.8535535}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.33990115, y: -0.42447495, z: 0.17582329, w: 0.820594}
+  m_LocalPosition: {x: 0, y: 0, z: -30.000011}
+  m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 2046171334}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 45, y: 45, z: 0}
+  m_LocalEulerAnglesHint: {x: -24.115002, y: -63.407, z: 39.22}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -6}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2010438977
@@ -3725,7 +3738,8 @@ MonoBehaviour:
   m_Script: {fileID: 563122735, guid: b5035fe32e8853442beb87cb342037d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EmptyBackgroundMaterial: {fileID: 0}
+  EmptyBackgroundMaterial: {fileID: 2100000, guid: babd95849ab08614dafa6540d3a35707,
+    type: 2}
   UnitBackgroundMaterial: {fileID: 2100000, guid: ca376aec0d3ac476eb67933e213f2d8b,
     type: 2}
 --- !u!1 &2060075620
