@@ -9,6 +9,9 @@ Some planets have the gates combined. Those are usually pure reward planets, for
 The stars are being drained by the invaders. Over time the planets get colder and are eventually captured, starting from the outer ones. 
 Visiting a captured planet makes the ship suffer damage over time.
 
+Alternatively:
+Bigger individual maps with iconic locations (still rendomly generated). Zoltan homeworlds, Golden Bay, Iceland etc.
+
 
 Battle
 * Attack types
@@ -24,6 +27,8 @@ Planet Types:
 
 
 Ideas
+- unit blueprints
+- weapon blueprints
 - destroy structures
 - teleporter
 - warp tunels are huge antennas pointing to the sky. Upon entering a tunnel camera rises up.
