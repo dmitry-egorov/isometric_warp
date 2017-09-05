@@ -33,17 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Direction2DEx.cs" />
-    <Compile Include="Direction2DExtensions.cs" />
-    <Compile Include="Index2DData.cs" />
-    <Compile Include="MapParsing\MapParsingExtensions.cs" />
-    <Compile Include="MeshTransformation\MeshTransformer.cs" />
-    <Compile Include="Outline\OutlineMeshBuilder.cs" />
-    <Compile Include="ReferencePixels.cs" />
-    <Compile Include="ShaderGlobalsWirer.cs" />
-    <Compile Include="Spacial2DData.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Lanski.Geometry\Lanski.Geometry.csproj">
       <Project>{D581D1F2-8332-44D4-8799-0C0E1690635C}</Project>
       <Name>Lanski.Geometry</Name>

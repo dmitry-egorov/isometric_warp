@@ -1,7 +1,7 @@
 ﻿using System;
 using Lanski.Reactive;
 using Lanski.Structures;
-using WarpSpace.Descriptions;
+using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Weapon;
@@ -29,7 +29,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         public IStream<MothershipExited> Stream_Of_Exits => _stream_of_exits;
 
-        public UnitModel(UnitType unit_type, Faction faction, InventoryContent? inventory, LocationModel initial_location)
+        public UnitModel(UnitType unit_type, Faction faction, Slot<InventoryContent> inventory, LocationModel initial_location)
         {
             Type = unit_type;
             Faction = faction;
@@ -95,7 +95,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
                 Destruct();
         }
 
-        internal void Take(InventoryContent? the_loot) => Inventory.Add(the_loot);
+        internal void Take(Slot<InventoryContent> the_loot) => Inventory.Add(the_loot);
         
         private void Destruct()
         {

@@ -55,6 +55,7 @@
     <Compile Include="IntStringsCache.cs" />
     <Compile Include="Meshes\ISharedMeshBehaviour.cs" />
     <Compile Include="Meshes\SharedMeshInstance.cs" />
+    <Compile Include="Overlay\ReferencePixels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

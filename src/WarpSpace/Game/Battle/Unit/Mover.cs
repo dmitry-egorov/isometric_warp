@@ -4,6 +4,7 @@ using Lanski.Geometry;
 using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
+using WarpSpace.Game.Battle.Tile;
 
 namespace WarpSpace.Game.Battle.Unit
 {
@@ -38,7 +39,7 @@ namespace WarpSpace.Game.Battle.Unit
             }
         }
 
-        public void ScheduleMovement(Board.Tile.TileComponent tile, Direction2D orientation)
+        public void ScheduleMovement(TileComponent tile, Direction2D orientation)
         {
             var parent = tile.UnitSlot.transform;
             var rotation = orientation.To_Rotation();

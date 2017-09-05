@@ -60,5 +60,7 @@ namespace Lanski.Structures
                 return (_has_a_value.GetHashCode() * 397) ^ EqualityComparer<T>.Default.GetHashCode(_obj);
             }
         }
+
+        public static implicit operator Slot<T>(T value) => value.As_a_Slot();
     }
 }

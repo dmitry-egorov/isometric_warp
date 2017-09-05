@@ -1,5 +1,5 @@
 ﻿using Lanski.Reactive;
-using WarpSpace.Descriptions;
+using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board;
 using WarpSpace.Models.Game.Battle.Player;
 

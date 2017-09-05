@@ -1,6 +1,6 @@
 ﻿using Lanski.Reactive;
 using Lanski.Structures;
-using WarpSpace.Descriptions;
+using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 
@@ -55,7 +55,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         public Direction2D Get_Direction_To(TileModel destination) => Position.Direction_To(destination.Position);
         public bool Has_a_Structure(out StructureModel structure) => Site.Is_a_Structure(out structure);
 
-        internal void Create_Debris(InventoryContent? inventory_content)
+        internal void Create_Debris(Slot<InventoryContent> inventory_content)
         {
             var debris = StructureDescription.Create.Debris(TileHelper.GetOrientation(Position), inventory_content);
             Set_Structure(debris);

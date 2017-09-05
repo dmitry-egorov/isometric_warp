@@ -2,13 +2,7 @@ build/
 Temp/
 Library/
 clips/
-Warp_UnityProject/Assets/Scripts/*.dll
-Warp_UnityProject/Assets/Scripts/*.pdb
-Warp_UnityProject/Assets/Scripts/*.meta
-Warp_UnityProject/Assets/Editor/*.dll
-Warp_UnityProject/Assets/Editor/*.pdb
-Warp_UnityProject/Assets/Editor/*.meta
-src/PlanetRider/.vs
+**/.vs/
 **/obj/
 **/bin/
 

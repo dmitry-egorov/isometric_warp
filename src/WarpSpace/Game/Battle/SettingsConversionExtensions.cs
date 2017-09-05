@@ -1,7 +1,8 @@
 ﻿using Lanski.Structures;
 using WarpSpace.Common;
 using WarpSpace.Common.MapParsing;
-using WarpSpace.Descriptions;
+using WarpSpace.Models.Descriptions;
+using WarpSpace.Models.Game.Battle.Board;
 
 namespace WarpSpace.Game.Battle
 {
@@ -30,14 +31,14 @@ namespace WarpSpace.Game.Battle
     
             LandscapeType ParseLandscapeChar(char c) => c.ToLandscapeType();
 
-            UnitType? ParseUnitChar(char c) => c.ToUnitType();
+            Slot<UnitType> ParseUnitChar(char c) => c.ToUnitType();
                 
             TileDescription CreateTile(LandscapeType t, Index2D i) => 
                 new TileDescription(t, SelectContent(i));
 
             //TODO: generate random loot from settings?
-            UnitDescription? CreateUnitDescritpion(UnitType? arg) => //TODO: match bay size
-                arg.Select(type => new UnitDescription(type, Faction.Natives, InventoryContent.InitialFor(type), Slot.Empty<Slot<UnitDescription>[]>()))
+            Slot<UnitDescription> CreateUnitDescritpion(Slot<UnitType> arg) => //TODO: match bay size
+                arg.Select(type => new UnitDescription(type, Faction.Natives, InventoryContent.Initial_For(type), Slot.Empty<Slot<UnitDescription>[]>()))
             ; 
             
             TileContentDescription SelectContent(Index2D i)

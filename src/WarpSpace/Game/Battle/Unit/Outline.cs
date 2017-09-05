@@ -1,5 +1,4 @@
 using UnityEngine;
-using WarpSpace.Common.Outline;
 
 namespace WarpSpace.Game.Battle.Unit
 {

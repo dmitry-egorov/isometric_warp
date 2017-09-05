@@ -39,22 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoardDescription.cs" />
-    <Compile Include="ChassisType.cs" />
-    <Compile Include="DamageDescription.cs" />
-    <Compile Include="DamageType.cs" />
-    <Compile Include="Faction.cs" />
-    <Compile Include="LandscapeType.cs" />
-    <Compile Include="InventoryContent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Spacial2D.cs" />
-    <Compile Include="StructureDescription.cs" />
-    <Compile Include="TileContentDescription.cs" />
-    <Compile Include="TileDescription.cs" />
-    <Compile Include="TileHelper.cs" />
-    <Compile Include="UnitDescription.cs" />
-    <Compile Include="UnitType.cs" />
-    <Compile Include="WeaponType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lanski.Linq\Lanski.Linq.csproj">

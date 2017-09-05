@@ -1,5 +1,5 @@
 ﻿using Lanski.Reactive;
-using WarpSpace.Descriptions;
+using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 
 namespace WarpSpace.Models.Game.Battle.Board.Structure

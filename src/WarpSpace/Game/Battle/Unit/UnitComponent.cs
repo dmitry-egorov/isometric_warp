@@ -3,7 +3,8 @@ using Lanski.Reactive;
 using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
-using WarpSpace.Descriptions;
+using WarpSpace.Game.Battle.Tile;
+using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Player;
 
@@ -17,7 +18,7 @@ namespace WarpSpace.Game.Battle.Unit
         public Mover Mover { get; private set; }
         public UnitModel Unit { get; private set; }
 
-        public static UnitComponent Create(GameObject prefab, Transform parent, UnitModel unit, Board.Tile.TileComponent[,] tile_components, PlayerModel player)
+        public static UnitComponent Create(GameObject prefab, Transform parent, UnitModel unit, TileComponent[,] tile_components, PlayerModel player)
         {
             var obj = Instantiate(prefab, parent).GetComponent<UnitComponent>();
 
@@ -36,7 +37,7 @@ namespace WarpSpace.Game.Battle.Unit
             _wirings();
         }
 
-        private void Init(UnitModel unit, PlayerModel player, Board.Tile.TileComponent[,] tile_components)
+        private void Init(UnitModel unit, PlayerModel player, TileComponent[,] tile_components)
         {
             var unitSettings = Select_Settings(unit.Type);
             var factionSettings = Select_Faction_Settings(unit.Faction);

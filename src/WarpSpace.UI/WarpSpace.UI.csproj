@@ -33,12 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Gameplay\Inventory\InventoryPresenter.cs" />
-    <Compile Include="Gameplay\ShowWhenUnitSelected.cs" />
-    <Compile Include="Gameplay\Weapon\ClicksHandler.cs" />
-    <Compile Include="Gameplay\Weapon\SelectionHighlight.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\lib\UnityEngine.dll</HintPath>
       <Private>False</Private>

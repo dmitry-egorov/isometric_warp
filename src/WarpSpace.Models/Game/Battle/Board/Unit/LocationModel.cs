@@ -1,7 +1,6 @@
 ﻿using System;
 using Lanski.Reactive;
 using Lanski.Structures;
-using WarpSpace.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 

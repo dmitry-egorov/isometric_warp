@@ -19,7 +19,7 @@ namespace Lanski.Reactive
 
         public void Next(T value)
         {
-            _last_value = value.As_a_Slot();
+            _last_value = value;
             _stream.Next(value);
             _stream.UnsubscribeAll();
         }

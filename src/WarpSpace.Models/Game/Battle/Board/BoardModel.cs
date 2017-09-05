@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Lanski.Reactive;
 using Lanski.Structures;
-using WarpSpace.Descriptions;
+using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Models.Game.Battle.Board
 {
+
     public class BoardModel
     {
         public readonly TileModel[,] Tiles;
@@ -77,14 +77,25 @@ namespace WarpSpace.Models.Game.Battle.Board
             var position = _entrance_spacial.Position;
             var orientation = _entrance_spacial.Orientation;
 
-            var tank = new UnitDescription(UnitType.Tank, Faction.Players, null, Slot.Empty<Slot<UnitDescription>[]>());
+            var tank = new UnitDescription(UnitType.Tank, Faction.Players, Slot.Empty<InventoryContent>(), Slot.Empty<Slot<UnitDescription>[]>());
+            
+            var test1 = new UnitDescription();
+            Debug.Log("1");
+            var test2 = new UnitDescription[1];
+            Debug.Log("2");
+            var test3 = new Slot<UnitDescription>[1].As_a_Slot();
+            Debug.Log("3");
 
-            //var bay = new [] { tank.As_a_Slot() }.As_a_Slot();
+            var tanks_slot = tank.As_a_Slot();
+            Debug.Log("4");
+
+            //var bay_units = new [] { tanks_slot };
             var bay_units = new Slot<UnitDescription>[1].As_a_Slot();
+            //var bay_units = new Slot<UnitDescription>[0].As_a_Slot();
 
             Debug.Log("Created bay description");
 
-            var desc = new UnitDescription(UnitType.Mothership, Faction.Players, null, bay_units);
+            var desc = new UnitDescription(UnitType.Mothership, Faction.Players, Slot.Empty<InventoryContent>(), bay_units);
             
             Debug.Log("Created mothership description");
 
@@ -104,5 +115,21 @@ namespace WarpSpace.Models.Game.Battle.Board
 
         private readonly HashSet<UnitModel> _units_hashset = new HashSet<UnitModel>();
         private readonly UnitFactory _unit_factory;
+    }
+    
+    public struct UnitDescription
+    {
+        public readonly UnitType Type;
+        public readonly Faction Faction;
+        public readonly Slot<InventoryContent> Inventory_Content;
+        public readonly Slot<Slot<UnitDescription>[]> Bay_Content;
+
+        public UnitDescription(UnitType type, Faction faction, Slot<InventoryContent> inventory_content, Slot<Slot<UnitDescription>[]> bay_content)
+        {
+            Type = type;
+            Inventory_Content = inventory_content;
+            Bay_Content = bay_content;
+            Faction = faction;
+        }
     }
 }

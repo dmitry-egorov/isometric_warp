@@ -1,5 +1,6 @@
 ﻿using Lanski.Reactive;
 using Lanski.Structures;
+using WarpSpace.Game.Battle.Tile;
 using WarpSpace.Models;
 using WarpSpace.Models.Game.Battle.Board;
 using WarpSpace.Models.Game.Battle.Board.Tile;
@@ -55,7 +56,7 @@ namespace WarpSpace.Game.Battle.Board
                 Get_the_Highlight_Element_Of(tile).Update_the_Highlight()
             ;
 
-            Tile.HighlightElement Get_the_Highlight_Element_Of(TileModel tile) => 
+            HighlightElement Get_the_Highlight_Element_Of(TileModel tile) => 
                 tile_components.Get(tile.Position).Highlight
             ;
         }

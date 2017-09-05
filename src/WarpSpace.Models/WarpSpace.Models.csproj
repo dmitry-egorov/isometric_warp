@@ -43,6 +43,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Debug.cs" />
+    <Compile Include="Descriptions\BoardDescription.cs" />
+    <Compile Include="Descriptions\ChassisType.cs" />
+    <Compile Include="Descriptions\DamageDescription.cs" />
+    <Compile Include="Descriptions\DamageType.cs" />
+    <Compile Include="Descriptions\Faction.cs" />
+    <Compile Include="Descriptions\InventoryContent.cs" />
+    <Compile Include="Descriptions\LandscapeType.cs" />
+    <Compile Include="Descriptions\Spacial2D.cs" />
+    <Compile Include="Descriptions\StructureDescription.cs" />
+    <Compile Include="Descriptions\TileContentDescription.cs" />
+    <Compile Include="Descriptions\TileDescription.cs" />
+    <Compile Include="Descriptions\TileHelper.cs" />
+    <Compile Include="Descriptions\UnitType.cs" />
+    <Compile Include="Descriptions\WeaponType.cs" />
     <Compile Include="Game\Battle\Board\MothershipExited.cs" />
     <Compile Include="Game\Battle\Board\UnitFactory.cs" />
     <Compile Include="Game\Battle\Board\Unit\ChangeSignal.cs" />
@@ -89,10 +103,6 @@
     <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
       <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>
       <Name>Lanski.Structures</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WarpSpace.Descriptions\WarpSpace.Descriptions.csproj">
-      <Project>{0127FC72-7C5D-434B-8EFE-4313ED9824E0}</Project>
-      <Name>WarpSpace.Descriptions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
