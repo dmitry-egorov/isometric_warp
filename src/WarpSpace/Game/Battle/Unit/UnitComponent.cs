@@ -94,8 +94,9 @@ namespace WarpSpace.Game.Battle.Unit
                     if (previous_location.Is_a_Bay(out var bay))
                     {
                         var owners_tile = bay.Owner.Must_Be_At_a_Tile();
-                        Mover.Teleport_To(tile_components.Get(owners_tile.Position), Direction2D.Left);
-                        Mover.ScheduleMovement(tile_components.Get(current_tile.Position), owners_tile.Get_Direction_To(current_tile));
+                        var orientation = owners_tile.Get_Direction_To(current_tile);
+                        Mover.Teleport_To(tile_components.Get(owners_tile.Position), orientation);
+                        Mover.ScheduleMovement(tile_components.Get(current_tile.Position), orientation);
                     }
                     else
                     {
