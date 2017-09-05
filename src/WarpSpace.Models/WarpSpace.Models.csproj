@@ -69,8 +69,6 @@
     <Compile Include="Game\Battle\Board\Tile\MTile.cs" />
     <Compile Include="Game\Battle\Board\Tile\TileSite.cs" />
     <Compile Include="Game\Battle\Board\Tile\UnitMoved.cs" />
-    <Compile Include="Game\Battle\Board\UnitCreated.cs" />
-    <Compile Include="Game\Battle\Board\UnitDestroyed.cs" />
     <Compile Include="Game\Battle\Board\Unit\MBay.cs" />
     <Compile Include="Game\Battle\Board\Unit\MChassis.cs" />
     <Compile Include="Game\Battle\Board\Unit\MHealth.cs" />

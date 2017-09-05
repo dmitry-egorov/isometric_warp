@@ -12,8 +12,8 @@ namespace WarpSpace.Models.Game.Battle.Board
         public readonly MTile[,] Tiles;
         public IReadOnlyCollection<MUnit> Units => _units_hashset;
 
-        public IStream<UnitCreated> Stream_Of_Unit_Creations => _unit_factory.Stream_Of_Unit_Creations;
-        public IStream<UnitDestroyed> Stream_Of_Unit_Destructions => _stream_of_unit_destructions;
+        public IStream<MUnit> Stream_Of_Unit_Creations => _unit_factory.Stream_Of_Unit_Creations;
+        public IStream<MUnit> Stream_Of_Unit_Destructions => _stream_of_unit_destructions;
         public IStream<MothershipExited> Stream_Of_Exits { get; }
 
         public MBoard(BoardDescription description)
@@ -28,7 +28,7 @@ namespace WarpSpace.Models.Game.Battle.Board
 
             IStream<MothershipExited> Create_Exits_Stream() =>
                 Stream_Of_Unit_Creations
-                    .Select(x => x.Unit.Stream_Of_Exits)
+                    .Select(x => x.Stream_Of_Exits)
                     .Merge();
 
             MTile[,] CreaTiles()
@@ -48,10 +48,8 @@ namespace WarpSpace.Models.Game.Battle.Board
             void Wire_Unit_Creation()
             {
                 Stream_Of_Unit_Creations
-                    .Subscribe(created =>
+                    .Subscribe(unit =>
                     {
-                        var unit = created.Unit;
-
                         Wire_Unit_Destruction(unit);
 
                         _units_hashset.Add(unit);
@@ -65,7 +63,7 @@ namespace WarpSpace.Models.Game.Battle.Board
                     .Subscribe(destroyed =>
                     {
                         _units_hashset.Remove(unit);
-                        _stream_of_unit_destructions.Next(new UnitDestroyed(unit, unit.Location));
+                        _stream_of_unit_destructions.Next(unit);
                     });
             }
         }
@@ -75,8 +73,9 @@ namespace WarpSpace.Models.Game.Battle.Board
             var position = _entrance_spacial.Position;
             var orientation = _entrance_spacial.Orientation;
 
-            var tank = new UnitDescription(UnitType.Tank, Faction.Players, Possible.Empty<InventoryContent>(), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>());
-            var bay_units = new List<Possible<UnitDescription>> {tank.As_a_Slot()};
+            var tank1 = new UnitDescription(UnitType.Tank, Faction.Players, Possible.Empty<InventoryContent>(), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>());
+            var tank2 = new UnitDescription(UnitType.Tank, Faction.Players, Possible.Empty<InventoryContent>(), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>());
+            var bay_units = new List<Possible<UnitDescription>> {tank1.As_a_Slot(), tank2.As_a_Slot()};
             var desc = new UnitDescription(UnitType.Mothership, Faction.Players, Possible.Empty<InventoryContent>(), bay_units);
 
             Create_a_Unit(desc, position + orientation);
@@ -89,7 +88,7 @@ namespace WarpSpace.Models.Game.Battle.Board
             _unit_factory.Create_a_Unit(desc, location);
         }
 
-        private readonly Stream<UnitDestroyed> _stream_of_unit_destructions = new Stream<UnitDestroyed>();
+        private readonly Stream<MUnit> _stream_of_unit_destructions = new Stream<MUnit>();
         private readonly Spacial2D _entrance_spacial;
 
         private readonly HashSet<MUnit> _units_hashset = new HashSet<MUnit>();

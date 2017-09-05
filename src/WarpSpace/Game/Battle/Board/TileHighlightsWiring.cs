@@ -10,7 +10,7 @@ namespace WarpSpace.Game.Battle.Board
 {
     internal static class TileHighlightsWiring
     {
-        public static void Wire(MPlayer player, MBoard board, Tile.TileComponent[,] tile_components)
+        public static void Wire(MPlayer player, MBoard board, TileComponent[,] tile_components)
         {
             player
                 .Selected_Unit_Cell
@@ -24,14 +24,13 @@ namespace WarpSpace.Game.Battle.Board
 
             player
                 .Selected_Unit_Cell
-                .Select(pu => pu.SelectMany(u => u.Location.As_a_Tile()))
                 .IncludePrevious()
-                .Subscribe(tuple => Handle_New_Selected_Unit(tuple.previous, tuple.current))
+                .Subscribe(p => Handle_New_Selected_Unit(p.previous.SelectMany(u => u.Location_As_a_Tile()), p.current.SelectMany(u => u.Location_As_a_Tile())))
             ;
 
             board
                 .Stream_Of_Unit_Destructions
-                .Select(destroyed => destroyed.Last_Location.As_a_Tile())
+                .Select(destroyed => destroyed.Location_As_a_Tile())
                 .Subscribe(Update_Neighborhood_Of)
             ;
 

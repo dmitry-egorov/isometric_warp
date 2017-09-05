@@ -4,7 +4,7 @@ using Lanski.UnityExtensions;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace WarpSpace.Overlay.Units
+namespace WarpSpace.Overlay
 {
     [ExecuteInEditMode]
     public class Health: MonoBehaviour

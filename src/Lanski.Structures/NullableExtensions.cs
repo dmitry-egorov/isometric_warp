@@ -38,7 +38,7 @@ namespace Lanski.Structures
             return nullable.Select(selector).GetValueOrDefault();
         }
 
-        public static Possible<TResult> SelectManyRef<T, TResult>(this T? nullable, Func<T, Possible<TResult>> selector)
+        public static Possible<TResult> SelectMany<T, TResult>(this T? nullable, Func<T, Possible<TResult>> selector)
             where T : struct
             where TResult : class
         {

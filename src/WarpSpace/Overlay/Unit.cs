@@ -1,31 +1,32 @@
 ﻿using System;
 using Lanski.Behaviours.Overlay;
 using Lanski.Geometry;
+using Lanski.UnityExtensions;
 using UnityEngine;
-using WarpSpace.Common;
 using WarpSpace.Game.Battle.Unit;
 
-namespace WarpSpace.Overlay.Units
+namespace WarpSpace.Overlay
 {
     public class Unit : MonoBehaviour
     {
         private Camera _camera;
         private RectTransform _rect_transform;
         private UnitComponent _unit_component;
-        private ReferencePixels _reference_pixels;
 
-        private Action _scale_wiring;
-        private Action _health_wiring;
+        private Action _wirings;
 
         public void Init(UnitComponent unitComponent)
         {
             _camera = FindObjectOfType<Camera>();
-            _reference_pixels = FindObjectOfType<ReferencePixels>();
             _rect_transform = GetComponent<RectTransform>();
             _unit_component = unitComponent;
+
+            var unit = unitComponent.Unit;
+            var scale_wiring = Wire_Scale();
+            var health_wiring = Wire_Health();
+            var docked_wiring = Wire_Docked();
+            _wirings = () => { scale_wiring(); health_wiring(); docked_wiring(); };
             
-            _scale_wiring = Wire_Scale();
-            _health_wiring = Wire_Health();
             Wire_Destroyed();
 
             Action Wire_Scale() => 
@@ -38,22 +39,25 @@ namespace WarpSpace.Overlay.Units
             {
                 var health_component = GetComponentInChildren<Health>();
 
-                var health = unitComponent.Unit.Health;
-
-                health_component.Total = health.TotalHitPoints;
+                health_component.Total = unit.Total_Hit_Points;
                 
                 return 
-                    health
+                    unit
                     .Current_Hit_Points_Cell
                     .Subscribe(current => 
                         health_component.Current = current
                     );
             }
 
+            Action Wire_Docked() => 
+                unit
+                .Stream_Of_Dockings
+                .Subscribe(is_docked => gameObject.SetActive(!is_docked))
+            ;
+
             void Wire_Destroyed()
             {
-                unitComponent
-                    .Unit
+                unit
                     .Signal_Of_the_Destruction
                     .Subscribe(_ => Destroy(gameObject));
             }
@@ -61,18 +65,21 @@ namespace WarpSpace.Overlay.Units
 
         public void OnDestroy()
         {
-            _health_wiring();
-            _scale_wiring();
+            _wirings();
         }
         
         public void LateUpdate()
         {
+            if (_unit_component.Unit.Is_Docked)
+            {
+                gameObject.Hide();
+                return;
+            }
+                
             var transformPosition = _unit_component.transform.position;
             var screen_position = _camera.WorldToScreenPoint(transformPosition).XY();
 
-            var scale = _reference_pixels.PixelPerfectScale;
-
-            _rect_transform.anchoredPosition = screen_position.Floor(); //(screen_position * scale).Floor() / scale;
+            _rect_transform.anchoredPosition = screen_position.Floor();
         }
     }
 }

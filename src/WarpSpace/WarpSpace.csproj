@@ -78,6 +78,7 @@
     <Compile Include="Game\Battle\Unit\Mover.cs" />
     <Compile Include="Game\Battle\Unit\Outline.cs" />
     <Compile Include="Game\Battle\Unit\UnitComponent.cs" />
+    <Compile Include="Settings\BaySlotPresenterSettingsHolder.cs" />
     <Compile Include="Settings\FactionSettings.cs" />
     <Compile Include="Settings\FactionsSettings.cs" />
     <Compile Include="Settings\MovementSettings.cs" />

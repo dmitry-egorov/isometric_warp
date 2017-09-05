@@ -4,6 +4,7 @@ using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Game.Battle.Tile;
+using WarpSpace.Models.Game.Battle.Board.Tile;
 
 namespace WarpSpace.Game.Battle.Unit
 {
@@ -36,6 +37,16 @@ namespace WarpSpace.Game.Battle.Unit
 
                 return Mathf.Abs((v1 * v1 - v0 * v0) / (2f * d));
             }
+        }
+
+        public void Teleport_To(TileComponent tile, Direction2D orientation)
+        {
+            _movementQueue.Clear();
+            _currentTarget = Possible.Empty<MovementTarget>();
+
+            _transform.parent = tile.UnitSlot.transform;
+            _transform.localPosition = Vector3.zero;
+            _transform.localRotation = orientation.To_Rotation();
         }
 
         public void ScheduleMovement(TileComponent tile, Direction2D orientation)

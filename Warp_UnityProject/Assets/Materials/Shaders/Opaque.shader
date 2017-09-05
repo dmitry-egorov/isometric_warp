@@ -8,6 +8,8 @@ Shader "Custom/Opaque" {
     SubShader {
         Tags { "RenderType" = "Opaque" } 
         Pass {
+            Blend Off
+            
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag

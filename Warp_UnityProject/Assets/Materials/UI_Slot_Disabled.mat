@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Disabled_UI_Slot
+  m_Name: UI_Slot_Disabled
   m_Shader: {fileID: 4800000, guid: 8dc5e6d040d9c48c6b303251c1364c23, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4

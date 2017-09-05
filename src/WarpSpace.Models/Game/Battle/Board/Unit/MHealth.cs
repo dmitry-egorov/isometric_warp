@@ -5,7 +5,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public class MHealth
     {
-        public readonly int TotalHitPoints;
+        public readonly int Total_Hit_Points;
         public ICell<int> Current_Hit_Points_Cell => _current_hit_points_cell;
         public ICell<bool> Is_Alive_Cell { get; }
         internal bool Is_Alive => Is_Alive_Cell.Value;
@@ -20,7 +20,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         private MHealth(int total_hit_points, MUnit unit)
         {
-            TotalHitPoints = total_hit_points;
+            Total_Hit_Points = total_hit_points;
             _unit = unit;
             _current_hit_points_cell = new ValueCell<int>(total_hit_points);
             

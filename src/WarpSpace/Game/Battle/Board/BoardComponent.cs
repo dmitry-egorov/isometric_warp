@@ -12,6 +12,7 @@ namespace WarpSpace.Game.Battle.Board
     {
         public GameObject TilePrefab;
         public GameObject UnitPrefab;
+        public GameObject Limbo;
         
         private RepeatAllStream<UnitComponent> _stream_of_created_units;
         public IStream<UnitComponent> Stream_Of_Created_Units => _stream_of_created_units;
@@ -24,7 +25,7 @@ namespace WarpSpace.Game.Battle.Board
 
             var tile_components = CreateTiles();
 
-            UnitCreationWiring.Wire(board, tile_components, UnitPrefab, player, _stream_of_created_units);
+            UnitCreationWiring.Wire(board, tile_components, UnitPrefab, Limbo, player, _stream_of_created_units);
             TileHighlightsWiring.Wire(player, board, tile_components);
 
             Tile.TileComponent[,] CreateTiles() => 

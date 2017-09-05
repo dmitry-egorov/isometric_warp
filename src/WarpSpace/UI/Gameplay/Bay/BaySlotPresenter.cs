@@ -1,72 +1,91 @@
-﻿using System;
+﻿using Lanski.Behaviours;
+using Lanski.Reactive;
 using Lanski.Structures;
+using Lanski.UnityExtensions;
 using UnityEngine;
 using UnityEngine.UI;
+using WarpSpace.Game.Battle;
 using WarpSpace.Game.Battle.Unit;
 using WarpSpace.Models.Game.Battle.Board.Unit;
+using WarpSpace.Models.Game.Battle.Player;
+using WarpSpace.Settings;
 
 namespace WarpSpace.UI.Gameplay.Bay
 {
     [RequireComponent(typeof(Image))]
+    [RequireComponent(typeof(ClickSource))]
     public class BaySlotPresenter : MonoBehaviour
     {
-        public Material EmptyBackgroundMaterial;
-        public Material UnitBackgroundMaterial;
-        
-
-        public void Hide()
+        public void Start()
         {
-            gameObject.SetActive(false);
-        }
-
-        public void Awake()
-        {
-            Init();
-        }
-
-        private void Init()
-        {
-            if (_initialised)
-                return;
-            _initialised = true;
+            var index = transform.GetSiblingIndex();
+            var settings = FindObjectOfType<BaySlotPresenterSettingsHolder>();
+            var unit_mesh = GetComponentInChildren<UnitMesh>();
+            var background = GetComponent<Image>();
+            var player_cell = FindObjectOfType<BattleComponent>().Player_Cell;
             
-            _unit_mesh = GetComponentInChildren<UnitMesh>();
-            _background = GetComponent<Image>();
-        }
-
-        public void Present(MLocation location)
-        {
-            Init();
-            
-            _last_subscription?.Invoke();
-
-            _last_subscription =
-                location
-                    .Possible_Occupant_Cell
-                    .Subscribe(Present_Unit)
+            player_cell
+                .SelectMany(pp => pp.Select(p => p.Selection_Cell).Cell_Or_Empty())
+                .Subscribe(Present_Selection)
             ;
-        }
 
+            var click_source = GetComponent<ClickSource>();
+            player_cell
+                .SkipEmpty()
+                .SelectMany(player => click_source.Clicks.Select(click_event => player))
+                .Subscribe(Handle_Click)
+            ;
 
-        private void Present_Unit(Possible<MUnit> possible_unit)
-        {
-            if (possible_unit.Has_a_Value(out var unit))
+            void Handle_Click(MPlayer player)
             {
-                _unit_mesh.Present(unit.Type, unit.Faction);
-                _background.material = UnitBackgroundMaterial;
+                var selected_unit = player.Selected_Unit_Cell.Must_Have_a_Value();
+                var selected_units_bay = selected_unit.Must_Have_a_Bay();
+                var bay_slot = selected_units_bay[index].Must_Have_a_Value();
+
+                if (bay_slot.Has_a_Unit(out var bay_slot_unit))
+                {
+                    player.Toggle_Bay_Unit_Selection(bay_slot_unit);
+                }
             }
-            else
+            
+            void Present_Selection(Possible<MPlayer.Selection> possible_selection)
             {
-                _unit_mesh.Hide();
-                _background.material = EmptyBackgroundMaterial;
+                if 
+                (
+                    possible_selection.Has_a_Value(out var selection) &&
+                    selection.Unit.Has_a_Bay(out var bay) && 
+                    bay[index].Has_a_Value(out var bay_slot)
+                )
+                {
+                    if (bay_slot.Has_a_Unit(out var unit))
+                    {
+                        var bay_unit_is_selected = selection.Has_a_Bay_Unit_Selected(out var selected_bay_unit) && unit == selected_bay_unit;
+                        Present_a_Unit(unit, bay_unit_is_selected);
+                    }
+                    else
+                    {
+                        Present_an_Empty_Bay_Slot();
+                    }
+
+                    gameObject.Show();
+                }
+                else
+                {
+                    gameObject.Hide();
+                }
+            }
+
+            void Present_a_Unit(MUnit unit, bool bay_unit_is_selected)
+            {
+                unit_mesh.Present(unit.Type, unit.Faction);
+                background.material = bay_unit_is_selected ? settings.SelectedUnitBackgroundMaterial : settings.UnitBackgroundMaterial;
+            }
+
+            void Present_an_Empty_Bay_Slot()
+            {
+                unit_mesh.Hide();
+                background.material = settings.EmptyBackgroundMaterial;
             }
         }
-        
-        private bool _initialised;
-        
-        private UnitMesh _unit_mesh;
-        private Image _background;
-        
-        private Action _last_subscription;
     }
 }

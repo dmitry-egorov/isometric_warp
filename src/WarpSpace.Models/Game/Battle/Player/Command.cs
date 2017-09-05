@@ -16,15 +16,15 @@ namespace WarpSpace.Models.Game.Battle.Player
             public static Command Interact(MUnit unit, MStructure target_structure) => new Command { _variant = new Interact(unit, target_structure) };
         }
 
-        public bool Is(out Fire fire) => _variant.Is_a_T1(out fire);
-        public bool Is(out SelectUnit select_unit) => _variant.Is_a_T2(out select_unit);
-        public bool Is(out Move move) => _variant.Is_a_T3(out move);
-        public bool Is(out Interact interact) => _variant.Is_a_T4(out interact);
+        public bool Is_a_Fire(out Fire fire) => _variant.Is_a_T1(out fire);
+        public bool Is_a_Select_Unit(out SelectUnit select_unit) => _variant.Is_a_T2(out select_unit);
+        public bool Is_a_Move(out Move move) => _variant.Is_a_T3(out move);
+        public bool Is_an_Interact(out Interact interact) => _variant.Is_a_T4(out interact);
 
-        public bool Is_Fire() => _variant.Is_a_T1();
-        public bool Is_Select_Unit() => _variant.Is_a_T2();
-        public bool Is_Move() => _variant.Is_a_T3();
-        public bool Is_Interact() => _variant.Is_a_T4();
+        public bool Is_a_Fire() => _variant.Is_a_T1();
+        public bool Is_a_Select_Unit() => _variant.Is_a_T2();
+        public bool Is_a_Move() => _variant.Is_a_T3();
+        public bool Is_a_Interact() => _variant.Is_a_T4();
 
         public struct Fire
         {

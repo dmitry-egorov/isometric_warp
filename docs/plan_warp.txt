@@ -1,6 +1,7 @@
 Plan
-- deploy own units
+- dock back
 - gates have a bay
+- hower over water
 - end turn
 - enemy ai
 - cooldowns
@@ -31,6 +32,7 @@ Plan
 
 
 done
++ deploy own units
 + loot
 + pixel perfect overlay
 + show hp

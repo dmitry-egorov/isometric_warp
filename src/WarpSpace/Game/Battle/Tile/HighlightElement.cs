@@ -27,12 +27,13 @@ namespace WarpSpace.Game.Battle.Tile
             _landscape.Set_the_Highlight_To(highlight_type);
             
             HighlightType Get_the_Highlight_Type() =>
-                  Selected_Unit_Is_At_the_Tile()              ? HighlightType.Unit_Placeholder
-                : !Has_A_Command_At_the_Tile(out var command) ? HighlightType.None  
-                : command.Is_Fire()                           ? HighlightType.Fire_Weapon
-                : command.Is_Move()                           ? HighlightType.Move 
-                : command.Is_Interact()                       ? HighlightType.Interaction 
-                                                              : HighlightType.None
+              Selected_Unit_Is_At_the_Tile()                                  ? HighlightType.Unit_Placeholder
+                : !Has_A_Command_At_the_Tile(out var command)                 ? HighlightType.None  
+                : command.Is_a_Fire()                                         ? HighlightType.Fire_Weapon
+                : command.Is_a_Move(out var move) && move.Unit.Is_At_a_Tile() ? HighlightType.Move 
+                : command.Is_a_Move(out     move) && move.Unit.Is_At_a_Bay()  ? HighlightType.Interaction 
+                : command.Is_a_Interact()                                     ? HighlightType.Interaction 
+                                                                              : HighlightType.None
             ;
         }
 

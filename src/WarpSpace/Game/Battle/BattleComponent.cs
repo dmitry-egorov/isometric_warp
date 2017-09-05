@@ -71,7 +71,7 @@ namespace WarpSpace.Game.Battle
             {
                 game.Current_Battle.Subscribe(battle_ref =>
                 {
-                    if (battle_ref.Doesnt_Have(out var battle))
+                    if (battle_ref.Doesnt_Have_a_Value(out var battle))
                         return;
                     
                     board.Init(battle.Board, battle.Player);

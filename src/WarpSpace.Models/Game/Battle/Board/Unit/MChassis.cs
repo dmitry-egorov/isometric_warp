@@ -6,7 +6,7 @@ using WarpSpace.Models.Game.Battle.Board.Tile;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
-    public class MChassis
+    internal class MChassis
     {
         public MLocation Location { get; private set; }
 
@@ -16,19 +16,14 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             Location = initial_location;
         }
 
-        public bool Can_Move_To(MTile destination)
-        {
-            var source = Location;
-
-            return destination.Is_Passable_By(_chassis_type)
-                && source.Is_Adjacent_To(destination)
-            ;
-        }
+        public bool Can_Move_To(MTile destination) => 
+            destination.Is_Passable_By(_chassis_type)
+            && Location.Is_Adjacent_To(destination)
+        ;
 
         internal void Update_the_Location(MLocation new_location)
         {
-            new_location.Is_Empty().Otherwise_Throw("Location is not empty");
-                
+            new_location.Must_Be_a_Empty();
             Location = new_location;
         }
 

@@ -7,7 +7,7 @@ using WarpSpace.Game.Battle.Board;
 using WarpSpace.Game.Battle.Unit;
 using WarpSpace.Models.Game.Battle;
 
-namespace WarpSpace.Overlay.Units
+namespace WarpSpace.Overlay
 {
     public class UnitsComponent: MonoBehaviour
     {
@@ -19,17 +19,17 @@ namespace WarpSpace.Overlay.Units
             battle.Battle_Cell.SelectMany(SelectWorldUnitsStream).Subscribe(CreateUiUnitComponent);
         }
 
-        private void CreateUiUnitComponent(UnitComponent obj)
+        private void CreateUiUnitComponent(UnitComponent unit_component)
         {
             var unit = Instantiate(UnitPrefab, transform).GetComponent<Unit>();
-            unit.Init(obj);
+            unit.Init(unit_component);
         }
 
-        private IStream<UnitComponent> SelectWorldUnitsStream(Possible<MBattle> arg)
+        private IStream<UnitComponent> SelectWorldUnitsStream(Possible<MBattle> possible_battle)
         {
             gameObject.DestroyChildren();
             
-            return arg.Has_a_Value() 
+            return possible_battle.Has_a_Value() 
                 ? FindObjectOfType<BoardComponent>().Stream_Of_Created_Units 
                 : Stream.Empty<UnitComponent>();
         }

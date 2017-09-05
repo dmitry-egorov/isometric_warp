@@ -4,6 +4,7 @@ namespace Lanski.Structures
 {
     public static class BooleanSemanticExtensions
     {
+        public static void Must_Be_True(this bool value) => value.Otherwise_Throw();
         public static void Otherwise_Throw(this bool value, string message = "")
         {
             if(!value)

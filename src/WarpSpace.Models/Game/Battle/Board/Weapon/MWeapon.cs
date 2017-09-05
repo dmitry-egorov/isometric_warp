@@ -14,29 +14,22 @@ namespace WarpSpace.Models.Game.Battle.Board.Weapon
             _damage = desc;
         }
 
+        public bool Can_Fire_At(MUnit unit) => 
+            unit.Is_Alive 
+            && The(unit).Is_Within_Range()
+            && The(unit).s_Faction_Is_Hostile()
+        ;
+
         public void Fire_At(MUnit unit)
         {
             Can_Fire_At(unit).Otherwise_Throw("Can't fire at the unit");
-
             unit.Take(_damage);
-        }
-
-        public bool Can_Fire_At(MUnit unit)
-        {
-            var target = The(unit);
-            
-            return unit.Is_Alive 
-                && target.Is_Within_Range()
-                && target.s_Faction_Is_Hostile()
-            ;
         }
 
         private Target The(MUnit unit) => new Target(unit, _mountingUnit);
 
-
         private readonly MUnit _mountingUnit;
         private readonly DamageDescription _damage;
-
 
         private struct Target
         {
@@ -51,13 +44,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Weapon
 
             public bool s_Faction_Is_Hostile() => _target_unit.Faction.Is_Hostile_Towards(_mounting_unit.Faction);
 
-            public bool Is_Within_Range()
-            {
-                var targets_tile = _target_unit.Location;
-                var source_tile = _mounting_unit.Location;
-                
-                return source_tile.Is_Adjacent_To(targets_tile);
-            }
+            public bool Is_Within_Range() => _target_unit.Is_Adjacent_To(_mounting_unit);
         }
     }
 }

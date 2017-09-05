@@ -7,7 +7,7 @@ namespace WarpSpace.Models.Game.Battle.Board
 {
     public class UnitFactory
     {
-        public IStream<UnitCreated> Stream_Of_Unit_Creations => _stream_of_unit_creations;
+        public IStream<MUnit> Stream_Of_Unit_Creations => _stream_of_unit_creations;
 
         public bool Can_Create_a_Unit_At(MLocation location) => location.Is_Empty();
         
@@ -19,15 +19,11 @@ namespace WarpSpace.Models.Game.Battle.Board
 
             initial_location.Set_the_Occupant_To(unit);
             
-            Signal_the_Creation();
+            Signal_the_Creation(unit);
 
             Create_Units_In_The_Bay(desc, unit);
 
-            void Signal_the_Creation()
-            {
-                var unit_created = new UnitCreated(unit, unit.Location);
-                _stream_of_unit_creations.Next(unit_created);                    
-            }            
+                        
         }
 
         private static string ToString(MLocation initial_location)
@@ -49,10 +45,15 @@ namespace WarpSpace.Models.Game.Battle.Board
             {
                 var possible_unit_in_the_bay = content[i];
                 if (possible_unit_in_the_bay.Has_a_Value(out var unit_in_the_bay))
-                    Create_a_Unit(unit_in_the_bay, bay[i]);
+                    Create_a_Unit(unit_in_the_bay, bay[i].Must_Have_a_Value());
             }
         }
+        
+        void Signal_the_Creation(MUnit unit)
+        {
+            _stream_of_unit_creations.Next(unit);                    
+        }
 
-        private readonly Stream<UnitCreated> _stream_of_unit_creations = new Stream<UnitCreated>();
+        private readonly Stream<MUnit> _stream_of_unit_creations = new Stream<MUnit>();
     }
 }

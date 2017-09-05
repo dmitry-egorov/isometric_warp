@@ -37,7 +37,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         ;
         
         public bool Is_Adjacent_To(MTile tile) => 
-            Is_a_Tile(out var own_tile)
+            (Is_a_Tile(out var own_tile) || Is_a_Bay(out var bay) && bay.Owner.Is_At_a_Tile(out own_tile))
             && own_tile.Is_Adjacent_To(tile)
         ;
         
@@ -46,10 +46,12 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool Is(MTile tile) => Is_a_Tile(out var own_tile) && own_tile == tile;
         public bool Is_a_Tile() => Owner.Is_a_T1();
         public bool Is_a_Tile(out MTile tile) => Owner.Is_a_T1(out tile);
+        public bool Is_a_Bay() => Owner.Is_a_T2();
         public bool Is_a_Bay(out MBay bay) => Owner.Is_a_T2(out bay);
         public MTile Must_Be_a_Tile() => Owner.Must_Be_a_T1();
         public MBay Must_Be_a_Bay() => Owner.Must_Be_a_T2();
-        
+        public void Must_Be_a_Empty() => Is_Empty().Must_Be_True();
+
         
         public bool Has_a_Unit() => Possible_Occupant.Has_a_Value();
         public bool Has_a_Unit(out MUnit unit) => Possible_Occupant.Has_a_Value(out unit);
@@ -59,7 +61,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         internal void Set_the_Occupant_To(MUnit unit)
         {
             if (Is_Occupied())
-                throw new InvalidOperationException("Can't set a unit on an occupied slot.");
+                throw new InvalidOperationException("Can't set a unit on an occupied location.");
             
             Set_Occupant(unit.As_a_Slot());
         }
@@ -67,7 +69,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         internal void Reset_the_Occupant()
         {
             if (Is_Empty())
-                throw new InvalidOperationException("Can't reset a unit on an empty slot.");
+                throw new InvalidOperationException("Can't reset a unit on an empty location.");
 
             Set_Occupant(Possible.Empty<MUnit>());
         }
@@ -78,5 +80,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         }
 
         private readonly ValueCell<Possible<MUnit>> _possible_occupant_cell;
+
     }
 }

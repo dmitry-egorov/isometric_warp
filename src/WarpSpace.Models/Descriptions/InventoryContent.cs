@@ -5,10 +5,11 @@ namespace WarpSpace.Models.Descriptions
 {
     public static class InventoryContentExyensions
     {
-        public static Possible<InventoryContent> And(this Possible<InventoryContent> pi1, Possible<InventoryContent> pi2)
-        {
-            return pi1.Has_a_Value(out var i1) ? i1 + pi2 : Possible.Empty<InventoryContent>();
-        }
+        public static Possible<InventoryContent> And(this Possible<InventoryContent> pi1, Possible<InventoryContent> pi2) => 
+            pi1.Has_a_Value(out var i1) 
+                ? i1 + pi2 
+                : pi2
+        ;
     }
     
     public struct InventoryContent

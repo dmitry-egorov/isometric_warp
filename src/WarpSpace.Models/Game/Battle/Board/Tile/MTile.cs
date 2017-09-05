@@ -30,7 +30,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
                 if (content.Is_a_Structure(out var structure_description))
                     return Create_Structure_Site(structure_description);
 
-                var location = new MLocation(this, Possible.Empty<MUnit>());
+                var location = Create_the_Location();
 
                 if (content.Is_Empty())
                     return location;
@@ -81,9 +81,11 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         private TileSite Create_Location_Empty_Site()
         {
-            var unit_slot = new MLocation(this, Possible.Empty<MUnit>());
+            var unit_slot = Create_the_Location();
             return new TileSite(unit_slot);
         }
+
+        private MLocation Create_the_Location() => MLocation.Create.From(this);
 
         private TileSite Create_Structure_Site(StructureDescription structure_description)
         {

@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI_Slot_Weapon_Highlight
+  m_Name: UI_Slot_Selected
   m_Shader: {fileID: 4800000, guid: 8dc5e6d040d9c48c6b303251c1364c23, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -59,7 +59,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _Falloff: 1.5
+    - _Falloff: 1.2
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -74,8 +74,8 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _BottomColor: {r: 0.35294116, g: 0.23921567, b: 0.292549, a: 0.78431374}
+    - _BottomColor: {r: 0.21600002, g: 0.21504664, b: 0.14688003, a: 0.785}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _OutlineColor: {r: 0.8897059, g: 0.37289143, b: 0.40496954, a: 1}
-    - _TopColor: {r: 0.15789674, g: 0.11623199, b: 0.167, a: 0.7529412}
+    - _OutlineColor: {r: 0.9411765, g: 0.90785664, b: 0.6392157, a: 1}
+    - _TopColor: {r: 0.09100002, g: 0.09036981, b: 0.061804183, a: 0.754}

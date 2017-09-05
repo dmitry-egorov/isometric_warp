@@ -39,6 +39,20 @@ namespace WarpSpace.Models.Descriptions
                         default:
                             throw new ArgumentOutOfRangeException(nameof(type), type, null);
                     }
+                case ChassisType.Track:
+                    switch (type)
+                    {
+                        case LandscapeType.Mountain:
+                            return Passability.None;
+                        case LandscapeType.Hill:
+                            return Passability.Penalty;
+                        case LandscapeType.Flatland:
+                            return Passability.Free;
+                        case LandscapeType.Water:
+                            return Passability.None;
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                    }
                 default:
                     throw new ArgumentOutOfRangeException(nameof(chassisType), chassisType, null);
             }

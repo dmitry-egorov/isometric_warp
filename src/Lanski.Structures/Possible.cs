@@ -27,10 +27,11 @@ namespace Lanski.Structures
         }
 
 
+        [Pure]public bool Does_Not_Have_a_Value() => Has_Nothing();
         [Pure]public bool Has_Nothing() => !Has_a_Value();
         [Pure]public bool Has_a_Value() => _has_a_value;
 
-        [Pure]public bool Doesnt_Have(out T o) => !Has_a_Value(out o);
+        [Pure]public bool Doesnt_Have_a_Value(out T o) => !Has_a_Value(out o);
 
         [Pure]public bool Has_a_Value(out T o)
         {

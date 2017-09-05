@@ -49,7 +49,7 @@ namespace WarpSpace.Models.Descriptions
                 case UnitType.Mothership:
                     return ChassisType.Hower;
                 case UnitType.Tank:
-                    return ChassisType.Tread;
+                    return ChassisType.Track;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

@@ -12,7 +12,6 @@ namespace WarpSpace.Game.Battle.Unit
 {
     public class UnitComponent : MonoBehaviour
     {
-
         public Mover Mover { get; private set; }
         public MUnit Unit { get; private set; }
 
@@ -84,18 +83,27 @@ namespace WarpSpace.Game.Battle.Unit
                         .Stream_Of_Movements
                         .Subscribe(x => MoveUnitComponent(x.Source, x.Destination));
 
-                void MoveUnitComponent(MLocation previous_slot, MLocation current_slot)
+                void MoveUnitComponent(MLocation previous_location, MLocation current_location)
                 {
-                    if (previous_slot.Is_a_Tile(out var previous_tile) && current_slot.Is_a_Tile(out var current_tile))
+                    if (!current_location.Is_a_Tile(out var current_tile))
                     {
+                        //TODO: handle docking
+                        return;
+                    }
+
+                    if (previous_location.Is_a_Bay(out var bay))
+                    {
+                        var owners_tile = bay.Owner.Must_Be_At_a_Tile();
+                        Mover.Teleport_To(tile_components.Get(owners_tile.Position), Direction2D.Left);
+                        Mover.ScheduleMovement(tile_components.Get(current_tile.Position), owners_tile.Get_Direction_To(current_tile));
+                    }
+                    else
+                    {
+                        var previous_tile = previous_location.Must_Be_a_Tile();
                         var cur_tile_component = tile_components.Get(current_tile.Position);
                         var orientation = previous_tile.Get_Direction_To(current_tile);
 
                         Mover.ScheduleMovement(cur_tile_component, orientation);
-                    }
-                    else
-                    {
-                        //TODO: Handle bays
                     }
                 }
             }
