@@ -2,9 +2,9 @@ build/
 Temp/
 Library/
 clips/
-Warp_UnityProject/Assets/behaviours/*.dll
-Warp_UnityProject/Assets/behaviours/*.pdb
-Warp_UnityProject/Assets/behaviours/*.meta
+Warp_UnityProject/Assets/Scripts/*.dll
+Warp_UnityProject/Assets/Scripts/*.pdb
+Warp_UnityProject/Assets/Scripts/*.meta
 Warp_UnityProject/Assets/Editor/*.dll
 Warp_UnityProject/Assets/Editor/*.pdb
 Warp_UnityProject/Assets/Editor/*.meta
