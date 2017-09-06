@@ -62,6 +62,6 @@ namespace Lanski.Structures
             }
         }
 
-        public static implicit operator Possible<T>(T value) => value;
+        public static implicit operator Possible<T>(T value) => new Possible<T>(true, value);
     }
 }
