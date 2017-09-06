@@ -11,34 +11,34 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public class MUnit
     {
-        public UnitType s_Type => the_type;
-        public MWeapon s_Weapon => the_weapon;
-        public Faction s_Faction => the_faction;
-
-        public bool Is_Docked => the_chassis.is_Docked();
-        public bool Is_Alive => the_health.is_Alive();
-
-        public ICell<HealthState> s_Cell_of_Health_Status() => the_health.s_Cell_of_Status();
-        public ICell<Possible<Stuff>> s_Cell_of_Inventory_Content() => the_inventory.s_Cell_of_Content();
-
-        public IStream<Movement> s_Stream_Of_Movements => the_chassis.s_Stream_of_Movements();
-        public IStream<bool> s_Stream_of_Dock_States => the_chassis.s_Stream_of_Dock_States();
-        public IStream<TheVoid> s_Signal_of_the_Destruction => the_health.s_Signal_of_the_Destruction();
-        public IStream<TheVoid> s_Signal_of_the_Exit => the_signal_of_the_exit;
-
         public MUnit(UnitType the_units_type, Faction the_units_faction, Possible<Stuff> possible_stuff, MLocation the_initial_location, EventsGuard the_events_guard)
         {
             the_type = the_units_type;
             the_faction = the_units_faction;
             the_weapon = new MWeapon(this);
             the_health = new MHealth(this, the_events_guard);
-            the_inventory = new MInventory(possible_stuff);
+            the_inventory = new MInventory(possible_stuff, the_events_guard);
 
             the_chassis = new MChassis(the_type, the_initial_location, the_events_guard);
             possible_bay = MBay.From(this);
 
-            the_signal_of_the_exit = new GuardedStream<TheVoid>(the_events_guard);
+            the_exit_signal = new GuardedStream<TheVoid>(the_events_guard);
         }
+
+        public UnitType s_Type => the_type;
+        public MWeapon s_Weapon => the_weapon;
+        public Faction s_Faction => the_faction;
+        public MHealth s_Health => the_health;
+
+        public bool is_Docked() => the_chassis.is_Docked();
+        public bool is_Alive() => the_health.is_Alive();
+
+        public ICell<Possible<Stuff>> s_Inventory_Contents_Cell() => the_inventory.s_Cell_of_Content();
+
+        public IStream<Movement> s_Movements_Stream() => the_chassis.s_Movements_Stream();
+        public IStream<bool> s_Dock_States_Stream() => the_chassis.s_Dock_States_Stream();
+        public IStream<TheVoid> s_Destruction_Signal() => the_health.s_Destruction_Signal();
+        public IStream<TheVoid> s_Exit_Signal() => the_exit_signal;
 
         public Possible<MTile> s_Location_As_a_Tile() => the_location().As_a_Tile(); 
         public bool is_At(MTile the_tile) => the_location().Is(the_tile); 
@@ -51,7 +51,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool Can_Move_To(MTile the_destination) => the_chassis.Can_Move_To(the_destination);
         public bool Has_a_Bay(out MBay the_bay) => possible_bay.Has_a_Value(out the_bay);
         public MBay Must_Have_a_Bay() => possible_bay.Must_Have_a_Value();
-        public bool is_Within_Range_Of(MWeapon the_other_weapon) => this.is_Adjacent_To(the_other_weapon.s_Owner);
+        public bool is_Within_the_Range_Of(MWeapon the_other_weapon) => this.is_Adjacent_To(the_other_weapon.s_Owner);
         public bool is_Hostile_Towards(MUnit the_other_unit) => the_faction.Is_Hostile_Towards(the_other_unit.the_faction);
         public bool s_Faction_Is(Faction the_requested_faction) => the_faction == the_requested_faction; 
         private bool is_of(UnitType the_requested_type) => the_type == the_requested_type;
@@ -130,7 +130,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             the_inventory.Adds(the_loot);
         }
 
-        private void Sends_the_Exit_Event() => the_signal_of_the_exit.Next();
+        private void Sends_the_Exit_Event() => the_exit_signal.Next();
 
         private MLocation the_location() => the_chassis.s_Location();
 
@@ -143,6 +143,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         private readonly MHealth the_health;
         private readonly MInventory the_inventory;
 
-        private readonly GuardedStream<TheVoid> the_signal_of_the_exit;
+        private readonly GuardedStream<TheVoid> the_exit_signal;
     }
 }

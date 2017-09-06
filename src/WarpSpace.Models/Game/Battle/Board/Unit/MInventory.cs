@@ -6,25 +6,24 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public class MInventory
     {
-        private readonly ValueCell<Possible<Stuff>> s_cell_of_content;
-        public ICell<Possible<Stuff>> s_Cell_of_Content() => s_cell_of_content;
+        public ICell<Possible<Stuff>> s_Cell_of_Content() => the_contents_cell;
 
         public Possible<Stuff> s_content
         {
-            get => s_cell_of_content.s_Value;
-            private set => s_cell_of_content.s_Value = value;
+            get => the_contents_cell.s_Value;
+            private set => the_contents_cell.s_Value = value;
         }
-
-        public static MInventory From(Possible<Stuff> initial_stuff) => new MInventory(initial_stuff);
 
         public void Adds(Possible<Stuff> new_content)
         {
             s_content = s_content.And(new_content);
         }
 
-        public MInventory(Possible<Stuff> initial_stuff)
+        public MInventory(Possible<Stuff> initial_stuff, EventsGuard the_events_guard)
         {
-            s_cell_of_content = new ValueCell<Possible<Stuff>>(initial_stuff);
+            the_contents_cell = new GuardedCell<Possible<Stuff>>(initial_stuff, the_events_guard);
         }
+        
+        private readonly GuardedCell<Possible<Stuff>> the_contents_cell;
     }
 }

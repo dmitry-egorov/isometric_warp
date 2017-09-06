@@ -22,10 +22,10 @@ namespace WarpSpace.UI.Gameplay.Bay
             var settings = FindObjectOfType<BaySlotPresenterSettingsHolder>();
             var unit_mesh = GetComponentInChildren<UnitMesh>();
             var background = GetComponent<Image>();
-            var player_cell = FindObjectOfType<BattleComponent>().Player_Cell;
+            var player_cell = FindObjectOfType<BattleComponent>().s_Players_Cell();
             
             player_cell
-                .SelectMany(pp => pp.Select(p => p.Selection_Cell).Cell_Or_Empty())
+                .SelectMany(pp => pp.Select(p => p.s_Selections_Cell).Cell_Or_Empty())
                 .Subscribe(Present_Selection)
             ;
 

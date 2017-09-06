@@ -13,13 +13,13 @@ namespace WarpSpace.Models.Game.Battle.Board
         public IReadOnlyCollection<MUnit> Units => _units_hashset;
 
         public IStream<MUnit> Stream_Of_Unit_Creations => _unit_factory.Stream_Of_Unit_Creations;
-        public IStream<MUnit> Stream_Of_Unit_Destructions => _stream_of_unit_destructions;
+        public IStream<MUnit> s_Unit_Destructions_Stream => _stream_of_unit_destructions;
         public IStream<TheVoid> Stream_Of_Exits { get; }
 
-        public MBoard(BoardDescription description)
+        public MBoard(BoardDescription description, EventsGuard the_events_guard)
         {
             _entrance_spacial = description.EntranceSpacial;
-            _unit_factory = new UnitFactory();
+            _unit_factory = new UnitFactory(the_events_guard);
 
             Stream_Of_Exits = Create_Exits_Stream();
             Wire_Unit_Creation();
@@ -28,7 +28,7 @@ namespace WarpSpace.Models.Game.Battle.Board
 
             IStream<TheVoid> Create_Exits_Stream() =>
                 Stream_Of_Unit_Creations
-                    .Select(x => x.s_Signal_of_the_Exit)
+                    .Select(x => x.s_Exit_Signal())
                     .Merge()
             ;
 
@@ -43,7 +43,7 @@ namespace WarpSpace.Models.Game.Battle.Board
                 return tiles;
 
                 MTile CreateTile(Index2D position, TileDescription desc) =>
-                    new MTile(position, desc, _unit_factory);
+                    new MTile(position, desc, _unit_factory, the_events_guard);
             }
 
             void Wire_Unit_Creation()
@@ -59,8 +59,7 @@ namespace WarpSpace.Models.Game.Battle.Board
 
             void Wire_Unit_Destruction(MUnit unit)
             {
-                unit
-                    .s_Signal_of_the_Destruction
+                unit.s_Destruction_Signal()
                     .Subscribe(destroyed =>
                     {
                         _units_hashset.Remove(unit);

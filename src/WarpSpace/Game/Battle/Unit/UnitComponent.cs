@@ -61,7 +61,7 @@ namespace WarpSpace.Game.Battle.Unit
             Action Wire_Selections_to_Outline()
             {
                 return player
-                    .Selected_Unit_Cell
+                    .s_Selected_Units_Cell
                     .IncludePrevious()
                     .Subscribe(x => SetOutline(x.previous, x.current))
                 ;
@@ -79,8 +79,7 @@ namespace WarpSpace.Game.Battle.Unit
             Action Wire_Movements()
             {
                 return
-                    unit
-                        .s_Stream_Of_Movements
+                    unit.s_Movements_Stream()
                         .Subscribe(x => MoveUnitComponent(x.Source, x.Destination));
 
                 void MoveUnitComponent(MLocation previous_location, MLocation current_location)
@@ -111,8 +110,7 @@ namespace WarpSpace.Game.Battle.Unit
             
             void Wire_the_Destruction()
             {
-                unit
-                    .s_Signal_of_the_Destruction
+                unit.s_Destruction_Signal()
                     .First()
                     .Subscribe(isAlive => Destroy(gameObject));
             }

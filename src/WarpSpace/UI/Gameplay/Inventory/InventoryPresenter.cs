@@ -15,10 +15,9 @@ namespace WarpSpace.UI.Gameplay.Inventory
             Debug.Log("Init inventory presenter");
             var cache = FindObjectOfType<IntStringsCache>();
             var text = GetComponent<Text>();
-            FindObjectOfType<BattleComponent>()
-                .Player_Cell
-                .SelectMany(pp => pp.Select(p => p.Selected_Unit_Cell).Cell_Or_Single_Default())
-                .SelectMany(pu => pu.Select(u => u.s_Cell_of_Inventory_Content()).Cell_Or_Single_Default())
+            FindObjectOfType<BattleComponent>().s_Players_Cell()
+                .SelectMany(pp => pp.Select(p => p.s_Selected_Units_Cell).Cell_Or_Single_Default())
+                .SelectMany(pu => pu.Select(u => u.s_Inventory_Contents_Cell()).Cell_Or_Single_Default())
                 .Subscribe(possible_content =>
                 {
                     text.text = 

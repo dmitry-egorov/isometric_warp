@@ -1,11 +1,13 @@
 Plan
+- deselect after firing
 - dock back
-- gates have a bay
-- hower over water
+- outline on the overlay
 - end turn
+- cooldowns
+- hower over water
+- gates have a bay
 - fog of war
 - enemy ai
-- cooldowns
 - faction materials
 - multiple objects per unit
 - weapon model for the mothership

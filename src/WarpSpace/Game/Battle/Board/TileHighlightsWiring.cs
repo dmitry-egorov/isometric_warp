@@ -11,33 +11,30 @@ namespace WarpSpace.Game.Battle.Board
     {
         public static void Wire(MPlayer player, MBoard board, TileComponent[,] tile_components)
         {
-            player
-                .Stream_Of_Selected_Unit_Movements
+            player.s_Selected_Unit_Movements_Stream
                 .Subscribe(moved =>
                 {
-                    Update_Neighborhood_Of(moved.Source.As_a_Tile());
-                    Update_Neighborhood_Of(moved.Destination.As_a_Tile());
+                    Updates_Neighborhood_Of(moved.Source.As_a_Tile());
+                    Updates_Neighborhood_Of(moved.Destination.As_a_Tile());
                 })
             ;
 
-            player
-                .Stream_Of_Selected_Unit_Changes
-                .Subscribe(p => Handle_New_Selected_Unit(p.Previous.SelectMany(u => u.s_Location_As_a_Tile()), p.Current.SelectMany(u => u.s_Location_As_a_Tile())))
+            player.s_Selected_Unit_Changes_Stream
+                .Subscribe(p => Handles_New_Selected_Unit(p.Previous.SelectMany(u => u.s_Location_As_a_Tile()), p.Current.SelectMany(u => u.s_Location_As_a_Tile())))
             ;
 
-            board
-                .Stream_Of_Unit_Destructions
+            board.s_Unit_Destructions_Stream
                 .Select(destroyed => destroyed.s_Location_As_a_Tile())
-                .Subscribe(Update_Neighborhood_Of)
+                .Subscribe(Updates_Neighborhood_Of)
             ;
 
-            void Handle_New_Selected_Unit(Possible<MTile> previous, Possible<MTile> current)
+            void Handles_New_Selected_Unit(Possible<MTile> previous, Possible<MTile> current)
             {
-                Update_Neighborhood_Of(previous);
-                Update_Neighborhood_Of(current);
+                Updates_Neighborhood_Of(previous);
+                Updates_Neighborhood_Of(current);
             }
 
-            void Update_Neighborhood_Of(Possible<MTile> possible_tile)
+            void Updates_Neighborhood_Of(Possible<MTile> possible_tile)
             {
                 if (!possible_tile.Has_a_Value(out var prev_tile))
                     return;
@@ -49,7 +46,7 @@ namespace WarpSpace.Game.Battle.Board
             }
             
             void Update_Highlight_Of(MTile tile) => 
-                Get_the_Highlight_Element_Of(tile).Update_the_Highlight()
+                Get_the_Highlight_Element_Of(tile).Updates_the_Highlight()
             ;
 
             HighlightElement Get_the_Highlight_Element_Of(MTile tile) => 

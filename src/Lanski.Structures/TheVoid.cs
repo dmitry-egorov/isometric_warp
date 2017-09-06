@@ -1,23 +1,13 @@
-﻿namespace Lanski.Structures
+﻿using System;
+
+namespace Lanski.Structures
 {
-    public struct TheVoid
+    public struct TheVoid: IEquatable<TheVoid>
     {
         public static TheVoid Instance => new TheVoid();
 
-        public bool Equals(TheVoid other)
-        {
-            return true;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is TheVoid && Equals((TheVoid) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return 0;
-        }
+        public bool Equals(TheVoid other) => true;
+        public override bool Equals(object obj) => !ReferenceEquals(null, obj) && (obj is TheVoid && Equals((TheVoid) obj));
+        public override int GetHashCode() => 0;
     }
 }

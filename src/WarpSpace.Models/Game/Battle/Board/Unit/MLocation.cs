@@ -6,7 +6,7 @@ using WarpSpace.Models.Game.Battle.Board.Tile;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
-    public class MLocation
+    public class MLocation: IEquatable<MLocation>
     {
         public MLocation(Or<MTile, MBay> owner): this(owner, Possible.Empty<MUnit>()){}
         public MLocation(Or<MTile, MBay> owner, Possible<MUnit> possible_unit)
@@ -39,6 +39,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool Has_a_Unit(out MUnit unit) => _possible_occupant.Has_a_Value(out unit);
         public bool Is_Occupied() => !Is_Empty();
         public bool Is_Empty() => _possible_occupant.Has_Nothing();
+        public bool Equals(MLocation other) => ReferenceEquals(this, other);
 
         internal void Sets_the_Occupant_To(MUnit unit)
         {
@@ -61,5 +62,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         
         private readonly Or<MTile, MBay> _owner;
         private Possible<MUnit> _possible_occupant;
+
     }
 }

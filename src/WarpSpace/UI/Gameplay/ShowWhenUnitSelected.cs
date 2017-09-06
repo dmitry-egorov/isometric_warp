@@ -15,9 +15,8 @@ namespace WarpSpace.UI.Gameplay
             Wire_Player_Selection();
             
             void Wire_Player_Selection() => 
-                battle
-                    .Player_Cell
-                    .SelectMany(ps => ps.Select(p => p.Selected_Unit_Cell).Cell_Or_Single_Default())
+                battle.s_Players_Cell()
+                    .SelectMany(ps => ps.Select(p => p.s_Selected_Units_Cell).Cell_Or_Single_Default())
                     .Subscribe(Set_Is_Active)
             ;
 

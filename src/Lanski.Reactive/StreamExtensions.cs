@@ -136,7 +136,7 @@ namespace Lanski.Reactive
             }
         }
 
-         public class InProgressCell<T> : ICell<bool>
+        public class InProgressCell<T> : ICell<bool>
         {
             private readonly IStream<T> _events;
             private readonly Func<T, bool> _startCondition;

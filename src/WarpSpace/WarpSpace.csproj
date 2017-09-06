@@ -63,8 +63,8 @@
     <Compile Include="Game\Battle\Tile\UnitSlot.cs" />
     <Compile Include="Game\Battle\Tile\Water.cs" />
     <Compile Include="Game\Battle\Unit\OutlineMeshBuilder.cs" />
-    <Compile Include="Overlay\Health.cs" />
-    <Compile Include="Overlay\Unit.cs" />
+    <Compile Include="Overlay\OHealth.cs" />
+    <Compile Include="Overlay\OUnit.cs" />
     <Compile Include="Overlay\UnitsComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\UnityRandom.cs" />

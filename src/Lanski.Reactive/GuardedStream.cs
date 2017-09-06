@@ -51,7 +51,7 @@ namespace Lanski.Reactive
             the_subscribers_count++;
             if (the_subscribers_count == 1)
             {
-                the_subscription = the_guard.s_Stream_Of_Releases().Subscribe(Processes_the_Guard_Status_Change);
+                the_subscription = the_guard.s_Releases_Stream().Subscribe(Processes_the_Guard_Status_Change);
             }
         }
 

@@ -14,7 +14,7 @@ namespace Lanski.Behaviours.Meshes
 
         private MeshFilter _filter;
 
-        private Cell<Mesh> _ownMeshCell;
+        private Cell<MeshContainer> _ownMeshCell;
         private Action _subscription;
 
         void Start()
@@ -43,15 +43,15 @@ namespace Lanski.Behaviours.Meshes
 
             _filter = GetComponent<MeshFilter>();
 
-            _ownMeshCell = new Cell<Mesh>(_filter.sharedMesh);
+            _ownMeshCell = new Cell<MeshContainer>(_filter.sharedMesh);
 
             _subscription = FindObjectOfType<T>().MeshCell
-                .Merge(_ownMeshCell.Where(x => x == null))
+                .Merge(_ownMeshCell.Where(x => x.s_Mesh == null))
                 .Subscribe(_ => UpdateMesh());
 
             void UpdateMesh()
             {
-                _filter.sharedMesh = FindObjectOfType<T>().MeshCell.s_Value;
+                _filter.sharedMesh = FindObjectOfType<T>().MeshCell.s_Value.s_Mesh;
             }
         }
     }

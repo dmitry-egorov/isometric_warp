@@ -1,13 +1,15 @@
 ﻿using System;
 using Lanski.Reactive;
+using Lanski.Structures;
 using Lanski.UnityExtensions;
 using UnityEngine;
 using UnityEngine.UI;
+using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Overlay
 {
     [ExecuteInEditMode]
-    public class Health: MonoBehaviour
+    public class OHealth: MonoBehaviour
     {
         public GameObject PointPrefab;
         public Material PointMaterial;
@@ -16,13 +18,6 @@ namespace WarpSpace.Overlay
         public int Total;
         public int Current;
 
-        private ChangeStream<int> _total_changes;
-        private ChangeStream<int> _current_changes;
-        [NonSerialized] private bool _initialized;
-        
-        private HorizontalLayoutGroup _group;
-        private ContentSizeFitter _fitter;
-
         private void Init()
         {
             if(_initialized)
@@ -30,14 +25,11 @@ namespace WarpSpace.Overlay
 
             _initialized = true;
             
-            _group = GetComponent<HorizontalLayoutGroup>();
-            _fitter = GetComponent<ContentSizeFitter>();
-
             _total_changes = new ChangeStream<int>();
             _current_changes = new ChangeStream<int>();
             
-            _total_changes.Subscribe(x => RecreatePoints());
-            _current_changes.Subscribe(x => Set_Point_Materials());
+            _total_changes.Subscribe(x => Recreates_Health_Points());
+            _current_changes.Subscribe(x => Sets_Point_Materials());
         }
 
         void Start()
@@ -53,13 +45,27 @@ namespace WarpSpace.Overlay
             _current_changes.Update(Current);
         }
 
-        private void RecreatePoints()
+        public void Watches(Possible<MHealth> the_possible_units_health)
+        {
+            the_possible_last_subscription.Do(s => s());
+            
+            if (the_possible_units_health.Has_a_Value(out var the_units_health))
+            {
+                the_possible_last_subscription = 
+                    the_units_health.s_States_Cell()
+                    .Subscribe(state =>
+                    {
+                        Current = state.s_Current_Hit_Points();
+                        Total = state.s_Total_Hit_Points();
+                    });
+            }
+            
+        }
+
+        private void Recreates_Health_Points()
         {
             var total = Total;
 
-            //_group.enabled = true;
-            //_fitter.enabled = true;
-            
             gameObject.DestroyChildren();
 
             for (var i = 0; i < total; i++)
@@ -67,18 +73,20 @@ namespace WarpSpace.Overlay
                 Instantiate(PointPrefab, transform);
             }
             
-            //_group.enabled = false;
-            //_fitter.enabled = false;
-            
-            Set_Point_Materials();
+            Sets_Point_Materials();
         }
 
-        private void Set_Point_Materials()
+        private void Sets_Point_Materials()
         {
             for (var i = 0; i < Total; i++)
             {
                 transform.GetChild(i).GetComponent<Image>().material = i < Current ? PointMaterial : EmptyMaterial;
             }
         }
+        
+        private Possible<Action> the_possible_last_subscription;
+        private ChangeStream<int> _total_changes;
+        private ChangeStream<int> _current_changes;
+        [NonSerialized] private bool _initialized;
     }
 }

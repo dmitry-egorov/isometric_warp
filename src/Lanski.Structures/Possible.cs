@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
 using JetBrains.Annotations;
 
 namespace Lanski.Structures
@@ -8,14 +7,14 @@ namespace Lanski.Structures
     public static class Possible
     {
         public static Possible<T> Empty<T>() => new Possible<T>();
-        public static Possible<T> From<T>(T obj) => new Possible<T>(true, obj);
+        public static Possible<T> From<T>(T obj)  => new Possible<T>(true, obj);
         public static Possible<T> As_a_Possible_Value<T>(this T obj) => From(obj);
     }
     
     /// <summary>
     /// A nullable reference (for improved code semantics)
     /// </summary>
-    public struct Possible<T>
+    public struct Possible<T>: IEquatable<Possible<T>>
     {
         private readonly bool _has_a_value;
         private readonly T _obj;
@@ -33,6 +32,12 @@ namespace Lanski.Structures
 
         [Pure]public bool Doesnt_Have_a_Value(out T o) => !Has_a_Value(out o);
 
+        public void Do(Action<T> action)
+        {
+            if (Has_a_Value(out var value))
+                action(value);
+        }
+        
         [Pure]public bool Has_a_Value(out T o)
         {
             o = _obj;
@@ -41,26 +46,12 @@ namespace Lanski.Structures
         
         [Pure] public T Must_Have_a_Value() => Has_a_Value(out var value) ? value : throw new InvalidOperationException("Must have a value");
 
-        public Possible<TResult> SelectMany<TResult>(Func<T, Possible<TResult>> selector) => Has_a_Value(out var value) ? selector(value) : default(Possible<TResult>);
-        public Possible<TResult> Select<TResult>(Func<T, TResult> selector) => Has_a_Value(out var value) ? new Possible<TResult>(true, selector(value)) : default(Possible<TResult>);
+        [Pure] public Possible<TResult> SelectMany<TResult>(Func<T, Possible<TResult>> selector) => Has_a_Value(out var value) ? selector(value) : default(Possible<TResult>);
+        [Pure] public Possible<TResult> Select<TResult>(Func<T, TResult> selector) => Has_a_Value(out var value) ? new Possible<TResult>(true, selector(value)) : default(Possible<TResult>);
         
         public T Value_Or(T defaultValue) => Has_a_Value(out var value) ? value : defaultValue;
         
         public bool Equals(Possible<T> other) => _has_a_value == other._has_a_value && EqualityComparer<T>.Default.Equals(_obj, other._obj);
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is Possible<T> && Equals((Possible<T>) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return (_has_a_value.GetHashCode() * 397) ^ EqualityComparer<T>.Default.GetHashCode(_obj);
-            }
-        }
 
         public static implicit operator Possible<T>(T value) => new Possible<T>(true, value);
     }

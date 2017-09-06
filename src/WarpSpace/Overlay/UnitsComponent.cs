@@ -16,12 +16,12 @@ namespace WarpSpace.Overlay
         public void Start()
         {
             var battle = FindObjectOfType<BattleComponent>();
-            battle.Battle_Cell.SelectMany(SelectWorldUnitsStream).Subscribe(CreateUiUnitComponent);
+            battle.s_Battles_Cell().SelectMany(SelectWorldUnitsStream).Subscribe(CreateUiUnitComponent);
         }
 
         private void CreateUiUnitComponent(UnitComponent unit_component)
         {
-            var unit = Instantiate(UnitPrefab, transform).GetComponent<Unit>();
+            var unit = Instantiate(UnitPrefab, transform).GetComponent<OUnit>();
             unit.Init(unit_component);
         }
 

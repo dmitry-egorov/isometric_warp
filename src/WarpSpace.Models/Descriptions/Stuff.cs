@@ -12,7 +12,7 @@ namespace WarpSpace.Models.Descriptions
         ;
     }
     
-    public struct Stuff
+    public struct Stuff: IEquatable<Stuff>
     {
         public readonly int Matter;
 
@@ -38,5 +38,7 @@ namespace WarpSpace.Models.Descriptions
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
+
+        public bool Equals(Stuff other) => Matter == other.Matter;
     }
 }

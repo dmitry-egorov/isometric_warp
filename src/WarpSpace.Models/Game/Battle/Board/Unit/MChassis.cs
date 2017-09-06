@@ -9,8 +9,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool is_Docked() => the_location().is_a_Bay();
         public MLocation s_Location() => the_location();
 
-        public IStream<Movement> s_Stream_of_Movements() => the_stream_of_movements;
-        public IStream<bool> s_Stream_of_Dock_States() => the_stream_of_dock_states;
+        public IStream<Movement> s_Movements_Stream() => the_stream_of_movements;
+        public IStream<bool> s_Dock_States_Stream() => the_stream_of_dock_states;
 
         public MChassis(UnitType the_owners_type, MLocation initial_location, EventsGuard the_events_guard)
         {

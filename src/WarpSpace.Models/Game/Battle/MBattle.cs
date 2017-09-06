@@ -13,10 +13,10 @@ namespace WarpSpace.Models.Game.Battle
 
         public IStream<TheVoid> Stream_Of_Exits => Board.Stream_Of_Exits;
 
-        public MBattle(BoardDescription board_description)
+        public MBattle(BoardDescription board_description, EventsGuard the_events_guard)
         {
-            Board = new MBoard(board_description);
-            Player = new MPlayer();
+            Board = new MBoard(board_description, the_events_guard);
+            Player = new MPlayer(the_events_guard);
         }
 
         public void Start()

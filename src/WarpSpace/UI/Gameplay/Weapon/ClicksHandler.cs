@@ -17,8 +17,7 @@ namespace WarpSpace.UI.Gameplay.Weapon
             Wire_Player_Slot_Variable();
 
             void Wire_Player_Slot_Variable() =>
-                battle
-                .Player_Cell
+                battle.s_Players_Cell()
                 .SelectMany(player => clicks.Clicks.Select(c => player))
                 .Subscribe(HandleClick);
             ;

@@ -20,6 +20,8 @@ Shader "Custom/Isometric"
 
 		Pass
 		{
+		    Blend off
+		    
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag

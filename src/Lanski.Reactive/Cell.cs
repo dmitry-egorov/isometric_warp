@@ -1,7 +1,14 @@
 using System;
+using System.Collections.Generic;
+using Lanski.Structures;
 
 namespace Lanski.Reactive
 {
+    public static class Cell
+    {
+        public static Cell<Possible<T>> Empty<T>() => new Cell<Possible<T>>(Possible.Empty<T>());
+    }
+    
     public class Cell<T> : ICell<T>, IConsumer<T>
     {
         private readonly Stream<T> _stream = new Stream<T>();
@@ -17,9 +24,7 @@ namespace Lanski.Reactive
             get => _lastValue;
             set
             {
-                if (_lastValue == null && value == null)
-                    return;
-                if (_lastValue != null && _lastValue.Equals(value))
+                if (EqualityComparer<T>.Default.Equals(_lastValue, value))
                     return;
 
                 _lastValue = value;

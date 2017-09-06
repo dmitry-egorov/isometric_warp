@@ -1,8 +1,9 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
 namespace Lanski.Structures
 {
-    public struct Or<T1, T2> 
+    public struct Or<T1, T2>: IEquatable<Or<T1, T2>>
     {
         public Or(T1 v) : this() => _v1 = v;
         public Or(T2 v) : this() => _v2 = v;
@@ -24,9 +25,11 @@ namespace Lanski.Structures
         
         private Possible<T1> _v1;
         private Possible<T2> _v2;
+
+        public bool Equals(Or<T1, T2> other) => _v1.Equals(other._v1) && _v2.Equals(other._v2);
     }
     
-    public struct Or<T1, T2, T3> 
+    public struct Or<T1, T2, T3>: IEquatable<Or<T1, T2, T3>>
     {
         public Or(T1 v) : this() => _v1 = v;
         public Or(T2 v) : this() => _v2 = v;
@@ -55,9 +58,11 @@ namespace Lanski.Structures
         private Possible<T1> _v1;
         private Possible<T2> _v2;
         private Possible<T3> _v3;
+
+        public bool Equals(Or<T1, T2, T3> other) => _v1.Equals(other._v1) && _v2.Equals(other._v2) && _v3.Equals(other._v3);
     }
     
-    public struct Or<T1, T2, T3, T4> 
+    public struct Or<T1, T2, T3, T4>: IEquatable<Or<T1, T2, T3, T4>>
     {
         public Or(T1 v) : this() => _v1 = v;
         public Or(T2 v) : this() => _v2 = v;
@@ -93,5 +98,7 @@ namespace Lanski.Structures
         private Possible<T2> _v2;
         private Possible<T3> _v3;
         private Possible<T4> _v4;
+
+        public bool Equals(Or<T1, T2, T3, T4> other) => _v1.Equals(other._v1) && _v2.Equals(other._v2) && _v3.Equals(other._v3) && _v4.Equals(other._v4);
     }
 }

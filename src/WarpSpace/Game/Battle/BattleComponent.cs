@@ -18,13 +18,9 @@ namespace WarpSpace.Game.Battle
     {
         public OptionalPredefinedBoardsSettings PredefinedBoards;
         [TextArea(8,8)] public string LastMapString;//For inspector
-        private BoardDescription _lastMap;//For inspector
 
-        private bool _initialized;
-        private ValueCell<Possible<MGame>> _gameCell;
-        public ICell<Possible<MGame>> Game_Cell => _gameCell;
-        public ICell<Possible<MPlayer>> Player_Cell { get; private set; }
-        public ICell<Possible<MBattle>> Battle_Cell { get; private set; }
+        public ICell<Possible<MPlayer>> s_Players_Cell() => the_players_cell;
+        public ICell<Possible<MBattle>> s_Battles_Cell() => the_battles_cell;
 
         void Awake()
         {
@@ -44,10 +40,10 @@ namespace WarpSpace.Game.Battle
             var board = FindObjectOfType<BoardComponent>();//TODO: create from prefab
 
             var game = Create_the_Game();
-            //Wire_Board_Component_to_the_Game();
-            //_gameCell.s_Value = game;
+            Wire_Board_Component_to_the_Game();
+            the_games_cell.s_Value = game;
 
-            //Start_the_Game();
+            Start_the_Game();
 
             MGame Create_the_Game()
             {
@@ -69,7 +65,7 @@ namespace WarpSpace.Game.Battle
             
             void Wire_Board_Component_to_the_Game()
             {
-                game.Current_Battle.Subscribe(battle_ref =>
+                game.s_Battles_Cell.Subscribe(battle_ref =>
                 {
                     if (battle_ref.Doesnt_Have_a_Value(out var battle))
                         return;
@@ -90,10 +86,19 @@ namespace WarpSpace.Game.Battle
                 return;
             _initialized = true;
             
-            _gameCell = ValueCellEx.Empty<MGame>();
-            Player_Cell = Game_Cell.SelectMany(gc => gc.Select(g => g.Current_Player).Cell_Or_Single_Default());
-            Battle_Cell = Game_Cell.SelectMany(gc => gc.Select(g => g.Current_Battle).Cell_Or_Single_Default());
+            the_games_cell = Cell.Empty<MGame>();
+            the_players_cell = the_games_cell.SelectMany(gc => gc.Select_Cell_Or_Single_Default(g => g.s_Players_cell));
+            the_battles_cell = the_games_cell.SelectMany(gc => gc.Select_Cell_Or_Single_Default(g => g.s_Battles_Cell));
         }
+        
+        
+        private BoardDescription _lastMap;//For inspector
+
+        private bool _initialized;
+        private Cell<Possible<MGame>> the_games_cell;
+        private ICell<Possible<MPlayer>> the_players_cell;
+        private ICell<Possible<MBattle>> the_battles_cell;
+
 
         [Serializable]
         public class OptionalPredefinedBoardsSettings: Optional<PredefinedBoardsSettings>{}

@@ -59,7 +59,6 @@
     <Compile Include="Stream.cs" />
     <Compile Include="StreamExtensions.cs" />
     <Compile Include="StreamMergeExtensions.cs" />
-    <Compile Include="ValueCell.cs" />
     <Compile Include="VoidStreamExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -8,19 +8,17 @@ namespace WarpSpace.Models.Game
 {
     public class MGame
     {
-        private readonly BoardDescription _boardDescription;
+        public ICell<Possible<MBattle>> s_Battles_Cell => the_battles_cell;
+        public ICell<Possible<MPlayer>> s_Players_cell => the_players_cell;
 
-        private readonly ValueCell<Possible<MBattle>> _currentBattle;
-        public ICell<Possible<MBattle>> Current_Battle => _currentBattle;
-        public ICell<Possible<MPlayer>> Current_Player { get; }
-
-        public MGame(BoardDescription boardDescription)
+        public MGame(BoardDescription the_board_description)
         {
-            _boardDescription = boardDescription;
-            _currentBattle = ValueCellEx.Empty<MBattle>();
-            Current_Player = _currentBattle.Select(b => b.Select(x => x.Player));
+            this.the_board_description = the_board_description;
+            the_events_guard = new EventsGuard();
+            the_battles_cell = new GuardedCell<Possible<MBattle>>(Possible.Empty<MBattle>(), the_events_guard);
+            the_players_cell = the_battles_cell.Select(b => b.Select(x => x.Player));
 
-            Current_Battle
+            s_Battles_Cell
                 .SelectMany(b => b.Select(x => x.Stream_Of_Exits).Value_Or_Empty())
                 .Subscribe(_ => Restart_Battle());
         }
@@ -32,11 +30,16 @@ namespace WarpSpace.Models.Game
 
         private void Restart_Battle()
         {
-            var battle = new MBattle(_boardDescription);
+            var battle = new MBattle(the_board_description, the_events_guard);
 
-            _currentBattle.s_Value = battle;
+            the_battles_cell.s_Value = battle;
             
             battle.Start();
         }
+        
+        private readonly EventsGuard the_events_guard;
+        private readonly BoardDescription the_board_description;
+        private readonly GuardedCell<Possible<MBattle>> the_battles_cell;
+        private readonly ICell<Possible<MPlayer>> the_players_cell;
     }
 }

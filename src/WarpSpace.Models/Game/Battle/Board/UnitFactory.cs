@@ -7,15 +7,20 @@ namespace WarpSpace.Models.Game.Battle.Board
 {
     public class UnitFactory
     {
-        public IStream<MUnit> Stream_Of_Unit_Creations => _stream_of_unit_creations;
+        public IStream<MUnit> Stream_Of_Unit_Creations => the_stream_of_unit_creations;
+
+        public UnitFactory(EventsGuard events_guard)
+        {
+            the_events_guard = events_guard;
+        }
 
         public bool Can_Create_a_Unit_At(MLocation location) => location.Is_Empty();
         
         public void Create_a_Unit(UnitDescription desc, MLocation initial_location)
         {
             Can_Create_a_Unit_At(initial_location).Otherwise_Throw("Can't create a unit at the location");
-            
-            var unit = new MUnit(desc.Type, desc.Faction, desc.Inventory_Content, initial_location, new EventsGuard());
+
+            var unit = new MUnit(desc.Type, desc.Faction, desc.Inventory_Content, initial_location, the_events_guard);
 
             initial_location.Sets_the_Occupant_To(unit);
             
@@ -42,9 +47,10 @@ namespace WarpSpace.Models.Game.Battle.Board
         
         void Signal_the_Creation(MUnit unit)
         {
-            _stream_of_unit_creations.Next(unit);                    
+            the_stream_of_unit_creations.Next(unit);                    
         }
 
-        private readonly Stream<MUnit> _stream_of_unit_creations = new Stream<MUnit>();
+        private readonly Stream<MUnit> the_stream_of_unit_creations = new Stream<MUnit>();
+        private EventsGuard the_events_guard;
     }
 }

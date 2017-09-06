@@ -3,6 +3,7 @@
 namespace Lanski.Reactive
 {
     public class GuardedCell<T> : ICell<T>, IConsumer<T>
+        where T: IEquatable<T>
     {
         public GuardedCell(T initial_value, EventsGuard the_events_guard)
         {
@@ -18,22 +19,19 @@ namespace Lanski.Reactive
             set => Next(value);
         }
 
-
         public void Next(T value)
         {
+            the_last_held_value = value;
+
             if (the_guard.is_Letting_Events_Through())
             {
                 the_source.s_Value = value;
-            }
-            else
-            {
-                the_last_held_value = value;
             }
         }
         
         public Action Subscribe(Action<T> the_action)
         {
-            var the_new_subscription = this.the_source.Subscribe(the_action);
+            var the_new_subscription = the_source.Subscribe(the_action);
             this.Registers_a_New_Subscription();
 
             return () =>
@@ -48,7 +46,7 @@ namespace Lanski.Reactive
             the_subscribers_count--;
             if (the_subscribers_count == 0)
             {
-                this.the_subscription();
+                the_subscription();
             }
         }
 
@@ -58,7 +56,7 @@ namespace Lanski.Reactive
             if (the_subscribers_count == 1)
             {
                 the_subscription = 
-                    the_guard.s_Stream_Of_Releases()
+                    the_guard.s_Releases_Stream()
                     .Subscribe(Processes_the_Guard_Release);
             }
         }

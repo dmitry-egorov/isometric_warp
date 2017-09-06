@@ -16,13 +16,13 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         public bool Is_Occupied => Site.Is_Occupied();
 
-        public MTile(Index2D position, TileDescription desc, UnitFactory unit_factory)
+        public MTile(Index2D position, TileDescription desc, UnitFactory unit_factory, EventsGuard the_events_guard)
         {
             Position = position;
             _landscape = new MLandscape(desc.Type);
 
             var site = desc.Initial_Site;
-            _site_cell = new ValueCell<TileSite>(Create_Site());
+            _site_cell = new GuardedCell<TileSite>(Create_Site(), the_events_guard);
 
             TileSite Create_Site()
             {
@@ -93,7 +93,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
             return new TileSite(structure);
         }
 
-        private readonly ValueCell<TileSite> _site_cell;
+        private readonly GuardedCell<TileSite> _site_cell;
         private readonly MLandscape _landscape;
     }
 }

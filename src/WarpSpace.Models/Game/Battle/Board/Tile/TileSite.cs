@@ -1,11 +1,12 @@
-﻿using Lanski.Structures;
+﻿using System;
+using Lanski.Structures;
 using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using static Lanski.Structures.Semantics;
 
 namespace WarpSpace.Models.Game.Battle.Board.Tile
 {
-    public struct TileSite
+    public struct TileSite : IEquatable<TileSite>
     {
         public readonly Or<MLocation, MStructure> Variant;
         
@@ -34,5 +35,21 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         public static implicit operator TileSite(MLocation location) => new TileSite(location);
         public static implicit operator TileSite(MStructure structure) => new TileSite(structure);
+
+        public bool Equals(TileSite other)
+        {
+            return Variant.Equals(other.Variant);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is TileSite && Equals((TileSite) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Variant.GetHashCode();
+        }
     }
 }
