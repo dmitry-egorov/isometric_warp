@@ -45,14 +45,14 @@
     <Compile Include="Debug.cs" />
     <Compile Include="Descriptions\BoardDescription.cs" />
     <Compile Include="Descriptions\ChassisType.cs" />
-    <Compile Include="Descriptions\DamageDescription.cs" />
+    <Compile Include="Descriptions\Damage.cs" />
     <Compile Include="Descriptions\DamageType.cs" />
     <Compile Include="Descriptions\Faction.cs" />
-    <Compile Include="Descriptions\InventoryContent.cs" />
+    <Compile Include="Descriptions\Stuff.cs" />
     <Compile Include="Descriptions\LandscapeType.cs" />
     <Compile Include="Descriptions\Spacial2D.cs" />
     <Compile Include="Descriptions\StructureDescription.cs" />
-    <Compile Include="Descriptions\TileContentDescription.cs" />
+    <Compile Include="Descriptions\TileSiteDescription.cs" />
     <Compile Include="Descriptions\TileDescription.cs" />
     <Compile Include="Descriptions\TileHelper.cs" />
     <Compile Include="Descriptions\UnitDescription.cs" />
@@ -60,7 +60,7 @@
     <Compile Include="Descriptions\WeaponType.cs" />
     <Compile Include="Game\Battle\Board\MothershipExited.cs" />
     <Compile Include="Game\Battle\Board\UnitFactory.cs" />
-    <Compile Include="Game\Battle\Board\Unit\ChangeSignal.cs" />
+    <Compile Include="Game\Battle\Board\Unit\HealthState.cs" />
     <Compile Include="StreamCache.cs" />
     <Compile Include="Game\Battle\Board\MBoard.cs" />
     <Compile Include="Game\Battle\Board\Structure\StructureDestroyed.cs" />
@@ -68,7 +68,7 @@
     <Compile Include="Game\Battle\Board\Tile\MLandscape.cs" />
     <Compile Include="Game\Battle\Board\Tile\MTile.cs" />
     <Compile Include="Game\Battle\Board\Tile\TileSite.cs" />
-    <Compile Include="Game\Battle\Board\Tile\UnitMoved.cs" />
+    <Compile Include="Game\Battle\Board\Tile\Movement.cs" />
     <Compile Include="Game\Battle\Board\Unit\MBay.cs" />
     <Compile Include="Game\Battle\Board\Unit\MChassis.cs" />
     <Compile Include="Game\Battle\Board\Unit\MHealth.cs" />

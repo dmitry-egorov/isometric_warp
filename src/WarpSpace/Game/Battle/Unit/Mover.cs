@@ -88,7 +88,7 @@ namespace WarpSpace.Game.Battle.Unit
                     There_Is_a_Target(out var current_target) 
                     && current_target.Rotation == _movementQueue.Peek().Rotation;
                     
-                void Update_Target_From_the_Queue() => _currentTarget = _movementQueue.Dequeue().As_a_Slot();
+                void Update_Target_From_the_Queue() => _currentTarget = _movementQueue.Dequeue();
                 bool there_Is_No_Target() => _currentTarget.Has_Nothing();
             }
 

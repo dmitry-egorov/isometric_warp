@@ -15,22 +15,13 @@ namespace WarpSpace.Models.Game.Battle.Board
         {
             Can_Create_a_Unit_At(initial_location).Otherwise_Throw("Can't create a unit at the location");
             
-            var unit = new MUnit(desc.Type, desc.Faction, desc.Inventory_Content, initial_location);
+            var unit = new MUnit(desc.Type, desc.Faction, desc.Inventory_Content, initial_location, new EventsGuard());
 
-            initial_location.Set_the_Occupant_To(unit);
+            initial_location.Sets_the_Occupant_To(unit);
             
             Signal_the_Creation(unit);
 
             Create_Units_In_The_Bay(desc, unit);
-
-                        
-        }
-
-        private static string ToString(MLocation initial_location)
-        {
-            return initial_location.Is_a_Tile(out var tile) 
-                ? tile.Position.ToString() 
-                : initial_location.Must_Be_a_Bay().Owner.Type.ToString();
         }
 
         private void Create_Units_In_The_Bay(UnitDescription desc, MUnit unit)

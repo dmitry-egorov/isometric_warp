@@ -3,6 +3,7 @@ Plan
 - gates have a bay
 - hower over water
 - end turn
+- fog of war
 - enemy ai
 - cooldowns
 - faction materials

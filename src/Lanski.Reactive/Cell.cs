@@ -2,20 +2,19 @@ using System;
 
 namespace Lanski.Reactive
 {
-    public class RefCell<T> : ICell<T>, IConsumer<T>
-        where T: class 
+    public class Cell<T> : ICell<T>, IConsumer<T>
     {
         private readonly Stream<T> _stream = new Stream<T>();
         private T _lastValue;
 
-        public RefCell(T initialValue)
+        public Cell(T initialValue)
         {
             _lastValue = initialValue;
         }
 
-        public T Value
+        public T s_Value
         {
-            get { return _lastValue; }
+            get => _lastValue;
             set
             {
                 if (_lastValue == null && value == null)
@@ -36,7 +35,7 @@ namespace Lanski.Reactive
 
         void IConsumer<T>.Next(T value)
         {
-            Value = value;
+            s_Value = value;
         }
     }
 }

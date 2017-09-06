@@ -5,7 +5,7 @@ namespace Lanski.Behaviours
 {
     public class IntStringsCache: MonoBehaviour
     {
-        private static string[] _prebuiltStrings;
+        private string[] _prebuiltStrings;
 
         void Start()
         {

@@ -25,7 +25,7 @@ namespace WarpSpace.Models.Descriptions
         {
             switch (chassisType)
             {
-                case ChassisType.Hower:
+                case ChassisType.a_Hower_Pad:
                     switch (type)
                     {
                         case LandscapeType.Mountain:
@@ -39,7 +39,7 @@ namespace WarpSpace.Models.Descriptions
                         default:
                             throw new ArgumentOutOfRangeException(nameof(type), type, null);
                     }
-                case ChassisType.Track:
+                case ChassisType.a_Track:
                     switch (type)
                     {
                         case LandscapeType.Mountain:

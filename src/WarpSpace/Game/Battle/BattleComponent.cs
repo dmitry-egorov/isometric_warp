@@ -44,10 +44,10 @@ namespace WarpSpace.Game.Battle
             var board = FindObjectOfType<BoardComponent>();//TODO: create from prefab
 
             var game = Create_the_Game();
-            Wire_Board_Component_to_the_Game();
-            _gameCell.Value = game.As_a_Slot();
+            //Wire_Board_Component_to_the_Game();
+            //_gameCell.s_Value = game;
 
-            Start_the_Game();
+            //Start_the_Game();
 
             MGame Create_the_Game()
             {

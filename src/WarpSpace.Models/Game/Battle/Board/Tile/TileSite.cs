@@ -1,5 +1,4 @@
-﻿using System;
-using Lanski.Structures;
+﻿using Lanski.Structures;
 using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using static Lanski.Structures.Semantics;

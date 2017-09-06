@@ -175,7 +175,7 @@ namespace Lanski.Structures
         public static Possible<T> TryGetRef<T>(this T[,] array, Index2D i)
             where T: class
         {
-            return i.Fits(array) ? array.Get(i).As_a_Slot() 
+            return i.Fits(array) ? array.Get(i) 
                                  : Possible.Empty<T>();
         }
         

@@ -18,7 +18,7 @@ namespace WarpSpace.UI.Gameplay.Inventory
             FindObjectOfType<BattleComponent>()
                 .Player_Cell
                 .SelectMany(pp => pp.Select(p => p.Selected_Unit_Cell).Cell_Or_Single_Default())
-                .SelectMany(pu => pu.Select(u => u.Inventory_Content_Cell).Cell_Or_Single_Default())
+                .SelectMany(pu => pu.Select(u => u.s_Cell_of_Inventory_Content()).Cell_Or_Single_Default())
                 .Subscribe(possible_content =>
                 {
                     text.text = 

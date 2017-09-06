@@ -38,7 +38,7 @@ namespace WarpSpace.UI.Gameplay.Bay
 
             void Handle_Click(MPlayer player)
             {
-                var selected_unit = player.Selected_Unit_Cell.Must_Have_a_Value();
+                var selected_unit = player.Must_Have_A_Selected_Unit();
                 var selected_units_bay = selected_unit.Must_Have_a_Bay();
                 var bay_slot = selected_units_bay[index].Must_Have_a_Value();
 
@@ -77,7 +77,7 @@ namespace WarpSpace.UI.Gameplay.Bay
 
             void Present_a_Unit(MUnit unit, bool bay_unit_is_selected)
             {
-                unit_mesh.Present(unit.Type, unit.Faction);
+                unit_mesh.Present(unit.s_Type, unit.s_Faction);
                 background.material = bay_unit_is_selected ? settings.SelectedUnitBackgroundMaterial : settings.UnitBackgroundMaterial;
             }
 

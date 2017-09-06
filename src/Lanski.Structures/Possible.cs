@@ -9,7 +9,7 @@ namespace Lanski.Structures
     {
         public static Possible<T> Empty<T>() => new Possible<T>();
         public static Possible<T> From<T>(T obj) => new Possible<T>(true, obj);
-        public static Possible<T> As_a_Slot<T>(this T obj) => From(obj);
+        public static Possible<T> As_a_Possible_Value<T>(this T obj) => From(obj);
     }
     
     /// <summary>
@@ -62,6 +62,6 @@ namespace Lanski.Structures
             }
         }
 
-        public static implicit operator Possible<T>(T value) => value.As_a_Slot();
+        public static implicit operator Possible<T>(T value) => value;
     }
 }

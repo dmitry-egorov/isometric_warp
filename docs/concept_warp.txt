@@ -27,6 +27,7 @@ Planet Types:
 
 
 Ideas
+- mini-transporters (instantly move all resources to the mothership) 
 - unit blueprints
 - weapon blueprints
 - destroy structures

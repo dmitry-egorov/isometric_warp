@@ -7,10 +7,10 @@ namespace WarpSpace.Models.Descriptions
     {
         public readonly UnitType Type;
         public readonly Faction Faction;
-        public readonly Possible<InventoryContent> Inventory_Content;
+        public readonly Possible<Stuff> Inventory_Content;
         public readonly Possible<IReadOnlyList<Possible<UnitDescription>>> Bay_Content;
 
-        public UnitDescription(UnitType type, Faction faction, Possible<InventoryContent> inventory_content, Possible<IReadOnlyList<Possible<UnitDescription>>> bay_content)
+        public UnitDescription(UnitType type, Faction faction, Possible<Stuff> inventory_content, Possible<IReadOnlyList<Possible<UnitDescription>>> bay_content)
         {
             Type = type;
             Inventory_Content = inventory_content;

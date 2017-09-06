@@ -22,6 +22,8 @@ namespace WarpSpace.Overlay
             _unit_component = unitComponent;
 
             var unit = unitComponent.Unit;
+            var health_component = GetComponentInChildren<Health>();
+
             var scale_wiring = Wire_Scale();
             var health_wiring = Wire_Health();
             var docked_wiring = Wire_Docked();
@@ -35,30 +37,25 @@ namespace WarpSpace.Overlay
                 .Subscribe(scale => _rect_transform.localScale = new Vector3(scale, scale, 1))
             ;
 
-            Action Wire_Health()
-            {
-                var health_component = GetComponentInChildren<Health>();
-
-                health_component.Total = unit.Total_Hit_Points;
-                
-                return 
-                    unit
-                    .Current_Hit_Points_Cell
-                    .Subscribe(current => 
-                        health_component.Current = current
-                    );
-            }
+            Action Wire_Health() => 
+                unit.s_Cell_of_Health_Status()
+                .Subscribe(the_status =>
+                {
+                    health_component.Total = the_status.s_Total_Hit_Points();
+                    health_component.Current = the_status.s_Current_Hit_Points();
+                })
+            ;
 
             Action Wire_Docked() => 
                 unit
-                .Stream_Of_Dockings
+                .s_Stream_of_Dock_States
                 .Subscribe(is_docked => gameObject.SetActive(!is_docked))
             ;
 
             void Wire_Destroyed()
             {
                 unit
-                    .Signal_Of_the_Destruction
+                    .s_Signal_of_the_Destruction
                     .Subscribe(_ => Destroy(gameObject));
             }
         }

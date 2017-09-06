@@ -47,7 +47,7 @@ namespace WarpSpace.Models.Game.Battle
                 .ToArray()
             ;
 
-            TileContentDescription SelectContent(Index2D i)
+            TileSiteDescription SelectContent(Index2D i)
             {
                 if (i == entranceSpacial.Position) 
                     return entranceStructure;
@@ -84,7 +84,7 @@ namespace WarpSpace.Models.Game.Battle
             
             bool IsPassable(LandscapeType? landscape)
             {
-                return landscape.Is(x => x.IsPassableWith(ChassisType.Hower));
+                return landscape.Is(x => x.IsPassableWith(ChassisType.a_Hower_Pad));
             }
         }
 

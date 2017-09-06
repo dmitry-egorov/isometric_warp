@@ -14,7 +14,7 @@ namespace WarpSpace.Models.Game.Battle.Board
 
         public IStream<MUnit> Stream_Of_Unit_Creations => _unit_factory.Stream_Of_Unit_Creations;
         public IStream<MUnit> Stream_Of_Unit_Destructions => _stream_of_unit_destructions;
-        public IStream<MothershipExited> Stream_Of_Exits { get; }
+        public IStream<TheVoid> Stream_Of_Exits { get; }
 
         public MBoard(BoardDescription description)
         {
@@ -26,10 +26,11 @@ namespace WarpSpace.Models.Game.Battle.Board
 
             Tiles = CreaTiles();
 
-            IStream<MothershipExited> Create_Exits_Stream() =>
+            IStream<TheVoid> Create_Exits_Stream() =>
                 Stream_Of_Unit_Creations
-                    .Select(x => x.Stream_Of_Exits)
-                    .Merge();
+                    .Select(x => x.s_Signal_of_the_Exit)
+                    .Merge()
+            ;
 
             MTile[,] CreaTiles()
             {
@@ -59,7 +60,7 @@ namespace WarpSpace.Models.Game.Battle.Board
             void Wire_Unit_Destruction(MUnit unit)
             {
                 unit
-                    .Signal_Of_the_Destruction
+                    .s_Signal_of_the_Destruction
                     .Subscribe(destroyed =>
                     {
                         _units_hashset.Remove(unit);
@@ -73,10 +74,10 @@ namespace WarpSpace.Models.Game.Battle.Board
             var position = _entrance_spacial.Position;
             var orientation = _entrance_spacial.Orientation;
 
-            var tank1 = new UnitDescription(UnitType.Tank, Faction.Players, Possible.Empty<InventoryContent>(), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>());
-            var tank2 = new UnitDescription(UnitType.Tank, Faction.Players, Possible.Empty<InventoryContent>(), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>());
-            var bay_units = new List<Possible<UnitDescription>> {tank1.As_a_Slot(), tank2.As_a_Slot()};
-            var desc = new UnitDescription(UnitType.Mothership, Faction.Players, Possible.Empty<InventoryContent>(), bay_units);
+            var tank1 = new UnitDescription(UnitType.a_Tank, Faction.Player, Possible.Empty<Stuff>(), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>());
+            var tank2 = new UnitDescription(UnitType.a_Tank, Faction.Player, Possible.Empty<Stuff>(), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>());
+            var bay_units = new List<Possible<UnitDescription>> {tank1, tank2};
+            var desc = new UnitDescription(UnitType.a_Mothership, Faction.Player, Possible.Empty<Stuff>(), bay_units);
 
             Create_a_Unit(desc, position + orientation);
         }

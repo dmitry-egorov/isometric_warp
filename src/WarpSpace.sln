@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarpSpace.Models", "WarpSpa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lanski.Sharp7", "Lanski.Sharp7\Lanski.Sharp7.csproj", "{8C681D57-A09D-4F42-A6EC-81E2E0FFA882}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarpSpace.Test.Console", "WarpSpace.Test.Console\WarpSpace.Test.Console.csproj", "{F766D575-E76C-458E-93BA-6BDF87F87DD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{8C681D57-A09D-4F42-A6EC-81E2E0FFA882}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C681D57-A09D-4F42-A6EC-81E2E0FFA882}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C681D57-A09D-4F42-A6EC-81E2E0FFA882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F766D575-E76C-458E-93BA-6BDF87F87DD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F766D575-E76C-458E-93BA-6BDF87F87DD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F766D575-E76C-458E-93BA-6BDF87F87DD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F766D575-E76C-458E-93BA-6BDF87F87DD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

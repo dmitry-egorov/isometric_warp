@@ -39,10 +39,10 @@ namespace WarpSpace.Game.Battle
 
             //TODO: generate random loot from settings?
             Possible<UnitDescription> CreateUnitDescritpion(Possible<UnitType> arg) => 
-                arg.Select(type => new UnitDescription(type, Faction.Natives, InventoryContent.Initial_For(type), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>()))
+                arg.Select(type => new UnitDescription(type, Faction.Natives, Stuff.Initial_For(type), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>()))
             ; 
             
-            TileContentDescription SelectContent(Index2D i)
+            TileSiteDescription SelectContent(Index2D i)
             {
                 if (i == entrance.Position)
                     return StructureDescription.Create.Entrance(entrance.Orientation);
@@ -50,7 +50,7 @@ namespace WarpSpace.Game.Battle
                     return StructureDescription.Create.Exit(exit.Orientation);
 
                 return units.Get(i).Has_a_Value(out var unit) 
-                    ? (TileContentDescription) unit 
+                    ? (TileSiteDescription) unit 
                     : TheVoid.Instance;
             }
             

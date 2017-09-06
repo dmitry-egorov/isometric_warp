@@ -49,7 +49,7 @@ namespace Lanski.Structures
             where T : struct
             where TResult: class 
         => 
-            nullable.HasValue ? selector(nullable.Value).As_a_Slot() : default(Possible<TResult>)
+            nullable.HasValue ? selector(nullable.Value) : default(Possible<TResult>)
         ;
 
         public static TResult? Select<T, TResult>(this T? nullable, Func<T, TResult> selector)

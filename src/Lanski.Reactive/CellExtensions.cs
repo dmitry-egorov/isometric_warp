@@ -31,7 +31,7 @@ namespace Lanski.Reactive
                 return _inCell.Subscribe(x => action(_selector(x)));
             }
 
-            public TOut Value => _selector(_inCell.Value);
+            public TOut s_Value => _selector(_inCell.s_Value);
         }
 
         public class SelectManyCell<TIn, TOut>: ICell<TOut>
@@ -57,7 +57,7 @@ namespace Lanski.Reactive
                 });
             }
 
-            public TOut Value => _selector(_inCell.Value).Value;
+            public TOut s_Value => _selector(_inCell.s_Value).s_Value;
         }
 
 
@@ -76,8 +76,8 @@ namespace Lanski.Reactive
 
             public Action Subscribe(Action<(T1, T2)> action)
             {
-                var sub1 = _cell1.Subscribe(x => action((x, _cell2.Value)));
-                var sub2 = _cell2.Subscribe(x => action((_cell1.Value, x)));
+                var sub1 = _cell1.Subscribe(x => action((x, _cell2.s_Value)));
+                var sub2 = _cell2.Subscribe(x => action((_cell1.s_Value, x)));
 
                 return () =>
                 {
@@ -86,7 +86,7 @@ namespace Lanski.Reactive
                 };
             }
 
-            public (T1, T2) Value => (_cell1.Value, _cell2.Value);
+            public (T1, T2) s_Value => (_cell1.s_Value, _cell2.s_Value);
         }
     }
 }

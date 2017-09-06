@@ -3,7 +3,9 @@ using Lanski.Structures;
 using Lanski.UnityExtensions;
 using UnityEngine;
 using WarpSpace.Game.Battle.Unit;
+using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board;
+using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Player;
 
 namespace WarpSpace.Game.Battle.Board
@@ -31,7 +33,7 @@ namespace WarpSpace.Game.Battle.Board
             Tile.TileComponent[,] CreateTiles() => 
                 board.Tiles.Map((tile, index) =>
                 {
-                    var n = board.Tiles.GetFitNeighbours(index).Map(t => t.MLandscape.Type);
+                    var n = board.Tiles.GetFitNeighbours(index).Map(t => t.Type_Of_the_Landscape());
                     return Tile.TileComponent.Create(TilePrefab, transform, tile, n, board.Tiles.GetDimensions(), player);
                 })
             ;

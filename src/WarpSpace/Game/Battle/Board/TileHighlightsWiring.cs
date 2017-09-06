@@ -1,7 +1,6 @@
 ﻿using Lanski.Reactive;
 using Lanski.Structures;
 using WarpSpace.Game.Battle.Tile;
-using WarpSpace.Models;
 using WarpSpace.Models.Game.Battle.Board;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Player;
@@ -13,8 +12,7 @@ namespace WarpSpace.Game.Battle.Board
         public static void Wire(MPlayer player, MBoard board, TileComponent[,] tile_components)
         {
             player
-                .Selected_Unit_Cell
-                .SelectMany(pu => pu.Select(u => u.Stream_Of_Movements).Value_Or(StreamCache.Empty_Stream_of_Movements))
+                .Stream_Of_Selected_Unit_Movements
                 .Subscribe(moved =>
                 {
                     Update_Neighborhood_Of(moved.Source.As_a_Tile());
@@ -23,14 +21,13 @@ namespace WarpSpace.Game.Battle.Board
             ;
 
             player
-                .Selected_Unit_Cell
-                .IncludePrevious()
-                .Subscribe(p => Handle_New_Selected_Unit(p.previous.SelectMany(u => u.Location_As_a_Tile()), p.current.SelectMany(u => u.Location_As_a_Tile())))
+                .Stream_Of_Selected_Unit_Changes
+                .Subscribe(p => Handle_New_Selected_Unit(p.Previous.SelectMany(u => u.s_Location_As_a_Tile()), p.Current.SelectMany(u => u.s_Location_As_a_Tile())))
             ;
 
             board
                 .Stream_Of_Unit_Destructions
-                .Select(destroyed => destroyed.Location_As_a_Tile())
+                .Select(destroyed => destroyed.s_Location_As_a_Tile())
                 .Subscribe(Update_Neighborhood_Of)
             ;
 

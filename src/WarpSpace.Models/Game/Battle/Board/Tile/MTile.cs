@@ -9,7 +9,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
     public class MTile
     {
         public readonly Index2D Position;
-        public readonly MLandscape MLandscape;
 
         public AdjacentRef<MTile> Adjacent { get; private set; }
         
@@ -20,22 +19,22 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         public MTile(Index2D position, TileDescription desc, UnitFactory unit_factory)
         {
             Position = position;
-            MLandscape = new MLandscape(desc.Type);
+            _landscape = new MLandscape(desc.Type);
 
-            var content = desc.Initial_Content;
+            var site = desc.Initial_Site;
             _site_cell = new ValueCell<TileSite>(Create_Site());
 
             TileSite Create_Site()
             {
-                if (content.Is_a_Structure(out var structure_description))
+                if (site.Is_a_Structure(out var structure_description))
                     return Create_Structure_Site(structure_description);
 
                 var location = Create_the_Location();
 
-                if (content.Is_Empty())
+                if (site.Is_Empty())
                     return location;
 
-                var unit = content.Must_Be_a_Unit();
+                var unit = site.Must_Be_a_Unit();
                 unit_factory.Create_a_Unit(unit, location);
                 
                 return location;
@@ -50,12 +49,13 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         public MLocation Must_Have_a_Location() => Site.Must_Be_a_Location();
         public bool Has_a_Location(out MLocation unit) => Site.Is_a_Location(out unit);
         public bool Has_a_Unit(out MUnit unit) => Site.Has_a_Unit(out unit);
-        public bool Is_Passable_By(ChassisType chassis_type) => MLandscape.Is_Passable_By(chassis_type) && !Is_Occupied;
+        public bool is_Passable_By(ChassisType chassis_type) => _landscape.Is_Passable_By(chassis_type) && !Is_Occupied;
         public bool Is_Adjacent_To(MTile destination) => Position.Is_Adjacent_To(destination.Position);
         public Direction2D Get_Direction_To(MTile destination) => Position.Direction_To(destination.Position);
         public bool Has_a_Structure(out MStructure structure) => Site.Is_a_Structure(out structure);
+        public LandscapeType Type_Of_the_Landscape() => _landscape.Type;
 
-        internal void Create_Debris(Possible<InventoryContent> inventory_content)
+        internal void Creates_a_Debris_With(Possible<Stuff> inventory_content)
         {
             var debris = StructureDescription.Create.Debris(TileHelper.GetOrientation(Position), inventory_content);
             Set_Structure(debris);
@@ -69,8 +69,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         private TileSite Site
         {
-            get => _site_cell.Value;
-            set => _site_cell.Value = value;
+            get => _site_cell.s_Value;
+            set => _site_cell.s_Value = value;
         }
 
         private void Set_Structure(StructureDescription debris)
@@ -85,7 +85,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
             return new TileSite(unit_slot);
         }
 
-        private MLocation Create_the_Location() => MLocation.Create.From(this);
+        private MLocation Create_the_Location() => new MLocation(this);
 
         private TileSite Create_Structure_Site(StructureDescription structure_description)
         {
@@ -94,5 +94,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         }
 
         private readonly ValueCell<TileSite> _site_cell;
+        private readonly MLandscape _landscape;
     }
 }

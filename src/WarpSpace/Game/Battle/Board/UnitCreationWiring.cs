@@ -23,7 +23,7 @@ namespace WarpSpace.Game.Battle.Board
                 
             void Create_and_Wire_a_Component_For_the_Unit(MUnit unit)
             {
-                var parent = unit.Is_At_a_Tile(out var tile) ? tile_components.Get(tile.Position).UnitSlot.transform : limbo.transform;
+                var parent = unit.is_At_a_Tile(out var tile) ? tile_components.Get(tile.Position).UnitSlot.transform : limbo.transform;
 
                 var unit_component = UnitComponent.Create(prefab, parent, unit, tile_components, player);
                 

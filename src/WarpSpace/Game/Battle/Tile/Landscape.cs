@@ -37,11 +37,11 @@ namespace WarpSpace.Game.Battle.Tile
                         return Normal;
                     case HighlightType.Move:
                         return MoveHighlight;
-                    case HighlightType.Unit_Placeholder:
+                    case HighlightType.Placeholder:
                         return UnitHighlight;
-                    case HighlightType.Interaction:
+                    case HighlightType.Interact:
                         return InteractionHighlight;
-                    case HighlightType.Fire_Weapon:
+                    case HighlightType.Attack:
                         return UseWeaponHighlight;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);

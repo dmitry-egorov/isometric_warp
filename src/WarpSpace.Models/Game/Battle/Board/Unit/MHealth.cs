@@ -1,33 +1,42 @@
 ﻿using Lanski.Reactive;
+using Lanski.Structures;
 using WarpSpace.Models.Descriptions;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public class MHealth
     {
-        public readonly int Total_Hit_Points;
-        public ICell<int> Current_Hit_Points_Cell => _current_hit_points_cell;
-        public ICell<bool> Is_Alive_Cell { get; }
-        internal bool Is_Alive => Is_Alive_Cell.Value;
-        internal bool Is_Dead => !Is_Alive;
+        public ICell<HealthState> s_Cell_of_Status() => this_health.s_cell_of_status;
+        public IStream<TheVoid> s_Signal_of_the_Destruction() => this_health.s_signal_of_the_destruction;
+        public bool is_Alive() => this_health.s_State().is_Alive();
 
-        public static MHealth From(UnitType type, MUnit unit) => new MHealth(type.GetHitPointsAmount(), unit);
-
-        public void Take(DamageDescription damage)
+        public MHealth(MUnit the_owner, EventsGuard the_events_guard)
         {
-            _current_hit_points_cell.Value -= damage.Amount;
+            s_owner = the_owner;
+
+            var the_initial_health_state = HealthState.s_Initial_For(the_owner.s_Type);
+            s_cell_of_status = new GuardedCell<HealthState>(the_initial_health_state, the_events_guard);
+            s_signal_of_the_destruction = this_health.s_cell_of_status.First(x => x.is_Dead()).Select(_ => TheVoid.Instance);
         }
 
-        private MHealth(int total_hit_points, MUnit unit)
+        public void Takes(Damage the_damage)
         {
-            Total_Hit_Points = total_hit_points;
-            _unit = unit;
-            _current_hit_points_cell = new ValueCell<int>(total_hit_points);
+            var the_new_state = this_health.s_State().After_Applying(the_damage);
             
-            Is_Alive_Cell = Current_Hit_Points_Cell.Select(x => x > 0);
+            if (the_new_state.is_Dead())
+                this_health.s_owner.Destructs();
+            
+            this_health.s_State_Becomes(the_new_state);
         }
 
-        private readonly MUnit _unit;
-        private readonly ValueCell<int> _current_hit_points_cell;
+        private HealthState s_State() => this_health.s_cell_of_status.s_Value;
+        private void s_State_Becomes(HealthState value) => this_health.s_cell_of_status.s_Value = value;
+
+        private MHealth this_health => this;
+
+        private readonly MUnit s_owner;
+        private readonly GuardedCell<HealthState> s_cell_of_status;
+        private readonly IStream<TheVoid> s_signal_of_the_destruction;
+
     }
 }

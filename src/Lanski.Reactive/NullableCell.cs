@@ -13,7 +13,7 @@ namespace Lanski.Reactive
             _lastValue = initialValue;
         }
 
-        public T? Value
+        public T? s_Value
         {
             get => _lastValue;
             set
@@ -34,7 +34,7 @@ namespace Lanski.Reactive
 
         void IConsumer<T?>.Next(T? value)
         {
-            Value = value;
+            s_Value = value;
         }
     }
 }

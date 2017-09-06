@@ -1,0 +1,78 @@
+﻿using System;
+
+namespace Lanski.Reactive
+{
+    public class GuardedCell<T> : ICell<T>, IConsumer<T>
+    {
+        public GuardedCell(T initial_value, EventsGuard the_events_guard)
+        {
+            the_guard = the_events_guard;
+            
+            the_source = new Cell<T>(initial_value);
+            the_last_held_value = initial_value;
+        }
+
+        public T s_Value
+        {
+            get => the_source.s_Value;
+            set => Next(value);
+        }
+
+
+        public void Next(T value)
+        {
+            if (the_guard.is_Letting_Events_Through())
+            {
+                the_source.s_Value = value;
+            }
+            else
+            {
+                the_last_held_value = value;
+            }
+        }
+        
+        public Action Subscribe(Action<T> the_action)
+        {
+            var the_new_subscription = this.the_source.Subscribe(the_action);
+            this.Registers_a_New_Subscription();
+
+            return () =>
+            {
+                the_new_subscription();
+                this.Removes_a_Subscription();
+            };
+        }
+
+        private void Removes_a_Subscription()
+        {
+            the_subscribers_count--;
+            if (the_subscribers_count == 0)
+            {
+                this.the_subscription();
+            }
+        }
+
+        private void Registers_a_New_Subscription()
+        {
+            the_subscribers_count++;
+            if (the_subscribers_count == 1)
+            {
+                the_subscription = 
+                    the_guard.s_Stream_Of_Releases()
+                    .Subscribe(Processes_the_Guard_Release);
+            }
+        }
+
+        private void Processes_the_Guard_Release()
+        {
+            the_source.s_Value = the_last_held_value;
+        }
+
+        private readonly Cell<T> the_source;
+        private readonly EventsGuard the_guard;
+        
+        private T the_last_held_value;
+        private int the_subscribers_count;
+        private Action the_subscription;
+    }
+}

@@ -5,132 +5,144 @@ using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Weapon;
+using static WarpSpace.Models.Descriptions.UnitType;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public class MUnit
     {
-        public readonly UnitType Type;
+        public UnitType s_Type => the_type;
+        public MWeapon s_Weapon => the_weapon;
+        public Faction s_Faction => the_faction;
 
-        public readonly MWeapon Weapon;
-        
-        public Faction Faction { get; }
-        public bool Is_Docked => Location.Is_a_Bay();
-        public bool Is_Alive => Health.Is_Alive;
-        public bool Is_Dead => Health.Is_Dead;
-        public int Total_Hit_Points => Health.Total_Hit_Points;
-        public ICell<int> Current_Hit_Points_Cell => Health.Current_Hit_Points_Cell;
-        public ICell<Possible<InventoryContent>> Inventory_Content_Cell => Inventory.Content_Cell;
+        public bool Is_Docked => the_chassis.is_Docked();
+        public bool Is_Alive => the_health.is_Alive();
 
-        public IStream<MothershipExited> Stream_Of_Exits => _stream_of_exits;
-        public IStream<UnitMoved> Stream_Of_Movements => _stream_of_movements;
-        public IStream<bool> Stream_Of_Dockings { get; }
-        public IStream<MUnit> Signal_Of_the_Destruction => _signal_of_the_destruction;
-        
-        public MUnit(UnitType unit_type, Faction faction, Possible<InventoryContent> inventory, MLocation initial_location)
+        public ICell<HealthState> s_Cell_of_Health_Status() => the_health.s_Cell_of_Status();
+        public ICell<Possible<Stuff>> s_Cell_of_Inventory_Content() => the_inventory.s_Cell_of_Content();
+
+        public IStream<Movement> s_Stream_Of_Movements => the_chassis.s_Stream_of_Movements();
+        public IStream<bool> s_Stream_of_Dock_States => the_chassis.s_Stream_of_Dock_States();
+        public IStream<TheVoid> s_Signal_of_the_Destruction => the_health.s_Signal_of_the_Destruction();
+        public IStream<TheVoid> s_Signal_of_the_Exit => the_signal_of_the_exit;
+
+        public MUnit(UnitType the_units_type, Faction the_units_faction, Possible<Stuff> possible_stuff, MLocation the_initial_location, EventsGuard the_events_guard)
         {
-            Type = unit_type;
-            Faction = faction;
+            the_type = the_units_type;
+            the_faction = the_units_faction;
+            the_weapon = new MWeapon(this);
+            the_health = new MHealth(this, the_events_guard);
+            the_inventory = new MInventory(possible_stuff);
 
-            Weapon = MWeapon.From(Type, this);
-            Health = MHealth.From(Type, this);
-            Inventory = MInventory.From(inventory);
+            the_chassis = new MChassis(the_type, the_initial_location, the_events_guard);
+            possible_bay = MBay.From(this);
 
-            Chassis = new MChassis(initial_location, Type);
-            Possible_Bay = Type.Has_a_Bay(out var size) ? new MBay(size, this).As_a_Slot() : Possible.Empty<MBay>();
-            Stream_Of_Dockings = Stream_Of_Movements.Select(x => x.Destination.Is_a_Bay());
+            the_signal_of_the_exit = new GuardedStream<TheVoid>(the_events_guard);
         }
 
-        public Possible<MTile> Location_As_a_Tile() => Location.As_a_Tile(); 
-        public bool Is_At(MTile the_tile) => Location.Is(the_tile); 
-        public bool Is_At_a_Tile(out MTile the_tile) => Location.Is_a_Tile(out the_tile); 
-        public bool Can_Move_To(MTile the_destination) => Chassis.Can_Move_To(the_destination);
-        public bool Is_Adjacent_To(MUnit the_unit) => Location.Is_Adjacent_To(the_unit.Location);
-        public bool Is_Adjacent_To(MStructure the_structure) => Location.Is_Adjacent_To(the_structure);
-        public bool Has_a_Bay(out MBay the_bay) => Possible_Bay.Has_a_Value(out the_bay);
-        public MBay Must_Have_a_Bay() => Possible_Bay.Must_Have_a_Value();
-        public MBay Must_Be_At_a_Bay() => Location.Must_Be_a_Bay();
-        public MTile Must_Be_At_a_Tile() => Location.Must_Be_a_Tile();
-        public bool Is_At_a_Tile() => Location.Is_a_Tile(); 
-        public bool Is_At_a_Bay() => Location.Is_a_Bay(); 
+        public Possible<MTile> s_Location_As_a_Tile() => the_location().As_a_Tile(); 
+        public bool is_At(MTile the_tile) => the_location().Is(the_tile); 
+        public bool is_At_a_Tile(out MTile the_tile) => the_location().Is_a_Tile(out the_tile); 
+        public bool is_Adjacent_To(MUnit the_unit) => the_location().is_Adjacent_To(the_unit.the_location());
+        public bool is_Adjacent_To(MStructure the_structure) => the_location().is_Adjacent_To(the_structure);
+        public MTile Must_Be_At_a_Tile() => the_location().Must_Be_a_Tile();
+        public bool is_At_a_Tile() => the_location().Is_a_Tile(); 
+        public bool is_At_a_Bay() => the_location().is_a_Bay(); 
+        public bool Can_Move_To(MTile the_destination) => the_chassis.Can_Move_To(the_destination);
+        public bool Has_a_Bay(out MBay the_bay) => possible_bay.Has_a_Value(out the_bay);
+        public MBay Must_Have_a_Bay() => possible_bay.Must_Have_a_Value();
+        public bool is_Within_Range_Of(MWeapon the_other_weapon) => this.is_Adjacent_To(the_other_weapon.s_Owner);
+        public bool is_Hostile_Towards(MUnit the_other_unit) => the_faction.Is_Hostile_Towards(the_other_unit.the_faction);
+        public bool s_Faction_Is(Faction the_requested_faction) => the_faction == the_requested_faction; 
+        private bool is_of(UnitType the_requested_type) => the_type == the_requested_type;
 
         public bool Can_Interact_With(MStructure the_structure) => 
-            Is_Adjacent_To(the_structure) && 
+            this.is_Adjacent_To(the_structure) && 
             (
-                the_structure.Is_an_Exit() && Type == UnitType.Mothership || 
+                the_structure.Is_an_Exit() && this.is_of(a_Mothership) || 
                 the_structure.Is_a_Debris()
             )
         ;
 
-        public void Move_To(MTile destination)
+        internal void Moves_To(MTile the_destination)
         {
-            Can_Move_To(destination).Otherwise_Throw("Can't move the unit to the destination");
+            this.Can_Move_To(the_destination).Otherwise_Throw("Can't move the unit to the destination");
 
-            var new_location = destination.Must_Have_a_Location(); //Shouldn't be able to move to a tile without a location 
-            var old_location = Location;
+            var the_new_location =
+                the_destination.Must_Have_a_Location(); //Shouldn't be able to move to a tile without a location 
+            var the_old_location = this.the_location();
 
-            Chassis.Update_the_Location(new_location);
-            old_location.Reset_the_Occupant();
-            new_location.Set_the_Occupant_To(this);
-            
-            Send_Movement(old_location, new_location);
+            this.Updates_Its_Location_To(the_new_location);
+            the_old_location.Resets_the_Occupant();
+            the_new_location.Sets_the_Occupant_To(this);
         }
 
-        public void Interact_With(MStructure the_structure)
+        internal void Interacts_With(MStructure the_structure)
         {
-            Can_Interact_With(the_structure).Otherwise_Throw("Can't interact with the structure");
-            
+            this.Can_Interact_With(the_structure).Otherwise_Throw("Can't interact with the structure");
+
             if (the_structure.Is_an_Exit())
             {
-                _stream_of_exits.Next(new MothershipExited());
+                this.Sends_the_Exit_Event();
             }
-            else if (the_structure.Is_a_Debris(out var debris))
+            else if (the_structure.Is_a_Debris())
             {
-                Take(debris.Loot);
-                the_structure.Destroy();
+                this.Loots(the_structure);
             }
-            else 
+            else
             {
                 throw new InvalidOperationException("Can't interact");
             }
         }
 
-        public void Take(DamageDescription the_damage)
+        internal void Takes(Damage the_damage)
         {
-            Health.Take(the_damage);
-            if (Is_Dead)
-                Destruct();
-            
-            void Destruct()
-            {
-                var loot = Inventory.Content;
-
-                Location.Reset_the_Occupant();
-            
-                if (Location.Is_a_Tile(out MTile tile_model))
-                    tile_model.Create_Debris(loot);
-
-                if (Location.Is_a_Bay(out var bay))
-                    bay.Owner.Take(loot);
-
-                Send_Destruction();
-            }
+            the_health.Takes(the_damage);
         }
-        
-        private MLocation Location => Chassis.Location;
-        private readonly MChassis Chassis;
-        private readonly Possible<MBay> Possible_Bay;
-        private readonly MHealth Health;
-        private readonly MInventory Inventory;
 
-        private void Take(Possible<InventoryContent> the_loot) => Inventory.Add(the_loot);
+        internal void Destructs()
+        {
+            var the_loot = the_inventory.s_content;
 
-        private void Send_Destruction() => _signal_of_the_destruction.Next(this);
-        private void Send_Movement(MLocation old_location, MLocation new_location) => _stream_of_movements.Next(new UnitMoved(this, old_location, new_location));
+            the_location().Resets_the_Occupant();
 
-        private readonly Stream<UnitMoved> _stream_of_movements = new Stream<UnitMoved>();
-        private readonly Signal<MUnit> _signal_of_the_destruction = new Signal<MUnit>();
-        private readonly Stream<MothershipExited> _stream_of_exits = new Stream<MothershipExited>();
+            if (the_location().Is_a_Tile(out var the_tile))
+                the_tile.Creates_a_Debris_With(the_loot);
 
+            if (the_location().Is_a_Bay(out var the_bay))
+                the_bay.s_Owner.Takes(the_loot);
+        }
+
+        private void Loots(MStructure the_structure)
+        {
+            var the_debris = the_structure.Must_Be_a_Debris();
+            this.Takes(the_debris.s_Loot());
+            the_structure.Destructs();
+        }
+
+        private void Updates_Its_Location_To(MLocation the_new_location)
+        {
+            the_chassis.Sets_the_Location_To(the_new_location);
+        }
+
+        private void Takes(Possible<Stuff> the_loot)
+        {
+            the_inventory.Adds(the_loot);
+        }
+
+        private void Sends_the_Exit_Event() => the_signal_of_the_exit.Next();
+
+        private MLocation the_location() => the_chassis.s_Location();
+
+        private readonly UnitType the_type;
+        private readonly Faction the_faction;
+
+        private readonly MWeapon the_weapon;
+        private readonly MChassis the_chassis;
+        private readonly Possible<MBay> possible_bay;
+        private readonly MHealth the_health;
+        private readonly MInventory the_inventory;
+
+        private readonly GuardedStream<TheVoid> the_signal_of_the_exit;
     }
 }

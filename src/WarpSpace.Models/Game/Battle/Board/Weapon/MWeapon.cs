@@ -6,45 +6,47 @@ namespace WarpSpace.Models.Game.Battle.Board.Weapon
 {
     public class MWeapon
     {
-        public static MWeapon From(UnitType type, MUnit mounting_unit) => new MWeapon(type.Get_Weapon_Type().Get_Damage_Description(), mounting_unit);
+        public MUnit s_Owner => s_owner;
 
-        public MWeapon(DamageDescription desc, MUnit mountingUnit)
+        public MWeapon(MUnit the_owner)
         {
-            _mountingUnit = mountingUnit;
-            _damage = desc;
+            this_weapon = this;
+            s_owner = the_owner;
+            s_damage = the_owner.s_Type.Get_Weapon_Type().Get_Damage_Description();
         }
 
-        public bool Can_Fire_At(MUnit unit) => 
-            unit.Is_Alive 
-            && The(unit).Is_Within_Range()
-            && The(unit).s_Faction_Is_Hostile()
+        public bool Can_Fire_At(MUnit the_unit) => 
+            the_unit.Is_Alive 
+            && the_unit.is_Within_Range_Of(this_weapon)
+            && the_unit.is_Hostile_Towards(this_weapon.s_Owner)
         ;
 
-        public void Fire_At(MUnit unit)
+        public void Fires_At(MUnit the_unit)
         {
-            Can_Fire_At(unit).Otherwise_Throw("Can't fire at the unit");
-            unit.Take(_damage);
+            Can_Fire_At(the_unit).Otherwise_Throw("Can't fire at the unit");
+            the_unit.Takes(this_weapon.s_damage);
         }
 
-        private Target The(MUnit unit) => new Target(unit, _mountingUnit);
+        private Target The(MUnit unit) => new Target(unit, this_weapon.s_owner);
 
-        private readonly MUnit _mountingUnit;
-        private readonly DamageDescription _damage;
+        private readonly MWeapon this_weapon;
 
+        private readonly MUnit s_owner;
+        private readonly Damage s_damage;
+
+        
         private struct Target
         {
             private readonly MUnit _target_unit;
             private readonly MUnit _mounting_unit;
 
-            public Target(MUnit targetUnit, MUnit mountingUnit)
+            public Target(MUnit target_unit, MUnit mounting_unit)
             {
-                _target_unit = targetUnit;
-                _mounting_unit = mountingUnit;
+                _target_unit = target_unit;
+                _mounting_unit = mounting_unit;
             }
 
-            public bool s_Faction_Is_Hostile() => _target_unit.Faction.Is_Hostile_Towards(_mounting_unit.Faction);
-
-            public bool Is_Within_Range() => _target_unit.Is_Adjacent_To(_mounting_unit);
+            
         }
     }
 }

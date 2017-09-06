@@ -1,18 +1,25 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Lanski.Structures;
+using WarpSpace.Models.Descriptions;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public class MBay
     {
-        public readonly MUnit Owner;
+        public readonly MUnit s_Owner;
         public int Size => _slots.Count;
         public Possible<MLocation> this[int i] => i < Size ? _slots[i] : Possible.Empty<MLocation>();
 
+        public static Possible<MBay> From(MUnit the_owner) => 
+            the_owner.s_Type.Requires_a_Bay(out var the_bay_s_size)
+            ? new MBay(the_bay_s_size, the_owner)
+            : Possible.Empty<MBay>()
+        ;
+
         public MBay(int size, MUnit owner)
         {
-            Owner = owner;
+            s_Owner = owner;
             _slots = Create_Slots(size);
         }
         
@@ -30,7 +37,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             return false;
         }
         
-        private List<MLocation> Create_Slots(int size) => Enumerable.Range(0, size).Select(x => MLocation.Create.From(this)).ToList();
+        private List<MLocation> Create_Slots(int size) => Enumerable.Range(0, size).Select(x => new MLocation(this)).ToList();
 
         private readonly IReadOnlyList<MLocation> _slots;
 

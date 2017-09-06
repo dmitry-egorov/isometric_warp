@@ -105,16 +105,36 @@ namespace Lanski.Reactive
                 .Select(r => r.Must_Have_a_Value())
         ;
 
-        public static IStream<Possible<T>> DelayByOne<T>(this IStream<T> stream) where T : class => new DelayByOneStream<T>(stream);
-        public static IStream<Possible<T>> DelayByOne<T>(this IStream<Possible<T>> stream) where T : class => new DelayByOneSlotStream<T>(stream);
-        public static IStream<(T? previous, T? current)> IncludePrevious<T>(this IStream<T?> stream) where T : struct => new PairsNullableStream<T>(stream);
-        public static IStream<(Possible<T> previous, Possible<T> current)> IncludePrevious<T>(this IStream<Possible<T>> stream) where T : class => new PairsRefStream<T>(stream);
-        public static IStream<(T? previous, T current)> IncludePreviousVal<T>(this IStream<T> stream) where T : struct => new PairsValStream<T>(stream);
-        public static IStream<(Possible<T> previous, T current)> IncludePrevious<T>(this IStream<T> stream) where T : class => new PairsStream<T>(stream);
+        public static IStream<(Possible<T> previous, Possible<T> current)> IncludePrevious<T>(this IStream<Possible<T>> stream) => new PairsStream<T>(stream);
+        public static IStream<(T previous, T current)> s_Changes<T>(this IStream<T> the_stream) => new ChangesStream<T>(the_stream);
 
         public static Action<T> Invocation<T>(this IConsumer<T> consumer) => x => consumer.Next(x);
 
         public static IStream<T> AsStream<T>(this IEnumerable<T> enumerable) => new EnumerableStream<T>(enumerable);
+
+        public class ChangesStream<T> : IStream<(T previous, T current)>
+        {
+            private readonly IStream<T> s_stream;
+
+            public ChangesStream(IStream<T> the_stream)
+            {
+                this.s_stream = the_stream;
+            }
+
+            public Action Subscribe(Action<(T previous, T current)> action)
+            {
+                var possible_prev = default(Possible<T>);
+                return this.s_stream.Subscribe(v =>
+                {
+                    if (possible_prev.Has_a_Value(out var prev))
+                    {
+                        action((prev, v));
+                        
+                    }
+                    possible_prev = v;
+                });
+            }
+        }
 
          public class InProgressCell<T> : ICell<bool>
         {
@@ -148,7 +168,7 @@ namespace Lanski.Reactive
                 });
             }
 
-            public bool Value => _isInProgress;
+            public bool s_Value => _isInProgress;
         }
 
         public static IStream<T> DistinctSequential<T>(this IStream<T> stream)
@@ -298,92 +318,12 @@ namespace Lanski.Reactive
             }
         }
     }
-
-    public class DelayByOneStream<T>: IStream<Possible<T>> where T : class
-    {
-        private readonly IStream<T> _stream;
-
-        public DelayByOneStream(IStream<T> stream)
-        {
-            _stream = stream;
-        }
-
-        public Action Subscribe(Action<Possible<T>> action)
-        {
-            var prev = default(Possible<T>);
-            return _stream.Subscribe(v =>
-            {
-                action(prev);
-                prev = v.As_a_Slot();
-            });
-        }
-    }
-
-    public class DelayByOneSlotStream<T>: IStream<Possible<T>> where T : class
-    {
-        private readonly IStream<Possible<T>> _stream;
-
-        public DelayByOneSlotStream(IStream<Possible<T>> stream)
-        {
-            _stream = stream;
-        }
-
-        public Action Subscribe(Action<Possible<T>> action)
-        {
-            var prev = default(Possible<T>);
-            return _stream.Subscribe(v =>
-            {
-                action(prev);
-                prev = v;
-            });
-        }
-    }
-
-    public class PairsStream<T>: IStream<(Possible<T>,T)> where T : class
-    {
-        private readonly IStream<T> _stream;
-
-        public PairsStream(IStream<T> stream)
-        {
-            _stream = stream;
-        }
-
-        public Action Subscribe(Action<(Possible<T>, T)> action)
-        {
-            var prev = default(Possible<T>);
-            return _stream.Subscribe(v =>
-            {
-                action((prev, v));
-                prev = v.As_a_Slot();
-            });
-        }
-    }
-
-    public class PairsNullableStream<T> : IStream<(T?, T?)> where T : struct
-    {
-        private readonly IStream<T?> _stream;
-
-        public PairsNullableStream(IStream<T?> stream)
-        {
-            _stream = stream;
-        }
-
-        public Action Subscribe(Action<(T?, T?)> action)
-        {
-            var prev = default(T?);
-            return _stream.Subscribe(v =>
-            {
-                action((prev, v));
-                prev = v;
-            });
-        }
-    }
     
-    public class PairsRefStream<T>: IStream<(Possible<T>,Possible<T>)> where T : class
+    public class PairsStream<T>: IStream<(Possible<T>,Possible<T>)>
     {
         private readonly IStream<Possible<T>> _stream;
 
-        public PairsRefStream(IStream<Possible<T>> stream)
+        public PairsStream(IStream<Possible<T>> stream)
         {
             _stream = stream;
         }
@@ -391,26 +331,6 @@ namespace Lanski.Reactive
         public Action Subscribe(Action<(Possible<T>, Possible<T>)> action)
         {
             var prev = default(Possible<T>);
-            return _stream.Subscribe(v =>
-            {
-                action((prev, v));
-                prev = v;
-            });
-        }
-    }
-    
-    public class PairsValStream<T>: IStream<(T?,T)> where T : struct
-    {
-        private readonly IStream<T> _stream;
-
-        public PairsValStream(IStream<T> stream)
-        {
-            _stream = stream;
-        }
-
-        public Action Subscribe(Action<(T?, T)> action)
-        {
-            var prev = default(T?);
             return _stream.Subscribe(v =>
             {
                 action((prev, v));

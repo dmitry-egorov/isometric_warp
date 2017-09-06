@@ -4,8 +4,8 @@ namespace Lanski.Structures
 {
     public struct Or<T1, T2> 
     {
-        public Or(T1 v) : this() => _v1 = v.As_a_Slot();
-        public Or(T2 v) : this() => _v2 = v.As_a_Slot();
+        public Or(T1 v) : this() => _v1 = v;
+        public Or(T2 v) : this() => _v2 = v;
 
         [Pure] public bool Is_a_T1(out T1 v) => _v1.Has_a_Value(out v);
         [Pure] public bool Is_a_T2(out T2 v) => _v2.Has_a_Value(out v);
@@ -28,9 +28,9 @@ namespace Lanski.Structures
     
     public struct Or<T1, T2, T3> 
     {
-        public Or(T1 v) : this() => _v1 = v.As_a_Slot();
-        public Or(T2 v) : this() => _v2 = v.As_a_Slot();
-        public Or(T3 v) : this() => _v3 = v.As_a_Slot();
+        public Or(T1 v) : this() => _v1 = v;
+        public Or(T2 v) : this() => _v2 = v;
+        public Or(T3 v) : this() => _v3 = v;
 
         [Pure] public bool Is_a_T1(out T1 v) => _v1.Has_a_Value(out v);
         [Pure] public bool Is_a_T2(out T2 v) => _v2.Has_a_Value(out v);
@@ -59,10 +59,10 @@ namespace Lanski.Structures
     
     public struct Or<T1, T2, T3, T4> 
     {
-        public Or(T1 v) : this() => _v1 = v.As_a_Slot();
-        public Or(T2 v) : this() => _v2 = v.As_a_Slot();
-        public Or(T3 v) : this() => _v3 = v.As_a_Slot();
-        public Or(T4 v) : this() => _v4 = v.As_a_Slot();
+        public Or(T1 v) : this() => _v1 = v;
+        public Or(T2 v) : this() => _v2 = v;
+        public Or(T3 v) : this() => _v3 = v;
+        public Or(T4 v) : this() => _v4 = v;
 
         [Pure] public bool Is_a_T1(out T1 v) => _v1.Has_a_Value(out v);
         [Pure] public bool Is_a_T2(out T2 v) => _v2.Has_a_Value(out v);

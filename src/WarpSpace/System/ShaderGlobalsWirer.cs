@@ -6,7 +6,7 @@ namespace WarpSpace.System
     [ExecuteInEditMode]
     public class ShaderGlobalsWirer : MonoBehaviour
     {
-        private static bool _initialized;
+        private bool _initialized;
 
         void Start()
         {
@@ -18,7 +18,7 @@ namespace WarpSpace.System
             Init();
         }
 
-        private static void Init()
+        private void Init()
         {
             if (_initialized)
                 return;

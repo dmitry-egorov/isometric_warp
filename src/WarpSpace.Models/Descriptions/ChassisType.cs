@@ -2,7 +2,7 @@
 {
     public enum ChassisType
     {
-        Hower,
-        Track
+        a_Hower_Pad,
+        a_Track
     }
 }

@@ -38,7 +38,7 @@ namespace WarpSpace.Game.Battle.Unit
         {
             var settings_holder = FindObjectOfType<UnitSettingsHolder>();
 
-            var unit_type = unit.Type;
+            var unit_type = unit.s_Type;
             
             Unit = unit;
 
@@ -48,7 +48,7 @@ namespace WarpSpace.Game.Battle.Unit
             var outline = GetComponentInChildren<Outline>();
             outline.Init(unit_type);
             var filter = GetComponentInChildren<UnitMesh>();
-            filter.Present(unit_type, unit.Faction);
+            filter.Present(unit_type, unit.s_Faction);
             
             transform.localRotation = Direction2D.Left.To_Rotation();
             
@@ -80,7 +80,7 @@ namespace WarpSpace.Game.Battle.Unit
             {
                 return
                     unit
-                        .Stream_Of_Movements
+                        .s_Stream_Of_Movements
                         .Subscribe(x => MoveUnitComponent(x.Source, x.Destination));
 
                 void MoveUnitComponent(MLocation previous_location, MLocation current_location)
@@ -93,7 +93,7 @@ namespace WarpSpace.Game.Battle.Unit
 
                     if (previous_location.Is_a_Bay(out var bay))
                     {
-                        var owners_tile = bay.Owner.Must_Be_At_a_Tile();
+                        var owners_tile = bay.s_Owner.Must_Be_At_a_Tile();
                         var orientation = owners_tile.Get_Direction_To(current_tile);
                         Mover.Teleport_To(tile_components.Get(owners_tile.Position), orientation);
                         Mover.ScheduleMovement(tile_components.Get(current_tile.Position), orientation);
@@ -112,7 +112,7 @@ namespace WarpSpace.Game.Battle.Unit
             void Wire_the_Destruction()
             {
                 unit
-                    .Signal_Of_the_Destruction
+                    .s_Signal_of_the_Destruction
                     .First()
                     .Subscribe(isAlive => Destroy(gameObject));
             }

@@ -34,7 +34,7 @@ namespace WarpSpace.Models.Game
         {
             var battle = new MBattle(_boardDescription);
 
-            _currentBattle.Value = battle.As_a_Slot();
+            _currentBattle.s_Value = battle;
             
             battle.Start();
         }

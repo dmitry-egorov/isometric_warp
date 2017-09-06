@@ -2,7 +2,7 @@
 {
     public enum Faction
     {
-        Players,
+        Player,
         Natives
     }
     

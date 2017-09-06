@@ -13,9 +13,9 @@ namespace WarpSpace.Settings
         {
             switch (unit_type)
             {
-                case UnitType.Mothership:
+                case UnitType.a_Mothership:
                     return Units.Mothership;
-                case UnitType.Tank:
+                case UnitType.a_Tank:
                     return Units.Tank;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(unit_type), unit_type, null);
@@ -26,7 +26,7 @@ namespace WarpSpace.Settings
         {
             switch (faction)
             {
-                case Faction.Players:
+                case Faction.Player:
                     return Factions.Player;
                 case Faction.Natives:
                     return Factions.Natives;

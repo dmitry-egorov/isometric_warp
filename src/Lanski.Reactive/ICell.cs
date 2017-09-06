@@ -2,6 +2,6 @@ namespace Lanski.Reactive
 {
     public interface ICell<T> : IStream<T>
     {
-        T Value { get; }
+        T s_Value { get; }
     }
 }
