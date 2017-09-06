@@ -15,7 +15,7 @@ namespace WarpSpace.Models.Game
         {
             this.the_board_description = the_board_description;
             the_events_guard = new EventsGuard();
-            the_battles_cell = new GuardedCell<Possible<MBattle>>(Possible.Empty<MBattle>(), the_events_guard);
+            the_battles_cell = GuardedCell.Empty<MBattle>(the_events_guard);
             the_players_cell = the_battles_cell.Select(b => b.Select(x => x.Player));
 
             s_Battles_Cell

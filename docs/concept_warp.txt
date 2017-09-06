@@ -12,6 +12,15 @@ Visiting a captured planet makes the ship suffer damage over time.
 Alternatively:
 Bigger individual maps with iconic locations (still rendomly generated). Zoltan homeworlds, Golden Bay, Iceland etc.
 
+Inspirations:
+Into the Breach (the board, destructable terrain, unit's abilities) 
+FTL (roguelike, wave-like pacing, finding items, scrap, blueprints)
+Homeworld and Desert of Kharak (mothership, building units, journey to a new home from destroyed home-planet)
+Civilization (tactical combat on a grid)
+Might and Magic (journey through different lands, different people)
+Total Annihilation (Tanks, Artillery, Air units)
+X-COM (tactical combat)
+
 
 Battle
 * Attack types

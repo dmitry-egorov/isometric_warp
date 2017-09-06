@@ -1,7 +1,13 @@
 ﻿using System;
+using Lanski.Structures;
 
 namespace Lanski.Reactive
 {
+    public static class GuardedCell
+    {
+        public static GuardedCell<Possible<T>> Empty<T>(EventsGuard the_events_guard) => new GuardedCell<Possible<T>>(Possible.Empty<T>(), the_events_guard);
+    }
+    
     public class GuardedCell<T> : ICell<T>, IConsumer<T>
         where T: IEquatable<T>
     {
