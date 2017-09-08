@@ -9,6 +9,7 @@ using WarpSpace.Game.Battle.Board;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game;
 using WarpSpace.Models.Game.Battle;
+using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Player;
 using WarpSpace.Services;
 
@@ -19,86 +20,95 @@ namespace WarpSpace.Game.Battle
         public OptionalPredefinedBoardsSettings PredefinedBoards;
         [TextArea(8,8)] public string LastMapString;//For inspector
 
-        public ICell<Possible<MPlayer>> s_Players_Cell() => the_players_cell;
-        public ICell<Possible<MBattle>> s_Battles_Cell() => the_battles_cell;
+        public ICell<Possible<MUnit>> s_Selected_Units_Cell => it.s_selected_units_cell;
+        public ICell<Possible<MPlayer.Selection>> s_Selections_Cell => it.s_selections_cell;
+        public ICell<Possible<MPlayer>> s_Players_Cell => it.s_players_cell;
+        public ICell<Possible<MBattle>> s_Battles_Cell => it.s_battles_cell;
+        
+        public bool has_a_Battle(out MBattle the_battle) => it.s_battles_cell.has_a_Value(out the_battle);
+        public bool has_a_Player(out MPlayer the_player) => it.s_players_cell.has_a_Value(out the_player);
 
-        void Awake()
+        public void Awake()
         {
-            Init();
+            inits();
         }
         
-        void Start()
+        public void Start()
         {
-            Restart();
+            Restarts();
         }
 
         [ExposeMethodInEditor]
-        public void Restart()
+        public void Restarts()
         {
-            Init();
+            it.inits();
 
-            var board = FindObjectOfType<BoardComponent>();//TODO: create from prefab
-
-            var game = Create_the_Game();
-            Wire_Board_Component_to_the_Game();
-            the_games_cell.s_Value = game;
-
-            Start_the_Game();
-
-            MGame Create_the_Game()
-            {
-                var boardDescription = GetBoardDescription();
-
-                _lastMap = boardDescription;
-                LastMapString = boardDescription.Display();
-                
-                return new MGame(boardDescription);
-                
-                BoardDescription GetBoardDescription() => 
-                    PredefinedBoards
-                        .Nullable
-                        .Select(x => x.GetPredefinedBoard())
-                        .Value_Or(GenerateRandomMap);
-
-                BoardDescription GenerateRandomMap() => new RandomBoardGenerator(new UnityRandom()).GenerateRandomMap();
-            }
-            
-            void Wire_Board_Component_to_the_Game()
-            {
-                game.s_Battles_Cell.Subscribe(battle_ref =>
-                {
-                    if (battle_ref.Doesnt_Have_a_Value(out var battle))
-                        return;
-                    
-                    board.Init(battle.Board, battle.Player);
-                });
-            }
-
-            void Start_the_Game()
-            {
-                game.Start();
-            }
+            var the_game = it.creates_a_game();
+            it.s_game_becomes(the_game);
+            the_game.Starts();
         }
 
-        private void Init()
+        private MGame creates_a_game()
+        {
+            var boardDescription = the_board_description();
+
+            _lastMap = boardDescription;
+            LastMapString = boardDescription.Display();
+                
+            return new MGame(boardDescription);
+                
+            BoardDescription the_board_description() => 
+                PredefinedBoards
+                    .Nullable
+                    .Select(x => x.GetPredefinedBoard())
+                    .Value_Or(it_generates_random_map);
+
+            BoardDescription it_generates_random_map() => new RandomBoardGenerator(new UnityRandom()).GenerateRandomMap();
+        }
+
+        private void inits()
         {
             if (_initialized)
                 return;
             _initialized = true;
             
-            the_games_cell = Cell.Empty<MGame>();
-            the_players_cell = the_games_cell.SelectMany(gc => gc.Select_Cell_Or_Single_Default(g => g.s_Players_cell));
-            the_battles_cell = the_games_cell.SelectMany(gc => gc.Select_Cell_Or_Single_Default(g => g.s_Battles_Cell));
+            the_board = FindObjectOfType<BoardComponent>();
+            
+            it.s_games_cell = Cell.Empty<MGame>();
+            it.s_players_cell = it.s_games_cell.Select(the_possible_game => the_possible_game.Select(the_game => the_game.s_Player));
+            it.s_battles_cell = it.s_games_cell.SelectMany(gc => gc.Select_Cell_Or_Single_Default(g => g.s_Battles_Cell));
+            it.s_selected_units_cell = it.s_players_cell.SelectMany(pp => pp.Select(p => p.s_Selected_Units_Cell).Cell_Or_Single_Default());
+            it.s_selections_cell = it.s_players_cell.SelectMany(pp => pp.Select(p => p.s_Selections_Cell).Cell_Or_Single_Default());
+            
+            wires_the_board();
         }
         
-        
-        private BoardDescription _lastMap;//For inspector
+        void wires_the_board()
+        {
+            it.s_Battles_Cell.Subscribe(battle_ref =>
+            {
+                if (battle_ref.Doesnt_Have_a_Value(out var battle))
+                    return;
+                    
+                the_board.Init(battle.Board, it.s_possible_game.must_have_a_Value().s_Player);
+            });
+        }
+
+        private void s_game_becomes(MGame the_game) => it.s_games_cell.s_Value = the_game;
+
+        private Possible<MGame> s_possible_game => it.s_games_cell.s_Value; 
+
+        private BattleComponent it => this;
 
         private bool _initialized;
-        private Cell<Possible<MGame>> the_games_cell;
-        private ICell<Possible<MPlayer>> the_players_cell;
-        private ICell<Possible<MBattle>> the_battles_cell;
+        private Cell<Possible<MGame>> s_games_cell;
+        private ICell<Possible<MPlayer>> s_players_cell;
+        private ICell<Possible<MBattle>> s_battles_cell;
+        private ICell<Possible<MUnit>> s_selected_units_cell;
+        private ICell<Possible<MPlayer.Selection>> s_selections_cell;
+        private BoardComponent the_board;
 
+        private BoardDescription _lastMap;//For inspector
 
         [Serializable]
         public class OptionalPredefinedBoardsSettings: Optional<PredefinedBoardsSettings>{}
@@ -123,6 +133,7 @@ namespace WarpSpace.Game.Battle
                 return Boards[Index].ToDescription();
             }
         }
+
     }
 }
 

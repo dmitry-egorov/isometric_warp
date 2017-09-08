@@ -55,7 +55,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RepeatAllStream.cs" />
     <Compile Include="Signal.cs" />
-    <Compile Include="EventsGuard.cs" />
+    <Compile Include="SignalGuard.cs" />
     <Compile Include="Stream.cs" />
     <Compile Include="StreamExtensions.cs" />
     <Compile Include="StreamMergeExtensions.cs" />
@@ -69,6 +69,10 @@
     <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
       <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>
       <Name>Lanski.Structures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.SwiftLinq\Lanski.SwiftLinq.csproj">
+      <Project>{95349F76-D64C-49EE-B7F2-917AE63C711C}</Project>
+      <Name>Lanski.SwiftLinq</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

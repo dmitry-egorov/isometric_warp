@@ -18,7 +18,7 @@ namespace WarpSpace.Test.Console
             var desc = new BoardDescription(tiles, new Spacial2D(new Index2D(2, 2), Direction2D.Down));
             var game = new MGame(desc);
             
-            game.Start();
+            game.Starts();
         }
     }
 }

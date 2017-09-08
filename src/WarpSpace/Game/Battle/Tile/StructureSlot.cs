@@ -13,22 +13,23 @@ namespace WarpSpace.Game.Battle.Tile
 
         public void Init(MTile tile)
         {
-            tile.Site_Cell.Subscribe(CreateStructure);
-        }
-
-        private void CreateStructure(TileSite tile_site)
-        {
-            gameObject.DestroyChildren();
+            var its_transform = transform;
+            tile.s_Sites_Cell.Subscribe(CreateStructure);
             
-            if (!tile_site.Is_a_Structure(out var structure))
-                return;
+            void CreateStructure(TileSite the_tiles_site)
+            {
+                gameObject.DestroyChildren();
+            
+                if (!the_tiles_site.is_a_Structure(out var structure))
+                    return;
 
-            var description = structure.Description;
-            var prefab = GetPrefab(description);
-            var rotation = description.s_Orientation.To_Rotation();
+                var description = structure.Description;
+                var prefab = GetPrefab(description);
+                var rotation = description.s_Orientation.To_Rotation();
 
-            var structure_component = Instantiate(prefab, transform);
-            structure_component.transform.localRotation = rotation;
+                var structure_component = Instantiate(prefab, its_transform);
+                structure_component.transform.localRotation = rotation;
+            }
         }
 
         private GameObject GetPrefab(StructureDescription structure)

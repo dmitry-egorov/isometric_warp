@@ -1,12 +1,9 @@
 Plan
-- deselect after firing
-- dock back
-- outline on the overlay
-- end turn
 - cooldowns
-- hower over water
+- highlight end turn when no more actions are available
+- hover over water
 - gates have a bay
-- fog of war
+- movement and weapon indicators
 - enemy ai
 - faction materials
 - multiple objects per unit
@@ -14,18 +11,23 @@ Plan
 - more weapons
 - fire weapon animation
 - destruction animation
+- draw movement queue line
 - multiple weapons
-- weapon models
-- weapon ui models
 - tilt and offest units by terrain
 - gate model
 - tank model
 - larger maps with the view centered on the mothership
+- fog of war
 - forests, other decals
 - better terrain generation
 - smoother unit movement (start rotating to the next tile, before reaching previous one)
 - loot animation
 - hp material animation on damage
+- weapon ui models
+- weapon models
+- better docking (the mothership turns to recieve a unit)
+- gray-out unavalable special actions
+
 
 * Landscape
 - different types of terrain
@@ -35,6 +37,14 @@ Plan
 
 
 done
+- end turn
+  + weapons have uses
+  + units have number of moves
+  + end turn resets these parameters
+  + disable buttons
++ outline on the overlay
++ dock back
++ deselect after firing
 + deploy own units
 + loot
 + pixel perfect overlay

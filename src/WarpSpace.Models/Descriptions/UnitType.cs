@@ -41,6 +41,19 @@ namespace WarpSpace.Models.Descriptions
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
         }
+
+        public static int s_Max_Moves(this UnitType type)
+        {
+            switch (type)
+            {
+                case UnitType.a_Mothership:
+                    return 2;
+                case UnitType.a_Tank:
+                    return 3;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
         
         public static ChassisType s_Chassis_Type(this UnitType type)
         {

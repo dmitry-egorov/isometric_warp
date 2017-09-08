@@ -4,11 +4,10 @@ using UnityEngine.EventSystems;
 
 namespace Lanski.Behaviours
 {
-    public class ClickSource : MonoBehaviour, IPointerClickHandler
+    public class ClickSource : MonoBehaviour, IPointerClickHandler, IPointerDownHandler
     {
-        private bool _initialized;
-        private Stream<PointerEventData> _clicks;
-        public IStream<PointerEventData> Clicks => _clicks;
+        public IStream<PointerEventData> Clicks => _clicks_stream;
+        public Stream<PointerEventData> Button_Downs => _button_down_stream;
 
         public void Awake()
         {
@@ -19,7 +18,12 @@ namespace Lanski.Behaviours
         {
             Init();
             
-            _clicks.Next(eventData);
+            _clicks_stream.Next(eventData);
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            _button_down_stream.Next(eventData);
         }
 
         private void Init()
@@ -28,7 +32,12 @@ namespace Lanski.Behaviours
                 return;
             _initialized = true;
 
-            _clicks = new Stream<PointerEventData>();
+            _clicks_stream = new Stream<PointerEventData>();
+            _button_down_stream = new Stream<PointerEventData>();
         }
+
+        private bool _initialized;
+        private Stream<PointerEventData> _clicks_stream;
+        private Stream<PointerEventData> _button_down_stream;
     }
 }

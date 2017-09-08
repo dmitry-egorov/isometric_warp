@@ -5,8 +5,8 @@ namespace WarpSpace.Models.Descriptions
 {
     public static class InventoryContentExyensions
     {
-        public static Possible<Stuff> And(this Possible<Stuff> pi1, Possible<Stuff> pi2) => 
-            pi1.Has_a_Value(out var i1) 
+        public static Possible<Stuff> and(this Possible<Stuff> pi1, Possible<Stuff> pi2) => 
+            pi1.has_a_Value(out var i1) 
                 ? i1 + pi2 
                 : pi2
         ;
@@ -24,7 +24,7 @@ namespace WarpSpace.Models.Descriptions
         public static Stuff operator &(Stuff i1, Stuff i2) => i1 + i2;
         public static Stuff operator +(Stuff i1, Stuff i2) => new Stuff(i1.Matter + i2.Matter);
         public static Stuff operator &(Stuff i1, Possible<Stuff> pi2) => i1 + pi2;
-        public static Stuff operator +(Stuff i1, Possible<Stuff> pi2) => pi2.Has_a_Value(out var i2) ? i1 + i2 : i1;
+        public static Stuff operator +(Stuff i1, Possible<Stuff> pi2) => pi2.has_a_Value(out var i2) ? i1 + i2 : i1;
 
         public static Possible<Stuff> Initial_For(UnitType type)
         {

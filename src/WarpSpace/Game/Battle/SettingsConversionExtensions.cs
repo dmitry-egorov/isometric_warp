@@ -49,7 +49,7 @@ namespace WarpSpace.Game.Battle
                 if (i == exit.Position)
                     return StructureDescription.Create.Exit(exit.Orientation);
 
-                return units.Get(i).Has_a_Value(out var unit) 
+                return units.Get(i).has_a_Value(out var unit) 
                     ? (TileSiteDescription) unit 
                     : TheVoid.Instance;
             }

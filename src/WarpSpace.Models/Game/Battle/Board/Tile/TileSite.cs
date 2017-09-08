@@ -13,43 +13,32 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         public TileSite(MLocation unit_slot) { Variant = unit_slot; }
         public TileSite(MStructure structure) { Variant = structure; }
 
-        public bool Is_Empty() => !Is_Occupied();
-        public bool Is_Occupied() => Is_a_Structure() || Is_a_Location(out var unit_slot) && unit_slot.Is_Occupied();
+        public bool is_Empty => !is_Occupied;
+        public bool is_Occupied => is_a_Structure() || is_a_Location(out var unit_slot) && unit_slot.is_Occupied();
 
-        public bool Is_a_Location() => Variant.Is_a_T1();
-        public bool Is_a_Structure() => Variant.Is_a_T2();
-        public bool Is_a_Location(out MLocation unit_slot) => Variant.Is_a_T1(out unit_slot);
-        public bool Is_a_Structure(out MStructure structure) => Variant.Is_a_T2(out structure);
-        public Possible<MLocation> As_a_Location() => Variant.As_a_T1();
-        public Possible<MStructure> As_a_Structure() => Variant.As_a_T2();
-        public MLocation Must_Be_a_Location() => Variant.Must_Be_a_T1();
+        public bool is_a_Location() => Variant.is_a_T1();
+        public bool is_a_Structure() => Variant.is_a_T2();
+        public bool is_a_Location(out MLocation unit_slot) => Variant.is_a_T1(out unit_slot);
+        public bool is_a_Structure(out MStructure structure) => Variant.is_a_T2(out structure);
+        public Possible<MLocation> as_a_Location() => Variant.as_a_T1();
+        public Possible<MStructure> as_a_Structure() => Variant.as_a_T2();
+        public MLocation must_be_a_Location() => Variant.must_be_a_T1();
 
-        public bool Has_a_Unit() => Is_a_Location(out var unit_slot) && unit_slot.Has_a_Unit(); 
-        public bool Has_a_Unit(out MUnit unit) => 
-            Set_Default_Value_To(out unit) 
-            && Is_a_Location(out var unit_slot) 
-            && unit_slot.Has_a_Unit(out unit)
+        public Possible<MUnit> s_possible_Unit() => as_a_Location().SelectMany(the_location => the_location.s_Unit);
+        public bool has_a_Unit() => is_a_Location(out var unit_slot) && unit_slot.has_a_Unit(); 
+        public bool has_a_Unit(out MUnit unit) => 
+            semantic_resets(out unit) 
+            && is_a_Location(out var unit_slot) 
+            && unit_slot.has_a_Unit(out unit)
         ;
 
-        public bool Is(MLocation location) => Is_a_Location(out var unit_slot) && unit_slot == location;
+        public bool @is(MLocation location) => is_a_Location(out var unit_slot) && unit_slot == location;
 
         public static implicit operator TileSite(MLocation location) => new TileSite(location);
         public static implicit operator TileSite(MStructure structure) => new TileSite(structure);
 
-        public bool Equals(TileSite other)
-        {
-            return Variant.Equals(other.Variant);
-        }
+        public bool Equals(TileSite other) => Variant.Equals(other.Variant);
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is TileSite && Equals((TileSite) obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return Variant.GetHashCode();
-        }
+        
     }
 }

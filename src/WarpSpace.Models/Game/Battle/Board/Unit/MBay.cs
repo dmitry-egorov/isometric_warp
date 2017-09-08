@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Lanski.Structures;
+using Lanski.SwiftLinq;
 using WarpSpace.Models.Descriptions;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
@@ -19,24 +21,26 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         public MBay(int size, MUnit owner)
         {
+            (size > 0).Otherwise_Throw("Bay size must be greater than 0");
+            
             s_Owner = owner;
             _slots = Create_Slots(size);
         }
         
-        public void Must_Have_a_Slot(MLocation bay_slot) => _slots.Contains(bay_slot).Must_Be_True();
-
-        public void Must_Contain(MUnit bay_unit) => _slots.Any(x => x.Has_a_Unit(out var slot_unit) && slot_unit == bay_unit).Must_Be_True(); 
-
-        public bool Can_Accept(MUnit unit)
+        public void must_Contain(MUnit the_unit)
         {
-            foreach (var slot in _slots) //Any is empty
+            var iterator = _slots.SIterate();
+            while (iterator.has_a_Value(out var the_slot))
             {
-                if (slot.Is_Empty())
-                    return true;
+                if (the_slot.has_a_Unit(out var the_slot_unit) && the_slot_unit == the_unit)
+                    return;
             }
-            return false;
+            
+            throw new InvalidOperationException("Doesn't contain the unit");
         }
-        
+
+        public bool has_an_Empty_Slot(out MLocation the_empty_slot) => _slots.SFirst(slot => slot.is_Empty()).has_a_Value(out the_empty_slot);
+
         private List<MLocation> Create_Slots(int size) => Enumerable.Range(0, size).Select(x => new MLocation(this)).ToList();
 
         private readonly IReadOnlyList<MLocation> _slots;

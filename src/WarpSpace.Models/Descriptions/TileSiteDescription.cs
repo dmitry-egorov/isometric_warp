@@ -11,11 +11,11 @@ namespace WarpSpace.Models.Descriptions
             the_variant = variant;
         }
 
-        [Pure] public bool Is_a_Unit(out UnitDescription unit) => the_variant.Is_a_T1(out unit);
-        [Pure] public bool Is_a_Structure(out StructureDescription structure) => the_variant.Is_a_T2(out structure);
-        [Pure] public bool Is_Empty() => the_variant.Is_a_T3();
+        [Pure] public bool Is_a_Unit(out UnitDescription unit) => the_variant.is_a_T1(out unit);
+        [Pure] public bool Is_a_Structure(out StructureDescription structure) => the_variant.is_a_T2(out structure);
+        [Pure] public bool Is_Empty() => the_variant.is_a_T3();
 
-        [Pure] public UnitDescription Must_Be_a_Unit() => the_variant.Must_Be_a_T1();
+        [Pure] public UnitDescription Must_Be_a_Unit() => the_variant.must_be_a_T1();
         
         public static implicit operator TileSiteDescription(UnitDescription unit) => new TileSiteDescription(unit);
         public static implicit operator TileSiteDescription(StructureDescription structure) => new TileSiteDescription(structure);

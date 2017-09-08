@@ -2,41 +2,107 @@
 using Lanski.Structures;
 using Lanski.UnityExtensions;
 using UnityEngine;
+using WarpSpace.Game.Battle.Tile;
 using WarpSpace.Game.Battle.Unit;
-using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board;
 using WarpSpace.Models.Game.Battle.Board.Tile;
+using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Player;
 
 namespace WarpSpace.Game.Battle.Board
 {
     public class BoardComponent : MonoBehaviour
     {
-        public GameObject TilePrefab;
-        public GameObject UnitPrefab;
-        public GameObject Limbo;
+        public TileComponent TilePrefab;
+        public WUnit UnitPrefab;
         
-        private RepeatAllStream<UnitComponent> _stream_of_created_units;
-        public IStream<UnitComponent> Stream_Of_Created_Units => _stream_of_created_units;
+        public IStream<WUnit> s_Created_Units_Stream => it.s_created_units_stream;
+        public TileComponent this[MTile the_tile] => it.s_tile_components.Get(the_tile.s_Position);
 
         public void Init(MBoard board, MPlayer player)
         {
             gameObject.DestroyChildren();
+            FindObjectOfType<WLimbo>().gameObject.DestroyChildren();
             
-            _stream_of_created_units = new RepeatAllStream<UnitComponent>();
+            s_created_units_stream = new RepeatAllStream<WUnit>();
 
-            var tile_components = CreateTiles();
+            var this_transform = transform;
+            it.s_tile_components = CreateTiles();
 
-            UnitCreationWiring.Wire(board, tile_components, UnitPrefab, Limbo, player, _stream_of_created_units);
-            TileHighlightsWiring.Wire(player, board, tile_components);
+            it.wires_unit_creation(board);
+            wires_the_highlights(player, board);
 
-            Tile.TileComponent[,] CreateTiles() => 
+            TileComponent[,] CreateTiles() => 
                 board.Tiles.Map((tile, index) =>
                 {
                     var n = board.Tiles.GetFitNeighbours(index).Map(t => t.Type_Of_the_Landscape());
-                    return Tile.TileComponent.Create(TilePrefab, transform, tile, n, board.Tiles.GetDimensions(), player);
+                    return TileComponent.Create(TilePrefab, this_transform, tile, n, board.Tiles.GetDimensions(), player);
                 })
             ;
+        }
+        
+        private void wires_unit_creation(MBoard board)
+        {
+            foreach (var unit in board.Units)
+                creates_the_world_unit_from(unit);
+
+            board
+                .s_Stream_Of_Unit_Creations
+                .Subscribe(the_unit => it.creates_the_world_unit_from(the_unit));
+        }
+        
+        private void creates_the_world_unit_from(MUnit the_model_unit)
+        {
+            var world_unit = WUnit.Is_Created_From(UnitPrefab, the_model_unit);
+                
+            it.s_created_units_stream.Next(world_unit);
+        }
+
+        private BoardComponent it => this;
+        private RepeatAllStream<WUnit> s_created_units_stream;
+        private TileComponent[,] s_tile_components;
+
+        private void wires_the_highlights(MPlayer player, MBoard board)
+        {
+            player.s_Selected_Unit_Movements_Stream
+                .Subscribe(moved =>
+                {
+                    Updates_Neighborhood_Of(moved.Source.as_a_Tile());
+                    Updates_Neighborhood_Of(moved.Destination.as_a_Tile());
+                })
+            ;
+
+            player.s_Selected_Unit_Changes_Stream
+                .Subscribe(p => Handles_New_Selected_Unit(p.Previous.Select(u => u.s_Tile), p.Current.Select(u => u.s_Tile)))
+            ;
+
+            board.s_Turn_Ends_Stream
+                .Subscribe(_ => Updates_Neighborhood_Of(player.s_Possible_Selected_Unit.Select(u => u.s_Tile)))
+            ;
+
+            board.s_Unit_Destructions_Stream
+                .Select(destroyed => destroyed.s_Location_As_a_Tile())
+                .Subscribe(Updates_Neighborhood_Of)
+            ;
+
+            void Handles_New_Selected_Unit(Possible<MTile> previous, Possible<MTile> current)
+            {
+                Updates_Neighborhood_Of(previous);
+                Updates_Neighborhood_Of(current);
+            }
+
+            void Updates_Neighborhood_Of(Possible<MTile> possible_tile)
+            {
+                if (!possible_tile.has_a_Value(out var prev_tile))
+                    return;
+
+                updates_the_highlight_of(prev_tile);
+                
+                foreach (var adjacent in prev_tile.Adjacent.NotEmpty)
+                    updates_the_highlight_of(adjacent);
+            }
+            
+            void updates_the_highlight_of(MTile tile) => it[tile].Highlight.Updates_the_Highlight();
         }
     }
 }

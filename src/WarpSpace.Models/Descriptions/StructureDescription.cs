@@ -16,11 +16,11 @@ namespace WarpSpace.Models.Descriptions
         
         private StructureDescription(Direction2D orientation): this() => s_Orientation = orientation;
 
-        [Pure] public bool Is_An_Entrance() => the_variant.Is_a_T1();
-        [Pure] public bool Is_An_Exit() => the_variant.Is_a_T2();
-        [Pure] public bool Is_A_Debris() => the_variant.Is_a_T3();
-        [Pure] public bool Is_A_Debris(out Debris debris) => the_variant.Is_a_T3(out debris);//Note: Assert the type?
-        [Pure] public Debris Must_Be_a_Debris() => the_variant.Must_Be_a_T3();//Note: Assert the type?
+        [Pure] public bool Is_An_Entrance() => the_variant.is_a_T1();
+        [Pure] public bool Is_An_Exit() => the_variant.is_a_T2();
+        [Pure] public bool Is_A_Debris() => the_variant.is_a_T3();
+        [Pure] public bool Is_A_Debris(out Debris debris) => the_variant.is_a_T3(out debris);//Note: Assert the type?
+        [Pure] public Debris Must_Be_a_Debris() => the_variant.must_be_a_T3();//Note: Assert the type?
         
         
         public struct Exit {}

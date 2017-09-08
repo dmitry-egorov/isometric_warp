@@ -52,6 +52,7 @@
     <Compile Include="FPS\FpsCounter.cs" />
     <Compile Include="FPS\FpsPresenter.cs" />
     <Compile Include="Input\Drag.cs" />
+    <Compile Include="Input\GlobalMouseEventsSource.cs" />
     <Compile Include="IntStringsCache.cs" />
     <Compile Include="Meshes\ISharedMeshBehaviour.cs" />
     <Compile Include="Meshes\SharedMeshInstance.cs" />

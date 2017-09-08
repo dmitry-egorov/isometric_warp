@@ -36,6 +36,9 @@ Planet Types:
 
 
 Ideas
+
+- trojan unit (heavy armor transport with a blinker)
+- blinker (short teleporter)
 - mini-transporters (instantly move all resources to the mothership) 
 - unit blueprints
 - weapon blueprints

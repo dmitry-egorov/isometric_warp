@@ -12,7 +12,7 @@
             Cull Back
             Blend Zero One
  
-            Offset -8, -8
+            Offset -64, -8
 
             Lighting Off
             Color (0,0,0,0)

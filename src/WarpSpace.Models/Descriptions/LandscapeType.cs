@@ -16,7 +16,7 @@ namespace WarpSpace.Models.Descriptions
             return (LandscapeType) _chars.IndexOf(c);
         }
 
-        public static bool IsPassableWith(this LandscapeType landscape, ChassisType chassisType)
+        public static bool is_passable_with(this LandscapeType landscape, ChassisType chassisType)
         {
             return landscape.GetPassability(chassisType) != Passability.None;
         }

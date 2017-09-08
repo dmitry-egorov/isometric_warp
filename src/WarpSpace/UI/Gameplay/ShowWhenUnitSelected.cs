@@ -1,5 +1,4 @@
-﻿using Lanski.Reactive;
-using Lanski.Structures;
+﻿using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Game.Battle;
 using WarpSpace.Models.Game.Battle.Board.Unit;
@@ -15,13 +14,12 @@ namespace WarpSpace.UI.Gameplay
             Wire_Player_Selection();
             
             void Wire_Player_Selection() => 
-                battle.s_Players_Cell()
-                    .SelectMany(ps => ps.Select(p => p.s_Selected_Units_Cell).Cell_Or_Single_Default())
+                battle.s_Selected_Units_Cell
                     .Subscribe(Set_Is_Active)
             ;
 
             void Set_Is_Active(Possible<MUnit> selected_unit) => 
-                gameObject.SetActive(selected_unit.Has_a_Value())
+                gameObject.SetActive(selected_unit.has_a_Value())
             ;
         }
     }

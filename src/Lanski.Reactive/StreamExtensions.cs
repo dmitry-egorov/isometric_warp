@@ -101,8 +101,8 @@ namespace Lanski.Reactive
 
         public static IStream<T> SkipEmpty<T>(this IStream<Possible<T>> stream) where T : class => 
             stream
-                .Where(r => r.Has_a_Value())
-                .Select(r => r.Must_Have_a_Value())
+                .Where(r => r.has_a_Value())
+                .Select(r => r.must_have_a_Value())
         ;
 
         public static IStream<(Possible<T> previous, Possible<T> current)> IncludePrevious<T>(this IStream<Possible<T>> stream) => new PairsStream<T>(stream);
@@ -126,7 +126,7 @@ namespace Lanski.Reactive
                 var possible_prev = default(Possible<T>);
                 return this.s_stream.Subscribe(v =>
                 {
-                    if (possible_prev.Has_a_Value(out var prev))
+                    if (possible_prev.has_a_Value(out var prev))
                     {
                         action((prev, v));
                         

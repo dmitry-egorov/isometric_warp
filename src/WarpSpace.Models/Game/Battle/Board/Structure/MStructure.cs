@@ -20,9 +20,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Structure
         }
         
         public bool Is_an_Entrance() => Description.Is_An_Entrance();
-        public bool Is_an_Exit() => Description.Is_An_Exit();
-        public bool Is_a_Debris() => Description.Is_A_Debris();
-        public bool Is_a_Debris(out StructureDescription.Debris debris) => Description.Is_A_Debris(out debris);
-        public StructureDescription.Debris Must_Be_a_Debris() => Description.Must_Be_a_Debris();
+        public bool is_an_Exit() => Description.Is_An_Exit();
+        public bool is_a_Debris() => Description.Is_A_Debris();
+        public bool is_a_Debris(out StructureDescription.Debris debris) => Description.Is_A_Debris(out debris);
+        public StructureDescription.Debris must_be_a_Debris() => Description.Must_Be_a_Debris();
     }
 }

@@ -8,17 +8,17 @@ namespace Lanski.Structures
         public Or(T1 v) : this() => _v1 = v;
         public Or(T2 v) : this() => _v2 = v;
 
-        [Pure] public bool Is_a_T1(out T1 v) => _v1.Has_a_Value(out v);
-        [Pure] public bool Is_a_T2(out T2 v) => _v2.Has_a_Value(out v);
+        [Pure] public bool is_a_T1(out T1 v) => _v1.has_a_Value(out v);
+        [Pure] public bool is_a_T2(out T2 v) => _v2.has_a_Value(out v);
         
-        [Pure] public bool Is_a_T1() => _v1.Has_a_Value();
-        [Pure] public bool Is_a_T2() => _v2.Has_a_Value();
+        [Pure] public bool is_a_T1() => _v1.has_a_Value();
+        [Pure] public bool is_a_T2() => _v2.has_a_Value();
         
-        [Pure] public Possible<T1> As_a_T1() => _v1;
-        [Pure] public Possible<T2> As_a_T2() => _v2;
+        [Pure] public Possible<T1> as_a_T1() => _v1;
+        [Pure] public Possible<T2> as_a_T2() => _v2;
 
-        [Pure] public T1 Must_Be_a_T1() => _v1.Must_Have_a_Value();
-        [Pure] public T2 Must_Be_a_T2() => _v2.Must_Have_a_Value();
+        [Pure] public T1 must_be_a_T1() => _v1.must_have_a_Value();
+        [Pure] public T2 must_be_a_T2() => _v2.must_have_a_Value();
         
         public static implicit operator Or<T1, T2>(T1 v) => new Or<T1, T2>(v);
         public static implicit operator Or<T1, T2>(T2 v) => new Or<T1, T2>(v);
@@ -35,21 +35,21 @@ namespace Lanski.Structures
         public Or(T2 v) : this() => _v2 = v;
         public Or(T3 v) : this() => _v3 = v;
 
-        [Pure] public bool Is_a_T1(out T1 v) => _v1.Has_a_Value(out v);
-        [Pure] public bool Is_a_T2(out T2 v) => _v2.Has_a_Value(out v);
-        [Pure] public bool Is_a_T3(out T3 v) => _v3.Has_a_Value(out v);
+        [Pure] public bool is_a_T1(out T1 v) => _v1.has_a_Value(out v);
+        [Pure] public bool is_a_T2(out T2 v) => _v2.has_a_Value(out v);
+        [Pure] public bool is_a_T3(out T3 v) => _v3.has_a_Value(out v);
         
-        [Pure] public bool Is_a_T1() => _v1.Has_a_Value();
-        [Pure] public bool Is_a_T2() => _v2.Has_a_Value();
-        [Pure] public bool Is_a_T3() => _v3.Has_a_Value();
+        [Pure] public bool is_a_T1() => _v1.has_a_Value();
+        [Pure] public bool is_a_T2() => _v2.has_a_Value();
+        [Pure] public bool is_a_T3() => _v3.has_a_Value();
         
-        [Pure] public Possible<T1> As_a_T1() => _v1;
-        [Pure] public Possible<T2> As_a_T2() => _v2;
-        [Pure] public Possible<T3> As_a_T3() => _v3;
+        [Pure] public Possible<T1> as_a_T1() => _v1;
+        [Pure] public Possible<T2> as_a_T2() => _v2;
+        [Pure] public Possible<T3> as_a_T3() => _v3;
 
-        [Pure] public T1 Must_Be_a_T1() => _v1.Must_Have_a_Value();
-        [Pure] public T2 Must_Be_a_T2() => _v2.Must_Have_a_Value();
-        [Pure] public T3 Must_Be_a_T3() => _v3.Must_Have_a_Value();
+        [Pure] public T1 must_be_a_T1() => _v1.must_have_a_Value();
+        [Pure] public T2 must_be_a_T2() => _v2.must_have_a_Value();
+        [Pure] public T3 must_be_a_T3() => _v3.must_have_a_Value();
         
         public static implicit operator Or<T1, T2, T3>(T1 v) => new Or<T1, T2, T3>(v);
         public static implicit operator Or<T1, T2, T3>(T2 v) => new Or<T1, T2, T3>(v);
@@ -69,25 +69,25 @@ namespace Lanski.Structures
         public Or(T3 v) : this() => _v3 = v;
         public Or(T4 v) : this() => _v4 = v;
 
-        [Pure] public bool Is_a_T1(out T1 v) => _v1.Has_a_Value(out v);
-        [Pure] public bool Is_a_T2(out T2 v) => _v2.Has_a_Value(out v);
-        [Pure] public bool Is_a_T3(out T3 v) => _v3.Has_a_Value(out v);
-        [Pure] public bool Is_a_T4(out T4 v) => _v4.Has_a_Value(out v);
+        [Pure] public bool is_a_T1(out T1 v) => _v1.has_a_Value(out v);
+        [Pure] public bool is_a_T2(out T2 v) => _v2.has_a_Value(out v);
+        [Pure] public bool is_a_T3(out T3 v) => _v3.has_a_Value(out v);
+        [Pure] public bool is_a_T4(out T4 v) => _v4.has_a_Value(out v);
         
-        [Pure] public bool Is_a_T1() => _v1.Has_a_Value();
-        [Pure] public bool Is_a_T2() => _v2.Has_a_Value();
-        [Pure] public bool Is_a_T3() => _v3.Has_a_Value();
-        [Pure] public bool Is_a_T4() => _v4.Has_a_Value();
+        [Pure] public bool is_a_T1() => _v1.has_a_Value();
+        [Pure] public bool is_a_T2() => _v2.has_a_Value();
+        [Pure] public bool is_a_T3() => _v3.has_a_Value();
+        [Pure] public bool is_a_T4() => _v4.has_a_Value();
         
-        [Pure] public Possible<T1> As_a_T1() => _v1;
-        [Pure] public Possible<T2> As_a_T2() => _v2;
-        [Pure] public Possible<T3> As_a_T3() => _v3;
-        [Pure] public Possible<T4> As_a_T4() => _v4;
+        [Pure] public Possible<T1> as_a_T1() => _v1;
+        [Pure] public Possible<T2> as_a_T2() => _v2;
+        [Pure] public Possible<T3> as_a_T3() => _v3;
+        [Pure] public Possible<T4> as_a_T4() => _v4;
 
-        [Pure] public T1 Must_Be_a_T1() => _v1.Must_Have_a_Value();
-        [Pure] public T2 Must_Be_a_T2() => _v2.Must_Have_a_Value();
-        [Pure] public T3 Must_Be_a_T3() => _v3.Must_Have_a_Value();
-        [Pure] public T4 Must_Be_a_T4() => _v4.Must_Have_a_Value();
+        [Pure] public T1 must_be_a_T1() => _v1.must_have_a_Value();
+        [Pure] public T2 must_be_a_T2() => _v2.must_have_a_Value();
+        [Pure] public T3 must_be_a_T3() => _v3.must_have_a_Value();
+        [Pure] public T4 must_be_a_T4() => _v4.must_have_a_Value();
         
         public static implicit operator Or<T1, T2, T3, T4>(T1 v) => new Or<T1, T2, T3, T4>(v);
         public static implicit operator Or<T1, T2, T3, T4>(T2 v) => new Or<T1, T2, T3, T4>(v);
@@ -100,5 +100,52 @@ namespace Lanski.Structures
         private Possible<T4> _v4;
 
         public bool Equals(Or<T1, T2, T3, T4> other) => _v1.Equals(other._v1) && _v2.Equals(other._v2) && _v3.Equals(other._v3) && _v4.Equals(other._v4);
+    }
+    
+    public struct Or<T1, T2, T3, T4, T5>: IEquatable<Or<T1, T2, T3, T4, T5>>
+    {
+        public Or(T1 v) : this() => _v1 = v;
+        public Or(T2 v) : this() => _v2 = v;
+        public Or(T3 v) : this() => _v3 = v;
+        public Or(T4 v) : this() => _v4 = v;
+        public Or(T5 v) : this() => _v5 = v;
+
+        [Pure] public bool is_a_T1(out T1 v) => _v1.has_a_Value(out v);
+        [Pure] public bool is_a_T2(out T2 v) => _v2.has_a_Value(out v);
+        [Pure] public bool is_a_T3(out T3 v) => _v3.has_a_Value(out v);
+        [Pure] public bool is_a_T4(out T4 v) => _v4.has_a_Value(out v);
+        [Pure] public bool is_a_T5(out T5 v) => _v5.has_a_Value(out v);
+        
+        [Pure] public bool is_a_T1() => _v1.has_a_Value();
+        [Pure] public bool is_a_T2() => _v2.has_a_Value();
+        [Pure] public bool is_a_T3() => _v3.has_a_Value();
+        [Pure] public bool is_a_T4() => _v4.has_a_Value();
+        [Pure] public bool is_a_T5() => _v5.has_a_Value();
+        
+        [Pure] public Possible<T1> as_a_T1() => _v1;
+        [Pure] public Possible<T2> as_a_T2() => _v2;
+        [Pure] public Possible<T3> as_a_T3() => _v3;
+        [Pure] public Possible<T4> as_a_T4() => _v4;
+        [Pure] public Possible<T5> as_a_T5() => _v5;
+
+        [Pure] public T1 must_be_a_T1() => _v1.must_have_a_Value();
+        [Pure] public T2 must_be_a_T2() => _v2.must_have_a_Value();
+        [Pure] public T3 must_be_a_T3() => _v3.must_have_a_Value();
+        [Pure] public T4 must_be_a_T4() => _v4.must_have_a_Value();
+        [Pure] public T5 must_be_a_T5() => _v5.must_have_a_Value();
+        
+        public static implicit operator Or<T1, T2, T3, T4, T5>(T1 v) => new Or<T1, T2, T3, T4, T5>(v);
+        public static implicit operator Or<T1, T2, T3, T4, T5>(T2 v) => new Or<T1, T2, T3, T4, T5>(v);
+        public static implicit operator Or<T1, T2, T3, T4, T5>(T3 v) => new Or<T1, T2, T3, T4, T5>(v);
+        public static implicit operator Or<T1, T2, T3, T4, T5>(T4 v) => new Or<T1, T2, T3, T4, T5>(v);
+        public static implicit operator Or<T1, T2, T3, T4, T5>(T5 v) => new Or<T1, T2, T3, T4, T5>(v);
+
+        private Possible<T1> _v1;
+        private Possible<T2> _v2;
+        private Possible<T3> _v3;
+        private Possible<T4> _v4;
+        private Possible<T5> _v5;
+
+        public bool Equals(Or<T1, T2, T3, T4, T5> other) => _v1.Equals(other._v1) && _v2.Equals(other._v2) && _v3.Equals(other._v3) && _v4.Equals(other._v4) && _v5.Equals(other._v5);
     }
 }

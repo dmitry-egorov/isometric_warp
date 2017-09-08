@@ -20,8 +20,10 @@ namespace WarpSpace.Game.Battle.Tile
             if (anyWaterAround)
             {
                 MeshFilter.sharedMesh = SelectMesh();
-                transform.localRotation = GetRotation();
-                transform.localScale = GetScale();
+                
+                var its_transform = transform;
+                its_transform.localRotation = GetRotation();
+                its_transform.localScale = GetScale();
             }
 
             Mesh SelectMesh() => Settings.Meshes.SelectBy(index);

@@ -8,8 +8,8 @@ namespace Lanski.Structures
     {
         public static IEnumerable<T> SkipEmpty<T>(this IEnumerable<Possible<T>> enumerable) where T : class => 
             enumerable
-                .Where(x => x.Has_a_Value())
-                .Select(x => x.Must_Have_a_Value())
+                .Where(x => x.has_a_Value())
+                .Select(x => x.must_have_a_Value())
         ;
         
 

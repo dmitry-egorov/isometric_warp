@@ -9,7 +9,7 @@ namespace WarpSpace.Settings
         public FactionsSettings Factions;
         public UnitsSettings Units;
 
-        public UnitSettings Get_Settings_For(UnitType unit_type)
+        public UnitSettings For(UnitType unit_type)
         {
             switch (unit_type)
             {
@@ -22,7 +22,7 @@ namespace WarpSpace.Settings
             }
         }
 
-        public FactionSettings Get_Settings_For(Faction faction)
+        public FactionSettings For(Faction faction)
         {
             switch (faction)
             {

@@ -47,7 +47,7 @@ namespace Lanski.Behaviours.Overlay
             
             _changes = new ChangeStream<float, int>();
             _pixel_scale_cell = new Cell<float>(Calculate_Pixel_Perfect_Scale());
-            _changes.Subscribe(() => _pixel_scale_cell.s_Value = Calculate_Pixel_Perfect_Scale());
+            _changes.Subscribe(_ => _pixel_scale_cell.s_Value = Calculate_Pixel_Perfect_Scale());
             _pixel_perfect_scale_cell = _pixel_scale_cell.Select(scale => Mathf.Max(1f, Mathf.Floor(scale)));
         }
 

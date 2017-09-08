@@ -8,38 +8,43 @@ namespace WarpSpace.Models.Game
 {
     public class MGame
     {
-        public ICell<Possible<MBattle>> s_Battles_Cell => the_battles_cell;
-        public ICell<Possible<MPlayer>> s_Players_cell => the_players_cell;
-
         public MGame(BoardDescription the_board_description)
         {
             this.the_board_description = the_board_description;
-            the_events_guard = new EventsGuard();
-            the_battles_cell = GuardedCell.Empty<MBattle>(the_events_guard);
-            the_players_cell = the_battles_cell.Select(b => b.Select(x => x.Player));
-
-            s_Battles_Cell
-                .SelectMany(b => b.Select(x => x.Stream_Of_Exits).Value_Or_Empty())
-                .Subscribe(_ => Restart_Battle());
-        }
-
-        public void Start()
-        {
-            Restart_Battle();
-        }
-
-        private void Restart_Battle()
-        {
-            var battle = new MBattle(the_board_description, the_events_guard);
-
-            the_battles_cell.s_Value = battle;
             
-            battle.Start();
+            s_signal_guard = new SignalGuard();
+            s_player = new MPlayer(it.s_signal_guard);
+            
+            s_battles_cell = GuardedCell.Empty<MBattle>(it.s_signal_guard);
+
+            it.s_battles_cell
+                .SelectMany(b => b.Select(x => x.s_Stream_Of_Exits).Value_Or_Empty())
+                .Subscribe(_ => restarts_the_battle());
         }
         
-        private readonly EventsGuard the_events_guard;
+        public ICell<Possible<MBattle>> s_Battles_Cell => it.s_battles_cell;
+        public MPlayer s_Player => it.s_player;
+
+        public void Starts() => it.restarts_the_battle();
+
+        private void restarts_the_battle()
+        {
+            using (it.s_signal_guard.Holds_All_Events())
+            {
+                it.s_Player.Resets_the_Selection();
+            
+                var battle = new MBattle(the_board_description, it.s_signal_guard);
+                it.s_battles_cell.s_Value = battle;
+            
+                battle.Start();                
+            }
+        }
+
+        
+        private MGame it => this;
+        private readonly SignalGuard s_signal_guard;
         private readonly BoardDescription the_board_description;
-        private readonly GuardedCell<Possible<MBattle>> the_battles_cell;
-        private readonly ICell<Possible<MPlayer>> the_players_cell;
+        private readonly GuardedCell<Possible<MBattle>> s_battles_cell;
+        private readonly MPlayer s_player;
     }
 }

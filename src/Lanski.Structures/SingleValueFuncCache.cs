@@ -16,7 +16,7 @@ namespace Lanski.Structures
 
         public TValue Get(TSource source)
         {
-            if (!_cache.Has_a_Value(out var last_calc) || !last_calc.Source.Equals(source))
+            if (!_cache.has_a_Value(out var last_calc) || !last_calc.Source.Equals(source))
                 _cache = last_calc = new Cache(source, _func(source));
 
             return last_calc.Result;

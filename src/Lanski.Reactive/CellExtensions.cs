@@ -48,13 +48,19 @@ namespace Lanski.Reactive
             public Action Subscribe(Action<TOut> action)
             {
                 Action lastSubscription = null;
-
-                return _inCell.Subscribe(x =>
+                
+                var s = _inCell.Subscribe(x =>
                 {
                     lastSubscription?.Invoke();
 
                     lastSubscription = x != null ? _selector(x).Subscribe(action) : null;
-                });
+                }); 
+
+                return () =>
+                {
+                    s();
+                    lastSubscription?.Invoke();
+                };
             }
 
             public TOut s_Value => _selector(_inCell.s_Value).s_Value;

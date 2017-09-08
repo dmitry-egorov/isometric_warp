@@ -1,4 +1,21 @@
-- if location is a bay, it returns a tile of the parent?
-- cache transform
+- generalize actions
+  - unit.actions
+  - unit.current_actions (maybe evaluate in the user to avoid allocation)
+  - can_be_performed_in_general (just shouldn't be in the unit in the first place)
+  - can_be_performed_now
+  - perform
+  - differentiate by possible target type: a unit, a structure or both.
+  - current actions: move, interact, fire (1, 2, 3...), deploy a unit (1, 2, 3...), dock
+  - regular actions: move, interact
+  - player.is_special_action_selected
+
+- turn Selection into a class
 - prefab can be referenced by a script
 - rename Unit to CUnit (as in component)
+
+done:
+- cache transform
+- custom non allocating linq
+- generalize dock, undock and move (move to location)
+- location.is_accessible_by(the_unit)
+- if location is a bay, it returns a tile of the parent? => made a separate method the_tile

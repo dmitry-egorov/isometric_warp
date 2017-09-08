@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Lanski.SwiftLinq;
 
 namespace Lanski.Reactive
 {
@@ -32,7 +33,8 @@ namespace Lanski.Reactive
         public void Next(T value)
         {
             _isSignaling = true;
-            foreach (var action in _subscribers)
+            var iterator = _subscribers.SIterate();
+            while (iterator.has_a_Value(out var action))
             {
                 if (_removeSet.Contains(action))
                     continue;

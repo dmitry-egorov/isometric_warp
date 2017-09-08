@@ -8,21 +8,21 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 {
     public class MTile
     {
-        public readonly Index2D Position;
+        public readonly Index2D s_Position;
 
         public AdjacentRef<MTile> Adjacent { get; private set; }
         
-        public ICell<TileSite> Site_Cell => _site_cell;
+        public ICell<TileSite> s_Sites_Cell => the_sites_cell;
 
-        public bool Is_Occupied => Site.Is_Occupied();
+        public bool is_Occupied => Site.is_Occupied;
 
-        public MTile(Index2D position, TileDescription desc, UnitFactory unit_factory, EventsGuard the_events_guard)
+        public MTile(Index2D position, TileDescription desc, UnitFactory unit_factory, SignalGuard the_signal_guard)
         {
-            Position = position;
-            _landscape = new MLandscape(desc.Type);
+            s_Position = position;
+            the_landscape = new MLandscape(desc.Type);
 
             var site = desc.Initial_Site;
-            _site_cell = new GuardedCell<TileSite>(Create_Site(), the_events_guard);
+            the_sites_cell = new GuardedCell<TileSite>(Create_Site(), the_signal_guard);
 
             TileSite Create_Site()
             {
@@ -35,7 +35,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
                     return location;
 
                 var unit = site.Must_Be_a_Unit();
-                unit_factory.Create_a_Unit(unit, location);
+                unit_factory.Creates_a_Unit(unit, location);
                 
                 return location;
             }
@@ -45,37 +45,39 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         {
             Adjacent = adjacent_tiles;
         }
+        
+        public Possible<MUnit> s_possible_Unit => Site.s_possible_Unit();
 
-        public MLocation Must_Have_a_Location() => Site.Must_Be_a_Location();
-        public bool Has_a_Location(out MLocation unit) => Site.Is_a_Location(out unit);
-        public bool Has_a_Unit(out MUnit unit) => Site.Has_a_Unit(out unit);
-        public bool is_Passable_By(ChassisType chassis_type) => _landscape.Is_Passable_By(chassis_type) && !Is_Occupied;
-        public bool Is_Adjacent_To(MTile destination) => Position.Is_Adjacent_To(destination.Position);
-        public Direction2D Get_Direction_To(MTile destination) => Position.Direction_To(destination.Position);
-        public bool Has_a_Structure(out MStructure structure) => Site.Is_a_Structure(out structure);
-        public LandscapeType Type_Of_the_Landscape() => _landscape.Type;
+        public MLocation must_have_a_Location() => Site.must_be_a_Location();
+        public bool has_a_Location(out MLocation unit) => Site.is_a_Location(out unit);
+        public bool has_a_Unit(out MUnit unit) => Site.has_a_Unit(out unit);
+        public bool is_Passable_By(ChassisType chassis_type) => the_landscape.Is_Passable_By(chassis_type);
+        public bool is_Adjacent_To(MTile destination) => s_Position.Is_Adjacent_To(destination.s_Position);
+        public Direction2D Direction_To(MTile destination) => s_Position.Direction_To(destination.s_Position);
+        public bool has_a_Structure(out MStructure structure) => Site.is_a_Structure(out structure);
+        public LandscapeType Type_Of_the_Landscape() => the_landscape.Type;
 
-        internal void Creates_a_Debris_With(Possible<Stuff> inventory_content)
+        internal void Creates_a_Debris_with(Possible<Stuff> inventory_content)
         {
-            var debris = StructureDescription.Create.Debris(TileHelper.GetOrientation(Position), inventory_content);
+            var debris = StructureDescription.Create.Debris(TileHelper.GetOrientation(s_Position), inventory_content);
             Set_Structure(debris);
         }
         
         internal void Reset_Structure()
         {
-            Site.Is_a_Structure().Otherwise_Throw("Can't reset structure on a tile, since the tile doesn't conatin a structure");
+            Site.is_a_Structure().Otherwise_Throw("Can't reset structure on a tile, since the tile doesn't conatin a structure");
             Site = Create_Location_Empty_Site();
         }
 
         private TileSite Site
         {
-            get => _site_cell.s_Value;
-            set => _site_cell.s_Value = value;
+            get => the_sites_cell.s_Value;
+            set => the_sites_cell.s_Value = value;
         }
 
         private void Set_Structure(StructureDescription debris)
         {
-            Site.Is_Empty().Otherwise_Throw("Site must be empty before it can contain a structure");
+            Site.is_Empty.Otherwise_Throw("Site must be empty before it can contain a structure");
             Site = Create_Structure_Site(debris);
         }
 
@@ -93,7 +95,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
             return new TileSite(structure);
         }
 
-        private readonly GuardedCell<TileSite> _site_cell;
-        private readonly MLandscape _landscape;
+        private readonly GuardedCell<TileSite> the_sites_cell;
+        private readonly MLandscape the_landscape;
     }
 }

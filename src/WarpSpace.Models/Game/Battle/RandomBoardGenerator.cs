@@ -84,7 +84,7 @@ namespace WarpSpace.Models.Game.Battle
             
             bool IsPassable(LandscapeType? landscape)
             {
-                return landscape.Is(x => x.IsPassableWith(ChassisType.a_Hower_Pad));
+                return landscape.Is(x => x.is_passable_with(ChassisType.a_Hower_Pad));
             }
         }
 

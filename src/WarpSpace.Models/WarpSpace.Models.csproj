@@ -61,6 +61,9 @@
     <Compile Include="Game\Battle\Board\MothershipExited.cs" />
     <Compile Include="Game\Battle\Board\UnitFactory.cs" />
     <Compile Include="Game\Battle\Board\Unit\HealthState.cs" />
+    <Compile Include="Game\Battle\Board\Unit\MDestructor.cs" />
+    <Compile Include="Game\Battle\Board\Unit\MInteractor.cs" />
+    <Compile Include="Game\Battle\Board\Unit\MLooter.cs" />
     <Compile Include="StreamCache.cs" />
     <Compile Include="Game\Battle\Board\MBoard.cs" />
     <Compile Include="Game\Battle\Board\Structure\StructureDestroyed.cs" />
@@ -102,6 +105,10 @@
     <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
       <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>
       <Name>Lanski.Structures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lanski.SwiftLinq\Lanski.SwiftLinq.csproj">
+      <Project>{95349F76-D64C-49EE-B7F2-917AE63C711C}</Project>
+      <Name>Lanski.SwiftLinq</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

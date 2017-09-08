@@ -12,9 +12,9 @@ namespace WarpSpace.Game.Battle.Tile
         public UnitSlot UnitSlot { get; private set; }
         public HighlightElement Highlight { get; private set; }
         
-        public static TileComponent Create(GameObject prefab, Transform parent, MTile tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, MPlayer player)
+        public static TileComponent Create(TileComponent prefab, Transform parent, MTile tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, MPlayer player)
         {
-            var component = Instantiate(prefab, parent).GetComponent<TileComponent>();
+            var component = Instantiate(prefab, parent);
             component.Init(tile, neighbourhood, dimensions, player);
             return component;
         }
@@ -22,11 +22,11 @@ namespace WarpSpace.Game.Battle.Tile
         private void Init(MTile tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, MPlayer player)
         {
             _tile = tile;
-            var position = tile.Position;
+            var position = tile.s_Position;
 
             transform.localPosition = GetPosition(position, dimensions);
             name = $"Tile ({position.Column}, {position.Row})";
-
+            
             var landscape = GetComponentInChildren<Landscape>();
             var water = GetComponentInChildren<Water>();
             var structureSlot = GetComponentInChildren<StructureSlot>();
@@ -46,7 +46,7 @@ namespace WarpSpace.Game.Battle.Tile
             void WirePlayerActionsDetector() => 
                 playerActionsDetector
                 .Actions
-                .Subscribe(() => player.Execute_Command_At(tile));
+                .Subscribe(_ => player.Executes_a_Command_At(tile));
         }
 
         private static Vector3 GetPosition(Index2D i, Dimensions2D dimensions) => new Vector3(i.Column - dimensions.Columns * 0.5f, 0, dimensions.Rows * 0.5f - i.Row);

@@ -62,23 +62,23 @@
     <Compile Include="Game\Battle\Tile\TileComponent.cs" />
     <Compile Include="Game\Battle\Tile\UnitSlot.cs" />
     <Compile Include="Game\Battle\Tile\Water.cs" />
-    <Compile Include="Game\Battle\Unit\OutlineMeshBuilder.cs" />
-    <Compile Include="Overlay\OHealth.cs" />
-    <Compile Include="Overlay\OUnit.cs" />
-    <Compile Include="Overlay\UnitsComponent.cs" />
+    <Compile Include="Game\Battle\Unit\WLimbo.cs" />
+    <Compile Include="Overlay\Units\OHealth.cs" />
+    <Compile Include="Overlay\Units\OOutliner.cs" />
+    <Compile Include="Overlay\Units\OPixelPerfectPanel.cs" />
+    <Compile Include="Overlay\Units\OUnit.cs" />
+    <Compile Include="Overlay\Units\OUnits.cs" />
+    <Compile Include="Overlay\Units\OutlineMeshBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\UnityRandom.cs" />
     <Compile Include="Game\Battle\Board\BoardComponent.cs" />
     <Compile Include="Game\Battle\Board\TileCreationHelper.cs" />
-    <Compile Include="Game\Battle\Board\TileHighlightsWiring.cs" />
-    <Compile Include="Game\Battle\Board\UnitCreationWiring.cs" />
     <Compile Include="Game\Battle\BattleComponent.cs" />
     <Compile Include="Game\Battle\SettingsConversionExtensions.cs" />
     <Compile Include="Game\Battle\Unit\UnitMesh.cs" />
-    <Compile Include="Game\Battle\Unit\Mover.cs" />
-    <Compile Include="Game\Battle\Unit\Outline.cs" />
-    <Compile Include="Game\Battle\Unit\UnitComponent.cs" />
-    <Compile Include="Settings\BaySlotPresenterSettingsHolder.cs" />
+    <Compile Include="Game\Battle\Unit\WMover.cs" />
+    <Compile Include="Game\Battle\Unit\WUnit.cs" />
+    <Compile Include="Settings\UISettingsHolder.cs" />
     <Compile Include="Settings\FactionSettings.cs" />
     <Compile Include="Settings\FactionsSettings.cs" />
     <Compile Include="Settings\MovementSettings.cs" />
@@ -87,12 +87,15 @@
     <Compile Include="Settings\UnitsSettings.cs" />
     <Compile Include="System\DebugComponent.cs" />
     <Compile Include="System\ShaderGlobalsWirer.cs" />
-    <Compile Include="UI\Gameplay\Bay\BayPresenter.cs" />
-    <Compile Include="UI\Gameplay\Bay\BaySlotPresenter.cs" />
+    <Compile Include="UI\Common\UIButton.cs" />
+    <Compile Include="UI\Gameplay\Actions\UIDock.cs" />
+    <Compile Include="UI\Gameplay\Actions\UISpecialActions.cs" />
+    <Compile Include="UI\Gameplay\Bay\UIBay.cs" />
+    <Compile Include="UI\Gameplay\Bay\UIBayButton.cs" />
+    <Compile Include="UI\Gameplay\EndTurn\EndTurnButton.cs" />
     <Compile Include="UI\Gameplay\Inventory\InventoryPresenter.cs" />
     <Compile Include="UI\Gameplay\ShowWhenUnitSelected.cs" />
-    <Compile Include="UI\Gameplay\Weapon\ClicksHandler.cs" />
-    <Compile Include="UI\Gameplay\Weapon\SelectionHighlight.cs" />
+    <Compile Include="UI\Gameplay\Weapon\UIWeaponButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lanski.Behaviours\Lanski.Behaviours.csproj">
@@ -123,6 +126,10 @@
       <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>
       <Name>Lanski.Structures</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lanski.SwiftLinq\Lanski.SwiftLinq.csproj">
+      <Project>{95349F76-D64C-49EE-B7F2-917AE63C711C}</Project>
+      <Name>Lanski.SwiftLinq</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lanski.UnityExtensions\Lanski.UnityExtensions.csproj">
       <Project>{56177DAE-76CF-4796-A02D-F4C0833CF22C}</Project>
       <Name>Lanski.UnityExtensions</Name>
@@ -135,9 +142,6 @@
       <Project>{ba651769-958c-4def-b0ec-15c7a154f76b}</Project>
       <Name>WarpSpace.Models</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UI" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -10,7 +10,7 @@ namespace Lanski.Reactive
 
         public Action Subscribe(Action<T> action)
         {
-            if (!_last_value.Has_a_Value(out var value)) 
+            if (!_last_value.has_a_Value(out var value)) 
                 return _stream.Subscribe(action);
             
             action(value);
