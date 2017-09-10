@@ -7,16 +7,17 @@ namespace WarpSpace.Models.Game.Battle
 {
     public class MBattle
     {
-        public readonly MBoard Board;
-
-        public IStream<TheVoid> s_Stream_Of_Exits => Board.s_Stream_Of_Exits;
-
         public MBattle(BoardDescription board_description, SignalGuard the_signal_guard)
         {
-            Board = new MBoard(board_description, the_signal_guard);
+            its_board = new MBoard(board_description, the_signal_guard);
         }
+        
+        public MBoard s_Board => its_board;
+        public IStream<TheVoid> s_Stream_Of_Exits => s_Board.s_Stream_Of_Exits;
 
-        public void Start() => Board.Warps_In_the_Mothership();
-        public void Ends_the_Turn() => Board.Ends_the_Turn();
+        public void Starts() => s_Board.Warps_In_the_Mothership();
+        public void Ends_the_Turn() => s_Board.Ends_the_Turn();
+        
+        private readonly MBoard its_board;
     }
 }

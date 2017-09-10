@@ -11,25 +11,25 @@ namespace WarpSpace.Models.Game.Battle.Board
     public class MBoard
     {
         public readonly MTile[,] Tiles;
-        public IReadOnlyList<MUnit> Units => it.s_units_list;
+        public IReadOnlyList<MUnit> Units => its_units_list;
 
-        public IStream<MUnit> s_Stream_Of_Unit_Creations => it.s_unit_factory.Stream_Of_Unit_Creations;
-        public IStream<MUnit> s_Unit_Destructions_Stream => it.s_unit_destructions_stream;
-        public IStream<TheVoid> s_Turn_Ends_Stream => it.s_turn_ends_stream;
+        public IStream<MUnit> s_Stream_Of_Unit_Creations => its_unit_factory.s_Unit_Creations_Stream;
+        public IStream<MUnit> s_Unit_Destructions_Stream => its_unit_destructions_stream;
+        public IStream<TheVoid> s_Turn_Ends_Stream => its_turn_ends_stream;
         public IStream<TheVoid> s_Stream_Of_Exits { get; }
 
         public MBoard(BoardDescription description, SignalGuard the_signal_guard)
         {
             this.the_signal_guard = the_signal_guard;
-            s_entrances_spacial = description.EntranceSpacial;
-            s_unit_destructions_stream = new GuardedStream<MUnit>(the_signal_guard);
-            s_turn_ends_stream = new GuardedStream<TheVoid>(the_signal_guard);
-            s_unit_factory = new UnitFactory(the_signal_guard);
+            its_entrances_spacial = description.EntranceSpacial;
+            its_unit_destructions_stream = new GuardedStream<MUnit>(the_signal_guard);
+            its_turn_ends_stream = new GuardedStream<TheVoid>(the_signal_guard);
+            its_unit_factory = new UnitFactory(the_signal_guard);
 
             s_Stream_Of_Exits = Create_Exits_Stream();
-            Wire_Unit_Creation();
+            wires_unit_creation();
 
-            Tiles = CreaTiles();
+            Tiles = creates_tiles();
 
             IStream<TheVoid> Create_Exits_Stream() =>
                 s_Stream_Of_Unit_Creations
@@ -37,7 +37,7 @@ namespace WarpSpace.Models.Game.Battle.Board
                     .Merge()
             ;
 
-            MTile[,] CreaTiles()
+            MTile[,] creates_tiles()
             {
                 var tiles = description.Tiles.Map((tile_desc, position) => CreateTile(position, tile_desc));
                 foreach (var i in tiles.EnumerateIndex())
@@ -48,27 +48,28 @@ namespace WarpSpace.Models.Game.Battle.Board
                 return tiles;
 
                 MTile CreateTile(Index2D position, TileDescription desc) =>
-                    new MTile(position, desc, it.s_unit_factory, the_signal_guard);
+                    new MTile(position, desc, its_unit_factory, the_signal_guard)
+                ;
             }
 
-            void Wire_Unit_Creation()
+            void wires_unit_creation()
             {
                 s_Stream_Of_Unit_Creations
                     .Subscribe(unit =>
                     {
-                        Wire_Unit_Destruction(unit);
-                        it.s_units_hashset.Add(unit);
-                        it.s_units_list.Add(unit);
+                        wires_the_units_destruction(unit);
+                        its_units_hashset.Add(unit);
+                        its_units_list.Add(unit);
                     });
 
-                void Wire_Unit_Destruction(MUnit unit)
+                void wires_the_units_destruction(MUnit unit)
                 {
                     unit.s_Destruction_Signal
                         .Subscribe(destroyed =>
                         {
-                            it.s_units_hashset.Remove(unit);
-                            it.s_units_list.Remove(unit);
-                            it.s_unit_destructions_stream.Next(unit);
+                            its_units_hashset.Remove(unit);
+                            its_units_list.Remove(unit);
+                            its_unit_destructions_stream.Next(unit);
                         });
                 }
             }
@@ -76,8 +77,8 @@ namespace WarpSpace.Models.Game.Battle.Board
 
         public void Warps_In_the_Mothership()
         {
-            var position = it.s_entrances_spacial.Position;
-            var orientation = it.s_entrances_spacial.Orientation;
+            var position = its_entrances_spacial.Position;
+            var orientation = its_entrances_spacial.Orientation;
 
             var tank1 = new UnitDescription(UnitType.a_Tank, Faction.Player, Possible.Empty<Stuff>(), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>());
             var tank2 = new UnitDescription(UnitType.a_Tank, Faction.Player, Possible.Empty<Stuff>(), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>());
@@ -91,7 +92,7 @@ namespace WarpSpace.Models.Game.Battle.Board
         {
             using (the_signal_guard.Holds_All_Events())
             {
-                var iterator = it.s_units_list.SIterate();
+                var iterator = its_units_list.SIterate();
                 while (iterator.has_a_Value(out var unit))
                 {
                     unit.Finishes_the_Turn();
@@ -105,23 +106,21 @@ namespace WarpSpace.Models.Game.Battle.Board
         {
             Tiles.Get(position).has_a_Location(out var location).Otherwise_Throw("Can't add a unit to a tile occupied by a structure");
 
-            it.s_unit_factory.Creates_a_Unit(desc, location);
+            its_unit_factory.Creates_a_Unit(desc, location);
         }
 
         private void signals_the_turns_end()
         {
-            it.s_turn_ends_stream.Next();
+            its_turn_ends_stream.Next();
         }
 
-        private MBoard it => this;
-
-        private readonly GuardedStream<TheVoid> s_turn_ends_stream;
-        private readonly GuardedStream<MUnit> s_unit_destructions_stream;
-        private readonly Spacial2D s_entrances_spacial;
-        private readonly UnitFactory s_unit_factory;
+        private readonly GuardedStream<TheVoid> its_turn_ends_stream;
+        private readonly GuardedStream<MUnit> its_unit_destructions_stream;
+        private readonly Spacial2D its_entrances_spacial;
+        private readonly UnitFactory its_unit_factory;
         private readonly SignalGuard the_signal_guard;
         
-        private readonly HashSet<MUnit> s_units_hashset = new HashSet<MUnit>();
-        private readonly List<MUnit> s_units_list = new List<MUnit>();
+        private readonly HashSet<MUnit> its_units_hashset = new HashSet<MUnit>();
+        private readonly List<MUnit> its_units_list = new List<MUnit>();
     }
 }

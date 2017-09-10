@@ -29,7 +29,7 @@ namespace WarpSpace.Models.Descriptions
             }
         }
         
-        public static WeaponType Get_Weapon_Type(this UnitType type)
+        public static WeaponType s_Weapon_Type(this UnitType type)
         {
             switch (type)
             {
@@ -68,16 +68,14 @@ namespace WarpSpace.Models.Descriptions
             }
         }
 
-        public static bool Requires_a_Bay(this UnitType type, out int size)
+        public static int s_bay_size(this UnitType type)
         {
             switch (type)
             {
                 case UnitType.a_Mothership:
-                    size = 4;
-                    return true;
+                    return 4;
                 case UnitType.a_Tank:
-                    size = 0;
-                    return false;
+                    return 0;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }

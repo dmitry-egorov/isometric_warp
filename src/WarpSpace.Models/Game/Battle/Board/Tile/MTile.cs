@@ -3,33 +3,24 @@ using Lanski.Structures;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Unit;
+using static Lanski.Structures.Semantics;
 
 namespace WarpSpace.Models.Game.Battle.Board.Tile
 {
     public class MTile
     {
-        public readonly Index2D s_Position;
-
-        public AdjacentRef<MTile> Adjacent { get; private set; }
-        
-        public ICell<TileSite> s_Sites_Cell => the_sites_cell;
-
-        public bool is_Occupied => Site.is_Occupied;
-
         public MTile(Index2D position, TileDescription desc, UnitFactory unit_factory, SignalGuard the_signal_guard)
         {
-            s_Position = position;
-            the_landscape = new MLandscape(desc.Type);
+            its_position = position;
+            its_landscape = new MLandscape(desc.Type);
+            its_sites_cell = new GuardedCell<TileSite>(it_creates_its_site(desc.Initial_Site), the_signal_guard);
 
-            var site = desc.Initial_Site;
-            the_sites_cell = new GuardedCell<TileSite>(Create_Site(), the_signal_guard);
-
-            TileSite Create_Site()
+            TileSite it_creates_its_site(TileSiteDescription site)
             {
                 if (site.Is_a_Structure(out var structure_description))
-                    return Create_Structure_Site(structure_description);
+                    return it_create_a_structure_site(structure_description);
 
-                var location = Create_the_Location();
+                var location = it_creates_a_location();
 
                 if (site.Is_Empty())
                     return location;
@@ -40,62 +31,60 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
                 return location;
             }
         }
-
+        
         public void Init(AdjacentRef<MTile> adjacent_tiles)
         {
-            Adjacent = adjacent_tiles;
+            s_Adjacent_Tiles = adjacent_tiles;
         }
         
-        public Possible<MUnit> s_possible_Unit => Site.s_possible_Unit();
+        public Index2D s_Position => its_position;
+        public AdjacentRef<MTile> s_Adjacent_Tiles { get; private set; }
+        public ICell<TileSite> s_Sites_Cell => its_sites_cell;
 
-        public MLocation must_have_a_Location() => Site.must_be_a_Location();
-        public bool has_a_Location(out MLocation unit) => Site.is_a_Location(out unit);
-        public bool has_a_Unit(out MUnit unit) => Site.has_a_Unit(out unit);
-        public bool is_Passable_By(ChassisType chassis_type) => the_landscape.Is_Passable_By(chassis_type);
-        public bool is_Adjacent_To(MTile destination) => s_Position.Is_Adjacent_To(destination.s_Position);
-        public Direction2D Direction_To(MTile destination) => s_Position.Direction_To(destination.s_Position);
-        public bool has_a_Structure(out MStructure structure) => Site.is_a_Structure(out structure);
-        public LandscapeType Type_Of_the_Landscape() => the_landscape.Type;
+        public bool has_a_unit_with_an_empty_bay_slot(out MLocation the_bay_slot) => 
+            semantic_resets(out the_bay_slot) && 
+            this.has_a_Unit(out var the_unit) && 
+            the_unit.has_an_empty_bay_slot(out the_bay_slot)
+        ;
+
+        public bool has_a_Location(out MLocation unit) => its_site.is_a_Location(out unit);
+        public bool has_a_Unit(out MUnit unit) => its_site.has_a_Unit(out unit);
+        public bool is_Passable_By(ChassisType chassis_type) => its_landscape.is_Passable_With(chassis_type);
+        public bool is_Adjacent_To(MTile destination) => its_position.Is_Adjacent_To(destination.its_position);
+        public Direction2D Direction_To(MTile destination) => its_position.Direction_To(destination.its_position);
+        public bool has_a_Structure(out MStructure structure) => its_site.is_a_Structure(out structure);
+        public LandscapeType s_Landscape_Type() => its_landscape.Type;
 
         internal void Creates_a_Debris_with(Possible<Stuff> inventory_content)
         {
-            var debris = StructureDescription.Create.Debris(TileHelper.GetOrientation(s_Position), inventory_content);
-            Set_Structure(debris);
+            var the_debris = StructureDescription.Create.Debris(TileHelper.GetOrientation(its_position), inventory_content);
+            its_structure_becomes(the_debris);
         }
         
-        internal void Reset_Structure()
+        internal void Removes_its_Structure()
         {
-            Site.is_a_Structure().Otherwise_Throw("Can't reset structure on a tile, since the tile doesn't conatin a structure");
-            Site = Create_Location_Empty_Site();
+            its_site.is_a_Structure().Otherwise_Throw("Can't reset structure on a tile, since the tile doesn't conatin a structure");
+            its_site = it_creates_an_empty_site();
         }
 
-        private TileSite Site
+        private void its_structure_becomes(StructureDescription the_structure_desc)
         {
-            get => the_sites_cell.s_Value;
-            set => the_sites_cell.s_Value = value;
+            its_site.is_Empty.Otherwise_Throw("Site must be empty before it can contain a structure");
+            its_site = it_create_a_structure_site(the_structure_desc);
         }
 
-        private void Set_Structure(StructureDescription debris)
+        private TileSite it_creates_an_empty_site() => it_creates_a_location();
+        private TileSite it_create_a_structure_site(StructureDescription structure_description) => new MStructure(structure_description, this);
+        private MLocation it_creates_a_location() => new MLocation(this);
+
+        private TileSite its_site
         {
-            Site.is_Empty.Otherwise_Throw("Site must be empty before it can contain a structure");
-            Site = Create_Structure_Site(debris);
+            get => its_sites_cell.s_Value;
+            set => its_sites_cell.s_Value = value;
         }
 
-        private TileSite Create_Location_Empty_Site()
-        {
-            var unit_slot = Create_the_Location();
-            return new TileSite(unit_slot);
-        }
-
-        private MLocation Create_the_Location() => new MLocation(this);
-
-        private TileSite Create_Structure_Site(StructureDescription structure_description)
-        {
-            var structure = new MStructure(structure_description, this);
-            return new TileSite(structure);
-        }
-
-        private readonly GuardedCell<TileSite> the_sites_cell;
-        private readonly MLandscape the_landscape;
+        private readonly GuardedCell<TileSite> its_sites_cell;
+        private readonly MLandscape its_landscape;
+        private readonly Index2D its_position;
     }
 }

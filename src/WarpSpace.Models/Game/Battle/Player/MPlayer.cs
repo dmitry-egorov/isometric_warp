@@ -1,11 +1,12 @@
 ﻿using System;
-using JetBrains.Annotations;
 using Lanski.Reactive;
 using Lanski.Structures;
+using Lanski.SwiftLinq;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Board.Weapon;
+using static Lanski.Structures.Semantics;
 
 namespace WarpSpace.Models.Game.Battle.Player
 {
@@ -15,262 +16,220 @@ namespace WarpSpace.Models.Game.Battle.Player
         {
             this.the_signal_guard = the_signal_guard;
             
-            s_selections_cell = new GuardedCell<Possible<Selection>>(Possible.Empty<Selection>(), the_signal_guard);
+            its_selections_cell = new GuardedCell<Possible<Selection>>(Possible.Empty<Selection>(), the_signal_guard);
             
-            s_selected_units_cell            = it.s_selections_cell.Select(x => x.Select(s => s.s_Unit));
-            s_selected_weapons_cell          = it.s_selections_cell.Select(x => x.SelectMany(s => s.s_Sub_Selection.as_a_Weapon()));
-            s_selected_bay_units_cell        = it.s_selections_cell.Select(x => x.SelectMany(s => s.s_Sub_Selection.as_a_Bay_Unit()));
-            s_selected_unit_changes_stream   = it.s_selected_units_cell.IncludePrevious().Select(p => new SelectedUnitChanged(p.previous, p.current));
-            s_selected_unit_movements_stream = it.s_selected_units_cell.SelectMany(pu => pu.Select(u => u.s_Movements_Stream).Value_Or(StreamCache.Empty_Stream_of_Movements));
+            its_selected_units_cell            = it_generates_its_selected_units_cell();
+            its_selected_weapons_cell          = it_generates_its_selected_weapons_cell();
+            its_selected_bay_units_cell        = it_generates_its_selected_bay_units_cell();
+            its_selected_unit_changes_stream   = it_generates_its_selected_unit_changes_stream();
+            its_selected_unit_movements_stream = it_generates_its_selected_unit_movements_stream();
 
             it_wires_the_selected_unit_destructions();
             it_wires_the_selected_bay_unit_moves();
             it_wires_the_selected_unit_docks();
             it_wires_the_selected_weapon_fires();
+
+            ICell<Possible<MUnit>> it_generates_its_selected_units_cell()                => its_selections_cell.Select(x => x.Select(s => s.s_Unit));
+            ICell<Possible<MWeapon>> it_generates_its_selected_weapons_cell()            => its_selections_cell.Select(x => x.SelectMany(s => s.s_Sub_Selection.as_a_Weapon()));
+            ICell<Possible<MUnit>> it_generates_its_selected_bay_units_cell()            => its_selections_cell.Select(x => x.SelectMany(s => s.s_Sub_Selection.as_a_Bay_Unit()));
+            IStream<SelectedUnitChange> it_generates_its_selected_unit_changes_stream() => its_selected_units_cell.IncludePrevious().Select(p => new SelectedUnitChange { s_Previous = p.previous, s_Current = p.current });
+            IStream<Movement> it_generates_its_selected_unit_movements_stream()          => its_selected_units_cell.SelectMany(pu => pu.Select_Stream_Or_Empty(u => u.s_Movements_Stream));
             
-            void it_wires_the_selected_unit_destructions()
-            {
-                it.s_selected_units_cell
-                    .SelectMany(pu => pu.Select(the_unit => the_unit.s_Destruction_Signal).Value_Or_Empty())
-                    .Subscribe(_ => it.s_selection_becomes_empty());
-            }
+            void it_wires_the_selected_unit_destructions() => 
+                its_selected_units_cell
+                .SelectMany(pu => pu.Select(the_unit => the_unit.s_Destruction_Signal).Value_Or_Empty())
+                .Subscribe(_ => its_selection_becomes_empty())
+            ;
 
-            void it_wires_the_selected_bay_unit_moves()
-            {
-                it.s_selected_bay_units_cell
-                    .SelectMany(pu => pu.Select(the_unit => the_unit.s_Movements_Stream.First()).Value_Or_Empty())
-                    .Subscribe(_ => it.s_sub_selection_becomes_empty());
-            }
+            void it_wires_the_selected_bay_unit_moves() => 
+                its_selected_bay_units_cell
+                .SelectMany(pu => pu.Select(the_unit => the_unit.s_Movements_Stream.First()).Value_Or_Empty())
+                .Subscribe(_ => its_selected_action_becomes_empty())
+            ;
 
-            void it_wires_the_selected_unit_docks()
-            {
-                it.s_selected_unit_movements_stream
-                    .Where(m => m.Destination.is_a_Bay())
-                    .Subscribe(_ => it.s_selection_becomes_empty());
-            }
+            void it_wires_the_selected_unit_docks() => 
+                its_selected_unit_movements_stream
+                .Where(m => m.Destination.is_a_Bay())
+                .Subscribe(_ => its_selection_becomes_empty())
+            ;
 
-            void it_wires_the_selected_weapon_fires()
-            {
-                it.s_selected_weapons_cell
-                    .SelectMany(pw => pw.Select_Stream_Or_Empty(w => w.s_Fires_Stream.Select(_ => w)))
-                    .Where(w => !w.can_Fire())
-                    .Subscribe(w => it.s_sub_selection_becomes_empty())
-                ;
-            }
+            void it_wires_the_selected_weapon_fires() => 
+                its_selected_weapons_cell
+                .SelectMany(pw => pw.Select_Stream_Or_Empty(the_weapon => the_weapon.s_Fires_Stream.Select(_ => the_weapon)))
+                .Where(w => !w.can_Fire())
+                .Subscribe(w => its_selected_action_becomes_empty())
+            ;
         }
         
-        public ICell<Possible<MUnit>> s_Selected_Units_Cell => it.s_selected_units_cell;
-        public ICell<Possible<MWeapon>> s_Selected_Weapons_Cell => it.s_selected_weapons_cell;
-        public ICell<Possible<Selection>> s_Selections_Cell => it.s_selections_cell;//Value can be null
+        public ICell<Possible<MUnit>> s_Selected_Units_Cell => its_selected_units_cell;
+        public ICell<Possible<MWeapon>> s_Selected_Weapons_Cell => its_selected_weapons_cell;
+        public ICell<Possible<Selection>> s_Selections_Cell => its_selections_cell;//Value can be null
 
-        public IStream<SelectedUnitChanged> s_Selected_Unit_Changes_Stream => it.s_selected_unit_changes_stream;
-        public IStream<Movement> s_Selected_Unit_Movements_Stream => it.s_selected_unit_movements_stream;
-        public Possible<MUnit> s_Possible_Selected_Unit => it.s_possible_selected_unit;
+        public IStream<SelectedUnitChange> s_Selected_Unit_Changes_Stream => its_selected_unit_changes_stream;
+        public IStream<Movement> s_Selected_Unit_Movements_Stream => its_selected_unit_movements_stream;
+        public Possible<MUnit> s_Possible_Selected_Unit => its_possible_selected_unit;
 
-        public bool has_a_Unit_Selected(out MUnit the_selected_unit) => it.has_a_unit_selected(out the_selected_unit);
-        public MUnit must_have_a_Unit_Selected() => it.must_have_a_unit_selected();
+        public bool has_a_Unit_Selected(out MUnit the_selected_unit) => it_has_a_unit_selected(out the_selected_unit);
+        public MUnit must_have_a_Unit_Selected() => it_must_have_a_unit_selected();
 
-        public bool has_a_Command_At(MTile tile, out Command command) => it.might_have_a_command_at(tile).has_a_Value(out command);
+        public bool has_a_Command_At(MTile tile, out UnitCommand the_unit_command) => its_possible_command_at(tile).has_a_Value(out the_unit_command);
 
-        public void Resets_the_Selection() => it.s_selection_becomes_empty();
+        public void Resets_the_Selection() => its_selection_becomes_empty();
 
-        public void Executes_a_Command_At(MTile tile)
+        public void Executes_a_Command_At(MTile the_tile)
         {
-            if (!it.has_a_Command_At(tile, out var the_command)) 
-                return;
-
-            the_command.Executes_With(the_signal_guard);
-        }
-        
-        public void Toggles_the_Weapon_Selection()
-        {
-            var selection = must_have_a_selection();
-
-            if (selection.has_a_Weapon_Selected())
+            if (this.has_a_Command_At(the_tile, out var the_command))
             {
-                it.s_sub_selection_becomes_empty();
+                the_command.Executes_With(the_signal_guard);
             }
-            else
+            else if (it_can_select_a_unit_at(the_tile, out var the_target_unit))
             {
-                it.selects_current_units_weapon();
+                it_selects_a_unit(the_target_unit);
             }
         }
 
-        public void Toggles_the_Bay_Unit_Selection(MUnit bay_unit)
+        public void toggles_the_selected_action_with(DUnitAction the_action_desc)
         {
-            var unit = must_have_a_Unit_Selected();
-            var bay = unit.must_have_a_Bay();
-
-            bay.must_Contain(bay_unit);
+            var the_selection = its_possible_selection.must_have_a_Value();
             
-            if (has_a_bay_unit_selected(out var selected_bay_unit) && bay_unit == selected_bay_unit)
+            if (the_selection.s_action_is(the_action_desc))
             {
-                it.s_sub_selection_becomes_empty();
+                its_selected_action_becomes_empty();
             }
             else
             {
-                it.s_sub_selection_becomes(bay_unit);
+                var the_selected_unit = the_selection.s_Unit;
+                var the_action = the_selected_unit.s_possible_action_for(the_action_desc).must_have_a_Value();
+                its_selected_action_becomes(the_action);
             }
         }
         
-        public void Toggles_the_Dock_Selection()
-        {
-            var selection = must_have_a_selection();
-            if (selection.has_the_Dock_Action_Selected())
-            {
-                it.s_sub_selection_becomes_empty();
-            }
-            else
-            {
-                it.s_sub_selection_becomes(DockAction.Instance);
-            }
-        }
+//        public void Toggles_the_Weapon_Selection()
+//        {
+//            var selection = it_must_have_a_selection();
+//
+//            if (selection.has_a_Weapon_Selected())
+//            {
+//                its_sub_selection_becomes_empty();
+//            }
+//            else
+//            {
+//                it_selects_current_units_weapon();
+//            }
+//        }
+//
+//        public void Toggles_the_Bay_Unit_Selection(MUnit bay_unit)
+//        {
+//            var unit = must_have_a_Unit_Selected();
+//            var bay = unit.must_have_a_Bay();
+//
+//            bay.must_Contain(bay_unit);
+//            
+//            if (it_has_a_bay_unit_selected(out var selected_bay_unit) && bay_unit == selected_bay_unit)
+//            {
+//                its_sub_selection_becomes_empty();
+//            }
+//            else
+//            {
+//                its_sub_selection_becomes(bay_unit);
+//            }
+//        }
+//        
+//        public void Toggles_the_Dock_Selection()
+//        {
+//            var selection = it_must_have_a_selection();
+//            if (selection.has_the_Dock_Action_Selected())
+//            {
+//                its_sub_selection_becomes_empty();
+//            }
+//            else
+//            {
+//                its_sub_selection_becomes(DockAction.Instance);
+//            }
+//        }
 
-        internal void Selects_a_Unit(MUnit unit) => it.s_selections_cell.s_Value = new Selection(unit, TheVoid.Instance);
+        internal void it_selects_a_unit(MUnit unit) => its_selections_cell.s_Value = new Selection(unit, Possible.Empty<MUnitAction>());
 
-        
-        private Possible<Command> might_have_a_command_at(MTile the_tile)
-        {
-            if (it.has_a_weapon_selected(out var the_selected_weapon))
-            {
-                if (the_selected_weapon.can_Fire_At_a_Unit_At(the_tile, out var the_target_unit))
-                    return Command.Create.Fire(the_selected_weapon, the_target_unit);
-            }
-            else if (it.has_a_bay_unit_selected(out var the_selected_bay_unit))
-            {
-                if (the_selected_bay_unit.can_Undock_At(the_tile, out var the_target_location))
-                    return Command.Create.Move(the_selected_bay_unit, the_target_location);
-            }
-            else if (it.has_a_dock_action_selected(out var the_selected_unit))
-            {
-                if (the_selected_unit.can_Dock_At(the_tile, out var the_target_location))
-                    return Command.Create.Move(the_selected_unit, the_target_location);
-            }
-            else
-            {
-                if (it.can_select_a_unit_at(the_tile, out var the_target_unit))
-                    return Command.Create.Select_Unit(it, the_target_unit);
-
-                if (it.has_a_Unit_Selected(out the_selected_unit))
-                {
-                    if (the_selected_unit.can_Move_To(the_tile, out var the_tiles_location))
-                        return Command.Create.Move(the_selected_unit, the_tiles_location);
-                    
-                    if (the_selected_unit.can_Interact_With_a_Structure_At(the_tile, out var the_target_structure))
-                        return Command.Create.Interact(the_selected_unit, the_target_structure);
-                }
-            }
-
-            return Possible.Empty<Command>();
-        }
-
-
-        private void selects_current_units_weapon()
-        {
-            var the_selected_unit = must_have_a_Unit_Selected();
-            it.s_sub_selection_becomes(the_selected_unit.s_Weapon);
-        }
-        
-        private Possible<MUnit> s_possible_selected_unit => s_selected_units_cell.s_Value;
-        private Possible<MWeapon> s_selected_weapon => s_selected_weapons_cell.s_Value;
-        private Possible<MUnit> s_selected_bay_unit => s_selected_bay_units_cell.s_Value;
-
-        private MUnit must_have_a_unit_selected() => s_possible_selected_unit.must_have_a_Value();
-        private Selection must_have_a_selection() => it.s_selections_cell.must_have_a_Value();
-        
-        private bool has_a_dock_action_selected(out MUnit the_selected_unit) => 
-            it.has_a_unit_selected(out the_selected_unit) 
-            && it.must_have_a_selection().has_the_Dock_Action_Selected()
+        private Possible<UnitCommand> its_possible_command_at(MTile the_tile) => 
+            it_has_a_selection(out var the_selection) 
+            ? the_selection.s_possible_command_at(the_tile) 
+            : Possible.Empty<UnitCommand>()
         ;
+        
+        private Possible<Selection> its_possible_selection => its_selections_cell.s_Value;
+        private Possible<MUnit> its_possible_selected_unit => its_selected_units_cell.s_Value;
+        private Possible<MUnit> its_selected_bay_unit => its_selected_bay_units_cell.s_Value;
 
-        private bool has_a_unit_selected(out MUnit the_selected_unit) => s_possible_selected_unit.has_a_Value(out the_selected_unit);
-        private bool has_a_weapon_selected(out MWeapon the_selected_weapon) => s_selected_weapon.has_a_Value(out the_selected_weapon); 
-        private bool has_a_bay_unit_selected(out MUnit the_selected_bay_unit) => s_selected_bay_unit.has_a_Value(out the_selected_bay_unit); 
+        private MUnit it_must_have_a_unit_selected() => its_possible_selected_unit.must_have_a_Value();
+        private Selection it_must_have_a_selection() => its_selections_cell.must_have_a_Value();
+        
+        private bool it_has_a_selection(out Selection the_selection) => its_possible_selection.has_a_Value(out the_selection);
+        private bool it_has_a_unit_selected(out MUnit the_selected_unit) => its_possible_selected_unit.has_a_Value(out the_selected_unit);
+        private bool it_has_a_bay_unit_selected(out MUnit the_selected_bay_unit) => its_selected_bay_unit.has_a_Value(out the_selected_bay_unit); 
 
-        private bool can_select_a_unit_at(MTile the_tile, out MUnit the_target_unit) => the_tile.has_a_Unit(out the_target_unit) && it.can_select(the_target_unit);
-        private bool can_select(MUnit the_unit) => the_unit.s_Faction_is(Faction.Player);
+        private bool it_can_select_a_unit_at(MTile the_tile, out MUnit the_target_unit) => the_tile.has_a_Unit(out the_target_unit) && it_can_select(the_target_unit);
+        private bool it_can_select(MUnit the_unit) => the_unit.s_Faction_is(Faction.Player);
 
-        private void s_sub_selection_becomes_empty() => it.s_sub_selection_becomes(TheVoid.Instance);
-        private void s_sub_selection_becomes(Selection.Sub the_sub_selection) => it.s_selection_becomes(new Selection(must_have_a_Unit_Selected(), the_sub_selection));
-        private void s_selection_becomes_empty() => it.s_selection_becomes(Possible.Empty<Selection>());
-        private void s_selection_becomes(Possible<Selection> the_new_selection) => it.s_selections_cell.s_Value = the_new_selection;
+        private void its_selected_action_becomes_empty() => its_selected_action_becomes(Possible.Empty<MUnitAction>());
+        private void its_selected_action_becomes(Possible<MUnitAction> the_action) => its_selection_becomes(new Selection(must_have_a_Unit_Selected(), the_action));
+        private void its_selection_becomes_empty() => its_selection_becomes(Possible.Empty<Selection>());
+        private void its_selection_becomes(Possible<Selection> the_new_selection) => its_selections_cell.s_Value = the_new_selection;
 
-        private MPlayer it => this;
-
-        private readonly GuardedCell<Possible<Selection>> s_selections_cell;
+        private readonly GuardedCell<Possible<Selection>> its_selections_cell;
         private readonly SignalGuard the_signal_guard;
         
-        private readonly ICell<Possible<MUnit>> s_selected_bay_units_cell;
-        private readonly ICell<Possible<MWeapon>> s_selected_weapons_cell;
-        private readonly ICell<Possible<MUnit>> s_selected_units_cell;
-        private readonly IStream<SelectedUnitChanged> s_selected_unit_changes_stream;
-        private readonly IStream<Movement> s_selected_unit_movements_stream;
+        private readonly ICell<Possible<MUnit>> its_selected_bay_units_cell;
+        private readonly ICell<Possible<MWeapon>> its_selected_weapons_cell;
+        private readonly ICell<Possible<MUnit>> its_selected_units_cell;
+        private readonly IStream<SelectedUnitChange> its_selected_unit_changes_stream;
+        private readonly IStream<Movement> its_selected_unit_movements_stream;
 
-        public struct Selection: IEquatable<Selection> //Maybe turn into a class, move some mutation methods there?
+        public struct Selection: IEquatable<Selection> //Maybe add a class, move some mutation methods there?
         {
-            public readonly MUnit s_Unit;
-            public readonly Sub s_Sub_Selection;
-
-            public Selection(MUnit unit, Sub sub_selection)
+            public Selection(MUnit unit) : this(unit, Possible.Empty<MUnitAction>()) {}
+            public Selection(MUnit unit, Possible<MUnitAction> the_possible_action): this()
             {
-                s_Unit = unit;
-                s_Sub_Selection = sub_selection;
+                its_unit = unit;
+                its_possible_action = the_possible_action;
             }
+            
+            public MUnit s_Unit => its_unit;
 
-            public bool has_a_Bay_Unit_Selected(out MUnit bay_unit) => s_Sub_Selection.is_a_Bay_Unit(out bay_unit);
-            public bool has_a_Weapon_Selected(out MWeapon weapon) => s_Sub_Selection.is_a_Weapon(out weapon);
-            public bool has_a_Weapon_Selected() => s_Sub_Selection.is_a_Weapon();
-            public bool has_the_Dock_Action_Selected() => s_Sub_Selection.is_a_Dock_Action();
+            public bool has_an_action(out MUnitAction the_action) => its_possible_action.has_a_Value(out the_action);
+            public bool s_action_is(DUnitAction the_requested_action_desc) => 
+                this.has_an_action(out var the_selected_action) && 
+                the_selected_action.@is(the_requested_action_desc);
 
-            public struct Sub: IEquatable<Sub>
+            public Possible<UnitCommand> s_possible_command_at(MTile the_tile) => 
+                has_a_special_command_At(the_tile, out var the_command) 
+                    ? the_command 
+                    : its_possible_regular_action(the_tile)
+            ;
+
+            public bool Equals(Selection other) => Equals(s_Unit, other.s_Unit) && its_possible_action.Equals(other.its_possible_action);
+
+            private bool has_a_special_command_At(MTile the_tile, out UnitCommand the_command) =>
+                semantic_resets(out the_command) &&
+                has_an_action(out var the_action) && 
+                the_action.s_possible_Command_at(the_tile).has_a_Value(out the_command)
+            ;
+
+            private Possible<UnitCommand> its_possible_regular_action(MTile the_tile)
             {
-                public Or<MWeapon, MUnit, DockAction, TheVoid> Variant;
-                
-                public static Sub Empty() => new Sub(TheVoid.Instance);
-
-                public Sub(Or<MWeapon, MUnit, DockAction, TheVoid> variant)
+                var iterator = s_Unit.s_Regular_Actions.SIterate();
+                while (iterator.has_a_Value(out var the_regular_action))
                 {
-                    Variant = variant;
+                    if (the_regular_action.s_possible_Command_at(the_tile).has_a_Value(out var the_command))
+                        return the_command;
                 }
 
-                [Pure] public bool is_a_Weapon() => Variant.is_a_T1();
-                [Pure] public bool is_a_Weapon(out MWeapon weapon) => Variant.is_a_T1(out weapon);
-                [Pure] public bool is_a_Bay_Unit(out MUnit bay_unit) => Variant.is_a_T2(out bay_unit);
-                [Pure] public bool is_a_Dock_Action() => Variant.is_a_T3();
-                [Pure] public bool is_Empty() => Variant.is_a_T4();
-
-                [Pure] public Possible<MWeapon> as_a_Weapon() => Variant.as_a_T1();
-                [Pure] public Possible<MUnit> as_a_Bay_Unit() => Variant.as_a_T2();
-                
-                public static implicit operator Sub(MWeapon weapon) => new Sub(weapon);
-                public static implicit operator Sub(MUnit unit) => new Sub(unit);
-                public static implicit operator Sub(DockAction dock) => new Sub(dock);
-                public static implicit operator Sub(TheVoid the_void) => new Sub(the_void);
-
-                public bool Equals(Sub other) => Variant.Equals(other.Variant);
+                return Possible.Empty<UnitCommand>();
             }
 
-            public bool Equals(Selection other) => Equals(s_Unit, other.s_Unit) && s_Sub_Selection.Equals(other.s_Sub_Selection);
+            private readonly MUnit its_unit;
+            private readonly Possible<MUnitAction> its_possible_action;
         }
 
-        public struct SelectedUnitChanged
-        {
-            public readonly Possible<MUnit> Current;
-            public readonly Possible<MUnit> Previous;
-
-            public SelectedUnitChanged(Possible<MUnit> previous, Possible<MUnit> current)
-            {
-                Current = current;
-                Previous = previous;
-            }
-        }
-        
-        public struct DockAction: IEquatable<DockAction>
-        {
-            public static readonly DockAction Instance = new DockAction();
-            public bool Equals(DockAction other) => true;
-        }
+        public struct SelectedUnitChange { public Possible<MUnit> s_Current; public Possible<MUnit> s_Previous; }
     }
-
-    
 }

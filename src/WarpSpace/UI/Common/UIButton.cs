@@ -10,9 +10,7 @@ namespace WarpSpace.UI.Common
     [RequireComponent(typeof(Image))]
     public class UIButton: MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPointerDownHandler, IPointerExitHandler, IPointerEnterHandler
     {
-        public Material Pressed_Material;
-        public Material Normal_Material;
-        
+        public bool Warning_Mode;
         public Stream<TheVoid> s_Presses_Stream => its_presses_stream;
 
         public void Awake()
@@ -22,25 +20,27 @@ namespace WarpSpace.UI.Common
             its_presses_stream = new Stream<TheVoid>();
         }
 
-        public void Becomes_Normal() => Becomes_Active_With(null, null);
-        public void Becomes_Active_With(Material the_normal_material, Material the_pressed_material)
+        public void Becomes_Toggled()
         {
-            Normal_Material = the_normal_material;
-            Pressed_Material = the_pressed_material;
+            it_is_disabled = false;
+            it_is_toggled = true;
+        }
 
-            is_disabled = false;
-            its_material_becomes_normal();
+        public void Becomes_Normal()
+        {
+            it_is_toggled = false;
+            it_is_disabled = false;
         }
 
         public void Becomes_Disabled()
         {
             its_image.material = the_settings.DisabledButtonMaterial;
-            is_disabled = true;
+            it_is_disabled = true;
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (is_disabled)
+            if (it_is_disabled)
                 return;
             
             its_pressing_is_in_progress = true;
@@ -49,7 +49,7 @@ namespace WarpSpace.UI.Common
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            if (is_disabled)
+            if (it_is_disabled)
                 return;
             
             its_material_becomes_normal();
@@ -57,7 +57,7 @@ namespace WarpSpace.UI.Common
         
         public void OnPointerEnter(PointerEventData eventData)
         {
-            if (is_disabled)
+            if (it_is_disabled)
                 return;
             
             if (its_pressing_is_in_progress)
@@ -72,7 +72,7 @@ namespace WarpSpace.UI.Common
         
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (is_disabled)
+            if (it_is_disabled)
                 return;
             
             its_material_becomes_normal();
@@ -81,7 +81,7 @@ namespace WarpSpace.UI.Common
 
         public void OnPointerUp(PointerEventData eventData)
         {
-            if (is_disabled)
+            if (it_is_disabled)
                 return;
             
             its_pressing_is_in_progress = false;
@@ -89,12 +89,20 @@ namespace WarpSpace.UI.Common
         
         private void its_material_becomes_normal()
         {
-            its_image.material = Normal_Material == null ? the_settings.NormalButtonMaterial : Normal_Material;
+            its_image.material = 
+                !it_is_toggled ? the_settings.NormalButtonMaterial 
+                : Warning_Mode ? the_settings.NormalWarningButtonMaterial
+                               : the_settings.NormalHighlightedButtonMaterial
+            ;
         }
 
         private void its_material_becomes_pressed()
         {
-            its_image.material = Pressed_Material == null ? the_settings.PressedButtonMaterial : Pressed_Material;
+            its_image.material = 
+                !it_is_toggled ? the_settings.PressedButtonMaterial 
+                : Warning_Mode ? the_settings.PressedWarningButtonMaterial
+                               : the_settings.PressedHighlightedButtonMaterial
+            ;
         }
         
         private Image its_image;
@@ -102,7 +110,8 @@ namespace WarpSpace.UI.Common
         private Stream<TheVoid> its_presses_stream;
 
         private bool its_pressing_is_in_progress;
-        private bool is_disabled;
-        
+        private bool it_is_disabled;
+        private bool it_is_toggled;
+
     }
 }

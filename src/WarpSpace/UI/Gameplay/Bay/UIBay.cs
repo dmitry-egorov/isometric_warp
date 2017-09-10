@@ -14,7 +14,7 @@ namespace WarpSpace.UI.Gameplay.Bay
             Wire_Player_Slot_Variable();
 
             void Wire_Player_Slot_Variable() =>
-                battle.s_Selected_Units_Cell
+                battle.s_Players_Selected_Units_Cell
                 .Subscribe(Handle_Unit_Selection)
             ;
         }

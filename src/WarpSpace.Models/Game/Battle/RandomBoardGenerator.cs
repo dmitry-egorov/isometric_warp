@@ -42,7 +42,7 @@ namespace WarpSpace.Models.Game.Battle
                 types
                 .EnumerateWithIndex()
                 .Where(e => e.element == LandscapeType.Flatland || e.element == LandscapeType.Hill)
-                .Select(p => Get_Orientation_To_Random_Passable_Neighbour(types.GetAdjacentNeighbours(p.index)).Select(d => new Spacial2D(p.index, d)))
+                .Select(p => the_orientation_to_random_passable_neighbour_from(types.GetAdjacentNeighbours(p.index)).Select(d => new Spacial2D(p.index, d)))
                 .SkipNull()
                 .ToArray()
             ;
@@ -58,7 +58,7 @@ namespace WarpSpace.Models.Game.Battle
             }
         }
 
-        private Direction2D? Get_Orientation_To_Random_Passable_Neighbour(AdjacentNeighbourhood2D<LandscapeType> n)
+        private Direction2D? the_orientation_to_random_passable_neighbour_from(AdjacentNeighbourhood2D<LandscapeType> n)
         {
             var passableDirections = PassableDirections().ToArray();
 
@@ -84,7 +84,7 @@ namespace WarpSpace.Models.Game.Battle
             
             bool IsPassable(LandscapeType? landscape)
             {
-                return landscape.Is(x => x.is_passable_with(ChassisType.a_Hower_Pad));
+                return landscape.Is(x => x.is_Passable_With(ChassisType.a_Hower_Pad));
             }
         }
 

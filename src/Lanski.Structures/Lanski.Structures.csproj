@@ -47,6 +47,8 @@
     <Compile Include="DictionarySemanticExtensions.cs" />
     <Compile Include="EnumerableOfNullableExtensions.cs" />
     <Compile Include="FunctionalExtensions.cs" />
+    <Compile Include="IntSemantics.cs" />
+    <Compile Include="ListNullableExtensions.cs" />
     <Compile Include="NullableExtensions.cs" />
     <Compile Include="NullableSemantics.cs" />
     <Compile Include="Option.cs" />

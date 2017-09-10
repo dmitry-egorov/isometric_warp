@@ -14,7 +14,7 @@ namespace WarpSpace.UI.Gameplay
             Wire_Player_Selection();
             
             void Wire_Player_Selection() => 
-                battle.s_Selected_Units_Cell
+                battle.s_Players_Selected_Units_Cell
                     .Subscribe(Set_Is_Active)
             ;
 

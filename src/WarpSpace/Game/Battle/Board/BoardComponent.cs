@@ -19,7 +19,7 @@ namespace WarpSpace.Game.Battle.Board
         public IStream<WUnit> s_Created_Units_Stream => it.s_created_units_stream;
         public TileComponent this[MTile the_tile] => it.s_tile_components.Get(the_tile.s_Position);
 
-        public void Init(MBoard board, MPlayer player)
+        public void Inits(MBoard board, MPlayer player)
         {
             gameObject.DestroyChildren();
             FindObjectOfType<WLimbo>().gameObject.DestroyChildren();
@@ -35,7 +35,7 @@ namespace WarpSpace.Game.Battle.Board
             TileComponent[,] CreateTiles() => 
                 board.Tiles.Map((tile, index) =>
                 {
-                    var n = board.Tiles.GetFitNeighbours(index).Map(t => t.Type_Of_the_Landscape());
+                    var n = board.Tiles.GetFitNeighbours(index).Map(t => t.s_Landscape_Type());
                     return TileComponent.Create(TilePrefab, this_transform, tile, n, board.Tiles.GetDimensions(), player);
                 })
             ;
@@ -73,7 +73,7 @@ namespace WarpSpace.Game.Battle.Board
             ;
 
             player.s_Selected_Unit_Changes_Stream
-                .Subscribe(p => Handles_New_Selected_Unit(p.Previous.Select(u => u.s_Tile), p.Current.Select(u => u.s_Tile)))
+                .Subscribe(p => Handles_New_Selected_Unit(p.s_Previous.Select(u => u.s_Tile), p.s_Current.Select(u => u.s_Tile)))
             ;
 
             board.s_Turn_Ends_Stream
@@ -98,7 +98,7 @@ namespace WarpSpace.Game.Battle.Board
 
                 updates_the_highlight_of(prev_tile);
                 
-                foreach (var adjacent in prev_tile.Adjacent.NotEmpty)
+                foreach (var adjacent in prev_tile.s_Adjacent_Tiles.NotEmpty)
                     updates_the_highlight_of(adjacent);
             }
             

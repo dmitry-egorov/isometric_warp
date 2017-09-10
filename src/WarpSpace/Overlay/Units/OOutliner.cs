@@ -39,7 +39,7 @@ namespace WarpSpace.Overlay.Units
 
         private Action wires_the_selected_unit() => 
             FindObjectOfType<BattleComponent>()
-            .s_Selected_Units_Cell
+            .s_Players_Selected_Units_Cell
             .Subscribe(handles_the_selected_unit_change)
         ;
 

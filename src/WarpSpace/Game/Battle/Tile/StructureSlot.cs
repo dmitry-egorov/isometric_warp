@@ -23,7 +23,7 @@ namespace WarpSpace.Game.Battle.Tile
                 if (!the_tiles_site.is_a_Structure(out var structure))
                     return;
 
-                var description = structure.Description;
+                var description = structure.s_Description;
                 var prefab = GetPrefab(description);
                 var rotation = description.s_Orientation.To_Rotation();
 
@@ -34,11 +34,11 @@ namespace WarpSpace.Game.Battle.Tile
 
         private GameObject GetPrefab(StructureDescription structure)
         {
-            if (structure.Is_An_Entrance())
+            if (structure.is_an_Entrance())
                 return Settings.EntrancePrefab;
-            if (structure.Is_An_Exit())
+            if (structure.is_an_Exit())
                 return Settings.ExitPrefab;
-            if (structure.Is_A_Debris())
+            if (structure.is_a_Debris())
                 return Settings.DebriePrefab;
             
             throw new ArgumentOutOfRangeException(nameof(structure), structure, null);

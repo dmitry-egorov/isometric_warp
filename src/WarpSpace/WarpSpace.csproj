@@ -88,10 +88,11 @@
     <Compile Include="System\DebugComponent.cs" />
     <Compile Include="System\ShaderGlobalsWirer.cs" />
     <Compile Include="UI\Common\UIButton.cs" />
-    <Compile Include="UI\Gameplay\Actions\UIDock.cs" />
-    <Compile Include="UI\Gameplay\Actions\UISpecialActions.cs" />
+    <Compile Include="UI\Gameplay\Actions\UIActionButtonType.cs" />
+    <Compile Include="UI\Gameplay\Actions\UISpecialActionsPanel.cs" />
+    <Compile Include="UI\Gameplay\Actions\UIUnitActionButton.cs" />
     <Compile Include="UI\Gameplay\Bay\UIBay.cs" />
-    <Compile Include="UI\Gameplay\Bay\UIBayButton.cs" />
+    <Compile Include="UI\Gameplay\Bay\UIBayButtonMesh.cs" />
     <Compile Include="UI\Gameplay\EndTurn\EndTurnButton.cs" />
     <Compile Include="UI\Gameplay\Inventory\InventoryPresenter.cs" />
     <Compile Include="UI\Gameplay\ShowWhenUnitSelected.cs" />

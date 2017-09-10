@@ -24,7 +24,7 @@ namespace WarpSpace.Game.Battle.Tile
             the_landscape.Set_the_Highlight_To(highlight_type);
             
             HighlightType Get_the_Highlight_Type() =>
-                  Selected_Unit_is_At_the_Tile()                          ? Placeholder
+                  the_selected_unit_is_at_the_tile()                          ? Placeholder
                 : !the_player.has_a_Command_At(the_tile, out var command) ? None  
                 : command.is_a_Fire_Command()                             ? Attack
                 : command.is_a_Tile_Move_Command()                        ? Move 
@@ -34,7 +34,7 @@ namespace WarpSpace.Game.Battle.Tile
             ;
         }
 
-        private bool Selected_Unit_is_At_the_Tile() => 
+        private bool the_selected_unit_is_at_the_tile() => 
             the_player.has_a_Unit_Selected(out var the_selected_unit) && 
             the_selected_unit.is_At(the_tile)
         ;

@@ -13,11 +13,12 @@ Alternatively:
 Bigger individual maps with iconic locations (still rendomly generated). Zoltan homeworlds, Golden Bay, Iceland etc.
 
 Inspirations:
-Into the Breach (the board, destructable terrain, unit's abilities) 
+Into the Breach (the board, destructable terrain, natural disasters, roguelike, unit's abilities) 
 FTL (roguelike, wave-like pacing, finding items, scrap, blueprints)
 Homeworld and Desert of Kharak (mothership, building units, journey to a new home from destroyed home-planet)
 Civilization (tactical combat on a grid)
 Might and Magic (journey through different lands, different people)
+Heroes (structures provide bonuses, exploring maps)
 Total Annihilation (Tanks, Artillery, Air units)
 X-COM (tactical combat)
 
@@ -36,7 +37,9 @@ Planet Types:
 
 
 Ideas
-
+- traders
+- cities
+- destructable mountains - can produce volcano by chance
 - trojan unit (heavy armor transport with a blinker)
 - blinker (short teleporter)
 - mini-transporters (instantly move all resources to the mothership) 

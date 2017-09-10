@@ -15,7 +15,7 @@ namespace WarpSpace.UI.Gameplay.Inventory
             var cache = FindObjectOfType<IntStringsCache>();
             var text = GetComponent<Text>();
             FindObjectOfType<BattleComponent>()
-                .s_Selected_Units_Cell
+                .s_Players_Selected_Units_Cell
                 .SelectMany(pu => pu.Select(u => u.s_Inventory_Contents_Cell).Cell_Or_Single_Default())
                 .Subscribe(possible_content =>
                 {

@@ -1,15 +1,18 @@
 Plan
-- cooldowns
+- movement and weapon indicators
+- longer weapon range
+- move several tiles at a time
+- enemy ai
+- weapons can fire at empty tiles
+- more weapon types
+- weapon models
+- fire weapon animation
+
 - highlight end turn when no more actions are available
 - hover over water
-- gates have a bay
-- movement and weapon indicators
-- enemy ai
 - faction materials
 - multiple objects per unit
-- weapon model for the mothership
-- more weapons
-- fire weapon animation
+- weapon models for the mothership
 - destruction animation
 - draw movement queue line
 - multiple weapons
@@ -20,13 +23,15 @@ Plan
 - fog of war
 - forests, other decals
 - better terrain generation
-- smoother unit movement (start rotating to the next tile, before reaching previous one)
-- loot animation
-- hp material animation on damage
+- smoother unit movement
+- loot animation (swarm or beam)
+- hp overlay points animation on damage
 - weapon ui models
-- weapon models
+- special actions show "no target"
+
 - better docking (the mothership turns to recieve a unit)
-- gray-out unavalable special actions
+- cooldowns
+
 
 
 * Landscape
@@ -34,10 +39,13 @@ Plan
 
 * Move between planets
 - next planet
+- gates have a bay
+- choose a planet when inside a gate
 
 
 done
-- end turn
++ gray-out unavalable special actions
++ end turn
   + weapons have uses
   + units have number of moves
   + end turn resets these parameters
