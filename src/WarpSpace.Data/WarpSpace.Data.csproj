@@ -4,12 +4,12 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F766D575-E76C-458E-93BA-6BDF87F87DD7}</ProjectGuid>
+    <ProjectGuid>{D6A0A937-82C6-4C60-BD85-701B39037501}</ProjectGuid>
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>WarpSpace.Test.Console</RootNamespace>
-    <AssemblyName>WarpSpace.Test.Console</AssemblyName>
+    <RootNamespace>WarpSpace.Data</RootNamespace>
+    <AssemblyName>WarpSpace.Data</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -35,31 +35,11 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEditor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\lib\UnityEditor.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
-      <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>
-      <Name>Lanski.Structures</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WarpSpace.Models\WarpSpace.Models.csproj">
-      <Project>{BA651769-958C-4DEF-B0EC-15C7A154F76B}</Project>
-      <Name>WarpSpace.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\WarpSpace\WarpSpace.csproj">
-      <Project>{50A126F4-46C4-4748-BDDF-F9EAAAFD3E12}</Project>
-      <Name>WarpSpace</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

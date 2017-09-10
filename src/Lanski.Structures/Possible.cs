@@ -10,6 +10,7 @@ namespace Lanski.Structures
         public static Possible<T> From<T>(T obj)  => new Possible<T>(true, obj);
         
         public static Possible<TheVoid> as_a_Possible(this bool flag) => flag ? From(TheVoid.Instance) : Empty<TheVoid>(); 
+        public static Possible<T> as_a_Possible<T>(this T value) => From(value); 
     }
     
     /// <summary>

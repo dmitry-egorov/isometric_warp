@@ -13,7 +13,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             its_owner = the_owner;
             its_chassis_type = the_owner.s_Type.s_Chassis_Type();
             var its_max_moves = the_owner.s_Type.s_Max_Moves();
-            its_uses_Limiter = new MUsesLimiter(its_max_moves);
+            its_uses_Limiter = new MUsesLimiter(its_max_moves, the_signal_guard);
 
             its_cell_of_locations = new GuardedCell<MLocation>(initial_location, the_signal_guard);
             its_stream_of_movements = its_cell_of_locations.s_Changes().Select(x => new Movement(x.previous, x.current));
@@ -21,9 +21,12 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         }
 
         public bool is_Docked => its_location.is_a_Bay();
+        public bool can_Move => its_uses_Limiter.has_Uses_Left;
+
         public MLocation s_Location => its_location;
         public MTile s_Tile => its_location.s_Tile;
-
+        
+        public ICell<bool> s_can_Move_Cell => its_uses_Limiter.s_Has_Uses_Left_Cell;
         public IStream<Movement> s_Movements_Stream => its_stream_of_movements;
         public IStream<bool> s_Dock_States_Stream => its_stream_of_dock_states;
 
@@ -37,10 +40,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool is_At_a_Bay() => its_location.is_a_Bay();
         public bool is_At_a_Bay(out MBay the_tile) => its_location.is_a_Bay(out the_tile);
 
-        public bool can_Move() => its_uses_Limiter.has_Uses_Left();
 
         public bool can_Move_To(MLocation the_destination) =>
-            this.can_Move() &&
+            this.can_Move &&
             the_destination.is_Passable_By(its_chassis_type) &&
             the_destination.is_Empty() &&
             its_location.is_Accessible_From(the_destination)

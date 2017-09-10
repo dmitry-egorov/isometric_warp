@@ -24,18 +24,20 @@ namespace WarpSpace.UI.Common
         {
             it_is_disabled = false;
             it_is_toggled = true;
+            updates_the_material();
         }
 
         public void Becomes_Normal()
         {
             it_is_toggled = false;
             it_is_disabled = false;
+            updates_the_material();
         }
 
         public void Becomes_Disabled()
         {
-            its_image.material = the_settings.DisabledButtonMaterial;
             it_is_disabled = true;
+            updates_the_material();
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -44,38 +46,30 @@ namespace WarpSpace.UI.Common
                 return;
             
             its_pressing_is_in_progress = true;
-            its_material_becomes_pressed();
+            updates_the_material();
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
             if (it_is_disabled)
                 return;
-            
-            its_material_becomes_normal();
+
+            updates_the_material();
         }
         
         public void OnPointerEnter(PointerEventData eventData)
         {
             if (it_is_disabled)
                 return;
-            
-            if (its_pressing_is_in_progress)
-            {
-                its_material_becomes_pressed();
-            }
-            else
-            {
-                its_material_becomes_normal();
-            }
+            updates_the_material();
         }
         
         public void OnPointerClick(PointerEventData eventData)
         {
             if (it_is_disabled)
                 return;
-            
-            its_material_becomes_normal();
+
+            updates_the_material();
             s_Presses_Stream.Next();
         }
 
@@ -87,21 +81,19 @@ namespace WarpSpace.UI.Common
             its_pressing_is_in_progress = false;
         }
         
-        private void its_material_becomes_normal()
+        private void updates_the_material()
         {
-            its_image.material = 
-                !it_is_toggled ? the_settings.NormalButtonMaterial 
-                : Warning_Mode ? the_settings.NormalWarningButtonMaterial
-                               : the_settings.NormalHighlightedButtonMaterial
-            ;
-        }
-
-        private void its_material_becomes_pressed()
-        {
-            its_image.material = 
+            its_image.material = it_is_disabled ? the_settings.DisabledButtonMaterial
+                                                :
+                its_pressing_is_in_progress ?
                 !it_is_toggled ? the_settings.PressedButtonMaterial 
                 : Warning_Mode ? the_settings.PressedWarningButtonMaterial
                                : the_settings.PressedHighlightedButtonMaterial
+                                            :
+                !it_is_toggled ? the_settings.NormalButtonMaterial 
+                : Warning_Mode ? the_settings.NormalWarningButtonMaterial
+                               : the_settings.NormalHighlightedButtonMaterial
+                ;
             ;
         }
         

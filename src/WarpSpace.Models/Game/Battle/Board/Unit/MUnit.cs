@@ -23,9 +23,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             its_looter            = new MLooter(this);
             its_interactor        = new MInteractor(this, the_signal_guard);
             its_destructor        = new MDestructor(this, the_signal_guard);
-            its_actions_container = new MActionsContainer(this);
             its_possible_docker   = MDocker.From(this);
-            its_possible_bay      = MBay.From(this);
+            its_possible_bay      = MBay.From(this, the_signal_guard);
+            its_actions_container = new MActionsContainer(this);
         }
 
         public UnitType   s_Type      => its_type;
@@ -37,12 +37,16 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public MLooter    s_Looter    => its_looter;
         public Possible<MBay> s_Possible_Bay => its_possible_bay;
         public IReadOnlyList<MUnitAction> s_Regular_Actions => its_actions_container.s_Regular_Actions;
+        public MLocation s_Location => its_mover.s_Location;
+        public MTile s_Tile => its_mover.s_Tile; 
+        public Possible<Stuff> s_Inventory_Content => its_inventory.s_Stuff;
 
         public bool is_Docked => its_mover.is_Docked;
         public bool is_Alive => its_health.is_Normal;
-        public MLocation s_Location => its_mover.s_Location;
-        public Possible<Stuff> s_Inventory_Content => its_inventory.s_Stuff;
+        public bool can_Move => its_mover.can_Move;
+
         public ICell<HealthState> s_Health_States_Cell => its_health.s_States_Cell;
+        public ICell<bool> s_can_Move_Cell => its_mover.s_can_Move_Cell;
 
         public ICell<Possible<Stuff>> s_Inventory_Contents_Cell => its_inventory.s_Stuffs_Cell;
         public IStream<Movement> s_Movements_Stream => its_mover.s_Movements_Stream;
@@ -52,7 +56,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         
         public Possible<MUnitAction> s_possible_action_for(DUnitAction the_action_desc) => its_actions_container.s_possible_action_for(the_action_desc);
 
-        public MTile s_Tile => its_mover.s_Tile; 
         public Possible<MTile> s_Location_As_a_Tile() => its_mover.s_Location_As_a_Tile(); 
         public bool is_At(MTile the_tile) => its_mover.is_At(the_tile); 
         public bool is_At_a_Tile() => its_mover.is_At_a_Tile();
@@ -64,6 +67,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         public bool has_a_docked_unit_at(int the_bay_slot_index, out MUnit the_bay_unit) => this.s_possible_docked_unit_at(the_bay_slot_index).has_a_Value(out the_bay_unit);
         public bool has_a_docked_unit_at(int the_bay_slot_index) => this.s_possible_docked_unit_at(the_bay_slot_index).has_a_Value();
+        public ICell<bool> s_has_a_docked_unit_at_cell(int the_bay_slot_index) => this.has_a_Bay(out var the_bay) ? the_bay.s_has_a_docked_unit_at_cell(the_bay_slot_index) : Cell.From(false);
         public Possible<MUnit> s_possible_docked_unit_at(int the_bay_slot_index) => this.has_a_Bay(out var the_bay) ? the_bay.s_possible_unit_at(the_bay_slot_index) : Possible.Empty<MUnit>();
         public bool has_an_empty_bay_slot(out MLocation the_bay_slot) => semantic_resets(out the_bay_slot) && this.has_a_Bay(out var the_bay) && the_bay.has_an_Empty_Slot(out the_bay_slot);
         public bool has_a_Bay(out MBay the_bay) => its_possible_bay.has_a_Value(out the_bay);
@@ -74,7 +78,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool @is(UnitType the_requested_type) => its_type == the_requested_type;
         public bool is_not(UnitType the_requested_type) => its_type != the_requested_type;
 
-        public bool can_Move() => its_mover.can_Move();
         public bool can_Move_To(MLocation the_destination) => its_mover.can_Move_To(the_destination);
         public bool can_Move_To(MTile the_tile, out MLocation the_tiles_location) => its_mover.can_Move_To(the_tile, out the_tiles_location);
         public bool can_Interact_With_a_Structure_At(MTile the_tile, out MStructure the_target_structure) =>

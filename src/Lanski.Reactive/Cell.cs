@@ -7,6 +7,7 @@ namespace Lanski.Reactive
     public static class Cell
     {
         public static Cell<Possible<T>> Empty<T>() => new Cell<Possible<T>>(Possible.Empty<T>());
+        public static Cell<T> From<T>(T the_value) => new Cell<T>(the_value);
     }
     
     public class Cell<T> : ICell<T>, IConsumer<T>

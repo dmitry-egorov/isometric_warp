@@ -4,7 +4,6 @@ using Lanski.Structures;
 using Lanski.UnityExtensions;
 using UnityEditor.Expose;
 using UnityEngine;
-using WarpSpace.Common;
 using WarpSpace.Game.Battle.Board;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game;
@@ -53,7 +52,6 @@ namespace WarpSpace.Game.Battle
         public ICell<Possible<MPlayer>> s_Players_Cell => its_players_cell;
         public ICell<Possible<MBattle>> s_Battles_Cell => its_battles_cell;
         
-        public bool has_a_Selection(out MPlayer.Selection the_selection) => its_players_selections_cell.has_a_Value(out the_selection);
         public bool has_a_Battle(out MBattle the_battle) => its_battles_cell.has_a_Value(out the_battle);
         public bool has_a_Player(out MPlayer the_player) => its_players_cell.has_a_Value(out the_player);
         
@@ -111,15 +109,6 @@ namespace WarpSpace.Game.Battle
 
         [Serializable]
         public class OptionalPredefinedBoardsSettings: Optional<PredefinedBoardsSettings>{}
-            
-        [Serializable]
-        public struct BoardData
-        {
-            [TextArea(8,8)] public string Tiles;
-            [TextArea(8,8)] public string Units;
-            public Spacial2DData Entrance;
-            public Spacial2DData Exit;
-        }
 
         [Serializable]
         public struct PredefinedBoardsSettings

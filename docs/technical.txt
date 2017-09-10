@@ -1,3 +1,11 @@
+- Highlights moves and fire at the same time -- selection changes before action is processed
+- fix the outline
+- turn Selection into a class?
+- rename Unit to CUnit (as in component)
+
+done:
+- button not toggling unless mouse exits
+- fix bay slots
 - generalize actions
   - unit.actions
   - unit.current_actions (maybe evaluate in the caller to avoid allocation)
@@ -8,11 +16,6 @@
   - current actions: move, interact, fire (1, 2, 3...), deploy a unit (1, 2, 3...), dock
   - regular actions: move, interact
   - player.is_special_action_selected
-
-- turn Selection into a class?
-- rename Unit to CUnit (as in component)
-
-done:
 - prefab can be referenced by a script
 - cache transform
 - custom non allocating linq

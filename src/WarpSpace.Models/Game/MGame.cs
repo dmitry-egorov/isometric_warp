@@ -27,6 +27,7 @@ namespace WarpSpace.Models.Game
             ;
         }
 
+        public Possible<MBattle> s_Battle => its_possible_battle;
         public ICell<Possible<MBattle>> s_Battles_Cell => its_battles_cell;
         public MPlayer s_Player => its_player;
 
@@ -39,13 +40,13 @@ namespace WarpSpace.Models.Game
                 this.s_Player.Resets_the_Selection();
             
                 var the_battle = new MBattle(its_board_description, its_signal_guard);
-                its_battle = the_battle;
+                its_possible_battle = the_battle;
             
                 the_battle.Starts();                
             }
         }
 
-        private Possible<MBattle> its_battle
+        private Possible<MBattle> its_possible_battle
         {
             get => its_battles_cell.s_Value;
             set => its_battles_cell.s_Value = value;

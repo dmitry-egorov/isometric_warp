@@ -39,7 +39,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             if (the_action_desc.is_a_Fire_Action())
                 return its_fire;
             if (the_action_desc.is_a_Deploy_Action(out var the_deploy))
-                return its_deploy_actions.possible_Element_At(the_deploy.s_bay_slot_index);
+                return its_deploy_actions.s_possible_Value_At(the_deploy.s_bay_slot_index);
             if (the_action_desc.is_a_Dock_Action())
                 return its_dock;
             if (the_action_desc.is_a_Move_Action())

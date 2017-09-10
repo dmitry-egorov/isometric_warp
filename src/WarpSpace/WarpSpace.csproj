@@ -54,6 +54,7 @@
     <Compile Include="Common\MeshTransformation\MeshTransformer.cs" />
     <Compile Include="Common\Spacial2DData.cs" />
     <Compile Include="Experiment\TileTransformer.cs" />
+    <Compile Include="Game\Battle\BoardData.cs" />
     <Compile Include="Game\Battle\Tile\HighlightElement.cs" />
     <Compile Include="Game\Battle\Tile\HighlightType.cs" />
     <Compile Include="Game\Battle\Tile\Landscape.cs" />
@@ -96,7 +97,6 @@
     <Compile Include="UI\Gameplay\EndTurn\EndTurnButton.cs" />
     <Compile Include="UI\Gameplay\Inventory\InventoryPresenter.cs" />
     <Compile Include="UI\Gameplay\ShowWhenUnitSelected.cs" />
-    <Compile Include="UI\Gameplay\Weapon\UIWeaponButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lanski.Behaviours\Lanski.Behaviours.csproj">

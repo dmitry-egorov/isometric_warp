@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Lanski.Structures;
-using WarpSpace.Models.Descriptions;
+﻿using Lanski.Structures;
+using WarpSpace.Common;
+using WarpSpace.Game.Battle;
 using WarpSpace.Models.Game;
+
+using Con = System.Console;
 
 namespace WarpSpace.Test.Console
 {
@@ -10,15 +11,38 @@ namespace WarpSpace.Test.Console
     {
         public static void Main(string[] args)
         {
-            System.Console.WriteLine("Start");
-            var the_tile_site_description = new TileSiteDescription(TheVoid.Instance);
-            var tile = new TileDescription(LandscapeType.Flatland, the_tile_site_description);
-            var tiles = new TileDescription[8, 8];//.Map(_ => new TileDescription(LandscapeType.Flatland, new TileSiteDescription(TheVoid.Instance)));
+            Con.WriteLine("Start");
+            var board = new BoardData { 
+                Units = 
+                "- - - - - - - -\n" +
+                "- - - - - - - -\n" +
+                "- - - - - - - -\n" +
+                "- - - - - - - -\n" +
+                "- - - - - - - -\n" +
+                "- - - - - - - -\n" +
+                "- - - - - - - -\n" +
+                "- - - - - - - -",
+                Tiles = 
+                "L L L L L L L L\n" +
+                "L L L L L L L L\n" +
+                "L L L L L L L L\n" +
+                "L L L L L L L L\n" +
+                "L L L L L L L L\n" +
+                "L L L L L L L L\n" +
+                "L L L L L L L L\n" +
+                "L L L L L L L L",
+                Entrance = new Spacial2DData {Position = new Index2DData() {Row = 2, Column = 2}, Orientation = Direction2D.Down}, 
+                Exit     = new Spacial2DData {Position = new Index2DData() {Row = 5, Column = 5}, Orientation = Direction2D.Up}, 
+            };
             
-            var desc = new BoardDescription(tiles, new Spacial2D(new Index2D(2, 2), Direction2D.Down));
+            var desc = board.ToDescription();
             var game = new MGame(desc);
             
             game.Starts();
+
+            var ms = game.s_Battle.must_have_a_Value().s_Board.Units[2];
+            
+            game.s_Player.Executes_a_Command_At(game.s_Battle.must_have_a_Value().s_Board.Tiles.Get(new Index2D(3, 2)));
         }
     }
 }

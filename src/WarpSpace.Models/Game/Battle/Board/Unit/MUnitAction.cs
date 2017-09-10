@@ -9,37 +9,42 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public class MUnitAction
     {
-        public MUnitAction(MUnit the_owner, DUnitAction the_desc) { its_owner = the_owner; its_desc = the_desc; }
+        public MUnitAction(MUnit the_owner, DUnitAction the_desc)
+        {
+            its_owner = the_owner; 
+            its_desc = the_desc;
+
+            its_avalability_cell = select_the_availability_cell();
+            
+            ICell<bool> select_the_availability_cell()
+            {
+                if (its_desc.is_a_Fire_Action())
+                    return its_owner.s_Weapon.s_Can_Fire_Cell
+                        ;
+
+                if (its_desc.is_a_Deploy_Action(out var the_deploy_action))
+                    return its_owner.s_has_a_docked_unit_at_cell(the_deploy_action.s_bay_slot_index)
+                        ;
+
+                if (its_desc.is_a_Dock_Action())
+                    return its_owner.s_can_Move_Cell
+                        ;
+
+                if (its_desc.is_a_Move_Action())
+                    return its_owner.s_can_Move_Cell
+                        ;
+
+                if (its_desc.is_an_Interact_Action())
+                    return Cell.From(true);
+            
+                throw new InvalidOperationException("Unknow action type");
+            }
+        }
 
         public ICell<bool> s_Availability_Cell => its_avalability_cell;
         
         public bool is_available() => its_avalability_cell.s_Value;
         
-        bool avaiablitty()
-        {
-            ??? //TODO: wire the changes to the cell
-            
-            if (its_desc.is_a_Fire_Action())
-                return its_owner.s_Weapon.can_Fire()
-            ;
-
-            if (its_desc.is_a_Deploy_Action(out var the_deploy_action))
-                return its_owner.has_a_docked_unit_at(the_deploy_action.s_bay_slot_index)
-            ;
-
-            if (its_desc.is_a_Dock_Action())
-                return its_owner.can_Move()
-            ;
-
-            if (its_desc.is_a_Move_Action())
-                return its_owner.can_Move()
-            ;
-
-            if (its_desc.is_an_Interact_Action())
-                return true;
-            
-            throw new InvalidOperationException("Unknow action type");
-        }
 
         public Possible<UnitCommand> s_possible_Command_at(MTile the_tile)
         {

@@ -11,6 +11,7 @@ namespace Lanski.Reactive
         public static ICell<TOut> Select_Cell_Or_Single_Default<TIn, TOut>(this Possible<TIn> possible, Func<TIn, ICell<TOut>> selector) => possible.Select(selector).Value_Or(CellsCache<TOut>.Default);
         
         public static ICell<T> Cell_Or_Single_Default<T>(this Possible<ICell<T>> possible_cell) where T : struct => possible_cell.Value_Or(CellsCache<T>.Default);
+        public static ICell<Possible<T>> Cell_Or_Single_Empty<T>(this Possible<ICell<T>> possible_cell) where T : struct => possible_cell.Select(cell => cell.Select(item => item.as_a_Possible())).Value_Or(CellsCache<Possible<T>>.Default);
         public static IStream<T> Cell_Or_Empty<T>(this Possible<ICell<T>> possible_cell) where T : struct => possible_cell.Select(c => (IStream<T>)c).Value_Or(StreamsCache<T>.Empty);
     }
 }

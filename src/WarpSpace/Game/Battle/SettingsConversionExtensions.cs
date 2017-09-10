@@ -3,13 +3,12 @@ using Lanski.Structures;
 using WarpSpace.Common;
 using WarpSpace.Common.MapParsing;
 using WarpSpace.Models.Descriptions;
-using WarpSpace.Models.Game.Battle.Board;
 
 namespace WarpSpace.Game.Battle
 {
     public static class SettingsConversionExtensions
     {
-        public static BoardDescription ToDescription(this BattleComponent.BoardData boardData)
+        public static BoardDescription ToDescription(this BoardData boardData)
         {
             var entrance = ToSpacial2D(boardData.Entrance);
             var exit = ToSpacial2D(boardData.Exit);

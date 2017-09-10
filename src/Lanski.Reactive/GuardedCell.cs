@@ -18,7 +18,8 @@ namespace Lanski.Reactive
             the_source = new Cell<T>(initial_value);
             the_last_held_value = initial_value;
             
-            the_cached_process_lambda = Processes_the_Guard_Release;
+            the_guard.s_Releases_Stream()
+                .Subscribe(Processes_the_Guard_Release);
         }
 
         public T s_Value
@@ -39,34 +40,7 @@ namespace Lanski.Reactive
         
         public Action Subscribe(Action<T> the_action)
         {
-            var the_new_subscription = the_source.Subscribe(the_action);
-            this.Registers_a_New_Subscription();
-
-            return () =>
-            {
-                the_new_subscription();
-                this.Removes_a_Subscription();
-            };
-        }
-
-        private void Removes_a_Subscription()
-        {
-            the_subscribers_count--;
-            if (the_subscribers_count == 0)
-            {
-                the_subscription();
-            }
-        }
-
-        private void Registers_a_New_Subscription()
-        {
-            the_subscribers_count++;
-            if (the_subscribers_count == 1)
-            {
-                the_subscription = 
-                    the_guard.s_Releases_Stream()
-                    .Subscribe(the_cached_process_lambda);
-            }
+            return the_source.Subscribe(the_action);
         }
 
         private void Processes_the_Guard_Release(TheVoid _)
@@ -76,10 +50,8 @@ namespace Lanski.Reactive
 
         private readonly Cell<T> the_source;
         private readonly SignalGuard the_guard;
-        private readonly Action<TheVoid> the_cached_process_lambda;
-        
+
         private T the_last_held_value;
-        private int the_subscribers_count;
         private Action the_subscription;
     }
 }

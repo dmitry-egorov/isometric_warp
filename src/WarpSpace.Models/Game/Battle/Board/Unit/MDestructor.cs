@@ -17,8 +17,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         {
             var the_loot = its_owner.s_Inventory_Content;
 
-            its_owner.s_Location.Becomes_Empty();
-
             if (its_owner.is_At_a_Tile(out var the_tile))
                 the_tile.Creates_a_Debris_with(the_loot);
 

@@ -24,10 +24,10 @@ namespace WarpSpace.Models.Game.Battle.Board
             var unit = new MUnit(desc.Type, desc.Faction, desc.Inventory_Content, initial_location, the_signal_guard);
 
             initial_location.s_Occupant_Becomes(unit);
-            
-            it_signals_the_creation(unit);
 
             it_creates_the_units_in_the_bay(desc, unit);
+
+            it_signals_the_creation(unit);
         }
 
         private void it_creates_the_units_in_the_bay(UnitDescription desc, MUnit unit)

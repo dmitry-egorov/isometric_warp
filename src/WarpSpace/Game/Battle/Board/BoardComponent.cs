@@ -67,13 +67,20 @@ namespace WarpSpace.Game.Battle.Board
             player.s_Selected_Unit_Movements_Stream
                 .Subscribe(moved =>
                 {
+                    Debug.Log("Updating movement");
+
                     Updates_Neighborhood_Of(moved.Source.as_a_Tile());
                     Updates_Neighborhood_Of(moved.Destination.as_a_Tile());
                 })
             ;
 
             player.s_Selected_Unit_Changes_Stream
-                .Subscribe(p => Handles_New_Selected_Unit(p.s_Previous.Select(u => u.s_Tile), p.s_Current.Select(u => u.s_Tile)))
+                .Subscribe(p =>
+                {
+                    Debug.Log("Updating selection change");
+                    Updates_Neighborhood_Of(p.s_Previous.Select(u => u.s_Tile));
+                    Updates_Neighborhood_Of(p.s_Current.Select(u => u.s_Tile));
+                })
             ;
 
             board.s_Turn_Ends_Stream
@@ -85,20 +92,16 @@ namespace WarpSpace.Game.Battle.Board
                 .Subscribe(Updates_Neighborhood_Of)
             ;
 
-            void Handles_New_Selected_Unit(Possible<MTile> previous, Possible<MTile> current)
-            {
-                Updates_Neighborhood_Of(previous);
-                Updates_Neighborhood_Of(current);
-            }
-
             void Updates_Neighborhood_Of(Possible<MTile> possible_tile)
             {
-                if (!possible_tile.has_a_Value(out var prev_tile))
+                if (!possible_tile.has_a_Value(out var the_tile))
                     return;
-
-                updates_the_highlight_of(prev_tile);
                 
-                foreach (var adjacent in prev_tile.s_Adjacent_Tiles.NotEmpty)
+                Debug.Log($"Updating neighbourhood of {the_tile.s_Position}");
+
+                updates_the_highlight_of(the_tile);
+                
+                foreach (var adjacent in the_tile.s_Adjacent_Tiles.NotEmpty)
                     updates_the_highlight_of(adjacent);
             }
             

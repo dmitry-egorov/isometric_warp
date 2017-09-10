@@ -18,13 +18,14 @@ namespace WarpSpace.Models.Game.Battle.Board.Weapon
             var the_weapon_type = the_owner.s_Type.s_Weapon_Type();
             
             var its_max_uses = the_weapon_type.s_Max_Uses();
-            its_uses_limiter = new MUsesLimiter(its_max_uses);
+            its_uses_limiter = new MUsesLimiter(its_max_uses, the_signal_guard);
             
             its_damage = the_weapon_type.s_Damage_Description();
             its_fires_stream = new GuardedStream<MUnit>(the_signal_guard);
         }
         
-        public bool can_Fire() => its_uses_limiter.has_Uses_Left();
+        public bool can_Fire() => its_uses_limiter.has_Uses_Left;
+        public ICell<bool> s_Can_Fire_Cell => its_uses_limiter.s_Has_Uses_Left_Cell;
         
         public bool can_Fire_At_a_Unit_At(MTile the_tile, out MUnit the_target_unit) => 
             the_tile.has_a_Unit(out the_target_unit) && 

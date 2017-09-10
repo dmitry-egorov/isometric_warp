@@ -12,6 +12,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         public MTile(Index2D position, TileDescription desc, UnitFactory unit_factory, SignalGuard the_signal_guard)
         {
             its_position = position;
+            this.the_signal_guard = the_signal_guard;
+
             its_landscape = new MLandscape(desc.Type);
             its_sites_cell = new GuardedCell<TileSite>(it_creates_its_site(desc.Initial_Site), the_signal_guard);
 
@@ -69,13 +71,12 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         private void its_structure_becomes(StructureDescription the_structure_desc)
         {
-            its_site.is_Empty.Otherwise_Throw("Site must be empty before it can contain a structure");
             its_site = it_create_a_structure_site(the_structure_desc);
         }
 
         private TileSite it_creates_an_empty_site() => it_creates_a_location();
         private TileSite it_create_a_structure_site(StructureDescription structure_description) => new MStructure(structure_description, this);
-        private MLocation it_creates_a_location() => new MLocation(this);
+        private MLocation it_creates_a_location() => new MLocation(this, the_signal_guard);
 
         private TileSite its_site
         {
@@ -86,5 +87,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         private readonly GuardedCell<TileSite> its_sites_cell;
         private readonly MLandscape its_landscape;
         private readonly Index2D its_position;
+        private readonly SignalGuard the_signal_guard;
     }
 }

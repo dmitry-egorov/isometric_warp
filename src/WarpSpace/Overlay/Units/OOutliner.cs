@@ -37,6 +37,7 @@ namespace WarpSpace.Overlay.Units
             it.is_initialized = true;
         }
 
+        //Note: every unit' outline wires to the player
         private Action wires_the_selected_unit() => 
             FindObjectOfType<BattleComponent>()
             .s_Players_Selected_Units_Cell

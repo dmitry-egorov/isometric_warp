@@ -1,12 +1,8 @@
-﻿using Lanski.Behaviours;
-using Lanski.Reactive;
-using Lanski.Structures;
-using Lanski.UnityExtensions;
+﻿using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Game.Battle;
 using WarpSpace.Game.Battle.Unit;
-using WarpSpace.Models.Game.Battle.Board.Unit;
-using WarpSpace.Settings;
+using WarpSpace.Models.Game.Battle.Player;
 using WarpSpace.UI.Common;
 
 namespace WarpSpace.UI.Gameplay.Bay
@@ -20,17 +16,17 @@ namespace WarpSpace.UI.Gameplay.Bay
             var unit_mesh = GetComponentInChildren<UnitMesh>();
             var the_battle_component = FindObjectOfType<BattleComponent>();
 
-            the_battle_component.s_Players_Selections_Cell.Subscribe(_ => updates_the_mesh());
+            the_battle_component.s_Players_Selections_Cell.Subscribe(updates_the_mesh);
             
-            void updates_the_mesh()
+            void updates_the_mesh(Possible<MPlayer.Selection> the_possible_selection)
             {
                 if
                 (
-                    the_battle_component.s_Players_Selections_Cell.has_a_Value(out var selection) &&
-                    selection.s_Unit.has_a_docked_unit_at(index, out var the_unit)
+                    the_possible_selection.has_a_Value(out var the_selection) &&
+                    the_selection.s_Unit.has_a_docked_unit_at(index, out var the_docked_unit)
                 )
                 {
-                    unit_mesh.Present(the_unit.s_Type, the_unit.s_Faction);
+                    unit_mesh.Present(the_docked_unit.s_Type, the_docked_unit.s_Faction);
                 }
                 else
                 {

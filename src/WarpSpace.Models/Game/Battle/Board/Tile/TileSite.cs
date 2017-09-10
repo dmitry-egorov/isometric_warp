@@ -25,9 +25,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         public Possible<MUnit> s_possible_Unit() => this.as_a_Location().SelectMany(the_location => the_location.s_Possible_Unit);
         public bool has_a_Unit() => this.is_a_Location(out var unit_slot) && unit_slot.has_a_Unit(); 
         public bool has_a_Unit(out MUnit unit) => 
-            semantic_resets(out unit) 
-            && this.is_a_Location(out var unit_slot) 
-            && unit_slot.has_a_Unit(out unit)
+            semantic_resets(out unit)
+            && this.is_a_Location(out var the_location)
+            && the_location.has_a_Unit(out unit)
         ;
 
         public bool @is(MLocation location) => this.is_a_Location(out var unit_slot) && unit_slot == location;
