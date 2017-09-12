@@ -14,12 +14,12 @@ namespace WarpSpace.Game.Battle.Board
 {
     public class WBoard : MonoBehaviour
     {
-        public TileComponent TilePrefab;
+        public WTile TilePrefab;
         public WUnit UnitPrefab;
         
         public IStream<Possible<MBattle>> s_New_Battles_Stream => its_new_Battle_stream;
         public IStream<WUnit> s_Created_Units_Stream => its_created_units_stream;
-        public TileComponent this[MTile the_tile] => its_tile.Get(the_tile.s_Position);
+        public WTile this[MTile the_tile] => its_tile.Get(the_tile.s_Position);
 
         void Awake()
         {
@@ -87,9 +87,9 @@ namespace WarpSpace.Game.Battle.Board
             its_tile = it_creates_the_tiles(the_board.s_Tiles, the_player);
         }
 
-        private TileComponent[,] it_creates_the_tiles(MTile[,] the_board_tiles, MPlayer the_player)
+        private WTile[,] it_creates_the_tiles(MTile[,] the_board_tiles, MPlayer the_player)
         {
-            return the_board_tiles.Map((tile, index) => TileComponent.Create(TilePrefab, its_transform, tile, the_board_tiles.s_Dimensions(), the_player));
+            return the_board_tiles.Map((tile, index) => WTile.Create(TilePrefab, its_transform, tile, the_board_tiles.s_Dimensions(), the_player));
         }
         
         private void it_creates_a_unit_from(MUnit the_model_unit)
@@ -104,17 +104,17 @@ namespace WarpSpace.Game.Battle.Board
             if (!possible_tile.has_a_Value(out var the_tile))
                 return;
                 
-            it_updates_the_highlight_of(the_tile);
+            //it_updates_the_highlight_of(the_tile);
                 
-            foreach (var adjacent in the_tile.s_Adjacent_Tiles.NotEmpty)
-                it_updates_the_highlight_of(adjacent);
+            //foreach (var adjacent in the_tile.s_Adjacent_Tiles.NotEmpty)
+                //it_updates_the_highlight_of(adjacent);
         }
         
-        private void it_updates_the_highlight_of(MTile tile) => this[tile].Highlight.Updates_the_Highlight();
+        //private void it_updates_the_highlight_of(MTile tile) => true;this[tile].s_Highlight.Updates_the_Highlight();
 
         private RepeatAllStream<WUnit> its_created_units_stream;
         private RepeatAllStream<Possible<MBattle>> its_new_Battle_stream;
-        private TileComponent[,] its_tile;
+        private WTile[,] its_tile;
         private WLimbo its_limbo;
         private Transform its_transform;
         private WGame its_world_battle;

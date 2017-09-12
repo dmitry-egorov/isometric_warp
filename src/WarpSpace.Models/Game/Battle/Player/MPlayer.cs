@@ -57,6 +57,7 @@ namespace WarpSpace.Models.Game.Battle.Player
         public IStream<Movement> s_Selected_Unit_Movements_Stream => its_selected_unit_movements_stream;
         public Possible<MUnit> s_Possible_Selected_Unit => its_possible_selected_unit;
 
+        public bool s_Selected_Unit_is_At(MTile the_tile) => it_has_a_unit_selected(out var the_selected_unit) && the_selected_unit.is_At(the_tile);
         public bool has_a_Unit_Selected(out MUnit the_selected_unit) => it_has_a_unit_selected(out the_selected_unit);
         public MUnit must_have_a_Unit_Selected() => it_must_have_a_unit_selected();
 

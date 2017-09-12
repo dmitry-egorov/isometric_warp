@@ -5,7 +5,6 @@ using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Game.Battle.Board;
 using WarpSpace.Models.Game.Battle.Board.Unit;
-using WarpSpace.Overlay.Units;
 using static WarpSpace.Models.Descriptions.Faction;
 
 namespace WarpSpace.Game.Battle.Unit
@@ -19,7 +18,7 @@ namespace WarpSpace.Game.Battle.Unit
         {
             var limbo = FindObjectOfType<WLimbo>().s_Transform;
             var board = FindObjectOfType<WBoard>();
-            var parent = unit.is_At_a_Tile(out var tile) ? board[tile].UnitSlot.Transform : limbo;
+            var parent = unit.is_At_a_Tile(out var tile) ? board[tile].s_UnitSlot.Transform : limbo;
 
             var obj = Instantiate(prefab, parent);
 

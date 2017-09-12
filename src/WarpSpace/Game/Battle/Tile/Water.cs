@@ -16,7 +16,7 @@ namespace WarpSpace.Game.Battle.Tile
         
         public void Start()
         {
-            var the_tile = GetComponentInParent<TileComponent>().s_Tile_Model;
+            var the_tile = GetComponentInParent<WTile>().s_Tile_Model;
             var the_position = the_tile.s_Position;
             var anyWaterAround = the_tile.s_Neighbors.Elements.Enumerate().Any(x => x.s_Landscape_Type == LandscapeType.Water);
 

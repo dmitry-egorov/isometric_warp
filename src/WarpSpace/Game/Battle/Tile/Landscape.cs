@@ -19,7 +19,7 @@ namespace WarpSpace.Game.Battle.Tile
         {
             its_mesh_filter = GetComponent<MeshFilter>();
 
-            var the_tile = GetComponentInParent<TileComponent>().s_Tile_Model;
+            var the_tile = GetComponentInParent<WTile>().s_Tile_Model;
             
             its_mesh_filter.sharedMesh = GenerateMesh(the_tile.s_Position, the_tile.s_Neighbors.Map(x => x.s_Landscape_Type));
         }

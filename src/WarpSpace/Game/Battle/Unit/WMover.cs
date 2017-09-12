@@ -67,7 +67,7 @@ namespace WarpSpace.Game.Battle.Unit
                 this.enqueues_a_limbo();
             }
 
-            Transform Transform_Of(MTile the_tile) => the_board[the_tile].UnitSlot.Transform;
+            Transform Transform_Of(MTile the_tile) => the_board[the_tile].s_UnitSlot.Transform;
         }
 
         private void enqueues_a_limbo() => its_queue.Enqueue(new TargetLocation(the_limbo, Vector3.zero, Quaternion.identity, true));

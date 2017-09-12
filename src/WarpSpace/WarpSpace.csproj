@@ -58,12 +58,11 @@
     <Compile Include="Game\Battle\BoardGenerators\BoardSettings.cs" />
     <Compile Include="Game\Battle\BoardGenerators\PredefinedBoard.cs" />
     <Compile Include="Game\Battle\BoardGenerators\RandomBoard.cs" />
-    <Compile Include="Game\Battle\Tile\HighlightType.cs" />
     <Compile Include="Game\Battle\Tile\Landscape.cs" />
-    <Compile Include="Game\Battle\Tile\PlayerActionSource.cs" />
+    <Compile Include="Game\Battle\Tile\WPlayerActionSource.cs" />
     <Compile Include="Game\Battle\Tile\StructureSlot.cs" />
-    <Compile Include="Game\Battle\Tile\TileComponent.cs" />
-    <Compile Include="Game\Battle\Tile\UnitSlot.cs" />
+    <Compile Include="Game\Battle\Tile\WTile.cs" />
+    <Compile Include="Game\Battle\Tile\WUnitSlot.cs" />
     <Compile Include="Game\Battle\Tile\Water.cs" />
     <Compile Include="Game\Battle\Tile\WHighlight.cs" />
     <Compile Include="Game\Battle\Unit\WOutliner.cs" />

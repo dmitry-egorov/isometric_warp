@@ -13,32 +13,34 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             its_owner = the_owner; 
             its_desc = the_desc;
 
-            its_avalability_cell = selects_the_availability_cell();
-            
-            ICell<bool> selects_the_availability_cell()
-            {
-                if (its_desc.is_a_Fire_Action())
-                    return its_owner.s_Weapon.s_Can_Fire_Cell;
-
-                if (its_desc.is_a_Deploy_Action(out var the_deploy))
-                    return its_owner.s_can_Deploy_Cell(the_deploy.s_bay_slot_index);
-
-                if (its_desc.is_a_Dock_Action())
-                    return its_owner.s_can_Move_Cell;
-
-                if (its_desc.is_a_Move_Action())
-                    return its_owner.s_can_Move_Cell;
-
-                if (its_desc.is_an_Interact_Action())
-                    return Cell.From(true);
-            
-                throw new InvalidOperationException("Unknow action type");
-            }
+            its_avalability_cell = it_selects_the_availability_cell();
         }
 
         public ICell<bool> s_Availability_Cell => its_avalability_cell;
+        public Possible<UnitCommand> s_possible_Command_at(MTile the_tile) => its_possible_command_at(the_tile);
+        public bool @is(DUnitAction the_desc) => the_desc.Equals(its_desc);
         
-        public Possible<UnitCommand> s_possible_Command_at(MTile the_tile)
+        private ICell<bool> it_selects_the_availability_cell()
+        {
+            if (its_desc.is_a_Fire_Action())
+                return its_owner.s_Weapon.s_Can_Fire_Cell;
+
+            if (its_desc.is_a_Deploy_Action(out var the_deploy))
+                return its_owner.s_can_Deploy_Cell(the_deploy.s_bay_slot_index);
+
+            if (its_desc.is_a_Dock_Action())
+                return its_owner.s_can_Move_Cell;
+
+            if (its_desc.is_a_Move_Action())
+                return its_owner.s_can_Move_Cell;
+
+            if (its_desc.is_an_Interact_Action())
+                return Cell.From(true);
+            
+            throw new InvalidOperationException("Unknow action type");
+        }
+
+        private Possible<UnitCommand> its_possible_command_at(MTile the_tile)
         {
             if (its_desc.is_a_Fire_Action())
             {
@@ -48,7 +50,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             }
             else if (its_desc.is_a_Deploy_Action(out var the_deploy))
             {
-                if (its_owner.can_Deploy(the_deploy.s_bay_slot_index, the_tile, out var the_docked_unit, out var the_target_location))
+                if (its_owner.can_Deploy(the_deploy.s_bay_slot_index, the_tile, out var the_docked_unit,
+                    out var the_target_location))
                     return UnitCommand.Create.Move(the_docked_unit, the_target_location);
             }
             else if (its_desc.is_a_Dock_Action())
@@ -66,11 +69,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
                 if (its_owner.can_Interact_With_a_Structure_At(the_tile, out var the_target_structure))
                     return UnitCommand.Create.Interact(its_owner, the_target_structure);
             }
-            
-            return  Possible.Empty<UnitCommand>();
+
+            return Possible.Empty<UnitCommand>();
         }
-        
-        public bool @is(DUnitAction the_desc) => the_desc.Equals(its_desc);
         
         private readonly MUnit its_owner;
         private readonly DUnitAction its_desc;

@@ -2,7 +2,7 @@
 
 namespace WarpSpace.Game.Battle.Tile
 {
-    public class UnitSlot: MonoBehaviour
+    public class WUnitSlot: MonoBehaviour
     {
         //Only used as a placeholder for now
         public Transform Transform { get; private set; }

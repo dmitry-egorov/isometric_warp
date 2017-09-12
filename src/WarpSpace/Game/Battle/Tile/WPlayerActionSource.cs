@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace WarpSpace.Game.Battle.Tile
 {
-    public class PlayerActionSource: MonoBehaviour
+    public class WPlayerActionSource: MonoBehaviour
     {
         private Stream<TheVoid> _actions;
         public IStream<TheVoid> Actions => _actions;

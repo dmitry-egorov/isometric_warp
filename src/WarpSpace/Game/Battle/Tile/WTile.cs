@@ -6,13 +6,13 @@ using WarpSpace.Models.Game.Battle.Player;
 
 namespace WarpSpace.Game.Battle.Tile
 {
-    public class TileComponent : MonoBehaviour
+    public class WTile : MonoBehaviour
     {
-        public UnitSlot UnitSlot { get; private set; }
-        public WHighlight Highlight { get; private set; }
+        public WUnitSlot s_UnitSlot => its_unit_slot;
+        public WHighlight s_Highlight => its_highlight;
         public MTile s_Tile_Model => its_tile_model;
 
-        public static TileComponent Create(TileComponent prefab, Transform parent, MTile tile, Dimensions2D dimensions, MPlayer player)
+        public static WTile Create(WTile prefab, Transform parent, MTile tile, Dimensions2D dimensions, MPlayer player)
         {
             var component = Instantiate(prefab, parent);
             component.Init(tile, dimensions, player);
@@ -28,10 +28,10 @@ namespace WarpSpace.Game.Battle.Tile
             name = $"Tile ({position.Column}, {position.Row})";
             
             var structureSlot = GetComponentInChildren<StructureSlot>();
-            var playerActionsDetector = GetComponentInChildren<PlayerActionSource>();
+            var playerActionsDetector = GetComponentInChildren<WPlayerActionSource>();
 
-            UnitSlot = GetComponentInChildren<UnitSlot>();
-            Highlight = GetComponentInChildren<WHighlight>();
+            its_unit_slot = GetComponentInChildren<WUnitSlot>();
+            its_highlight = GetComponentInChildren<WHighlight>();
 
             structureSlot.Init(tile);
 
@@ -48,5 +48,7 @@ namespace WarpSpace.Game.Battle.Tile
         private static Vector3 GetPosition(Index2D i, Dimensions2D dimensions) => new Vector3(i.Column - dimensions.Columns * 0.5f, 0, dimensions.Rows * 0.5f - i.Row);
         
         private MTile its_tile_model;
+        private WHighlight its_highlight;
+        private WUnitSlot its_unit_slot;
     }
 }
