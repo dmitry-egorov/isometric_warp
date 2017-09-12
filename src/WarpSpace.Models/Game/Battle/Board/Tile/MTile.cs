@@ -34,15 +34,15 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
             }
         }
         
-        public void Init(AdjacentRef<MTile> adjacent_tiles, FullNeighbourhood2D<MTile> the_neighbourhood)
+        public void Init(FullNeighbourhood2D<MTile> the_neighbourhood)
         {
-            s_Adjacent_Tiles = adjacent_tiles;
-            s_Neighbors = the_neighbourhood;
+            its_neighbors = the_neighbourhood;
         }
         
         public Index2D s_Position => its_position;
-        public FullNeighbourhood2D<MTile> s_Neighbors { get; private set; }
-        public AdjacentRef<MTile> s_Adjacent_Tiles { get; private set; }
+
+        public FullNeighbourhood2D<MTile> s_Neighbors => its_neighbors;
+
         public ICell<TileSite> s_Sites_Cell => its_sites_cell;
         public LandscapeType s_Landscape_Type => its_landscape.s_Type;
 
@@ -90,5 +90,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         private readonly MLandscape its_landscape;
         private readonly Index2D its_position;
         private readonly SignalGuard the_signal_guard;
+        private FullNeighbourhood2D<MTile> its_neighbors;
     }
 }

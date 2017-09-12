@@ -21,8 +21,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             its_regular_actions = new[] { its_move, its_interact };
         }
         
-        public IReadOnlyList<MUnitAction> s_Regular_Actions => its_regular_actions;
-
         public Possible<MUnitAction> s_possible_Action_For(DUnitAction the_action_desc)
         {
             if (the_action_desc.is_a_Fire_Action())
@@ -51,7 +49,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             return Possible.Empty<UnitCommand>();
         }
             
-        private IReadOnlyList<MUnitAction> it_creates_the_deploy_actions(MUnit the_owner) => 
+        private static IReadOnlyList<MUnitAction> it_creates_the_deploy_actions(MUnit the_owner) => 
             the_owner.s_Bay_Size
                 .counted()
                 .Select(the_bay_slot_index => new MUnitAction(the_owner, DUnitAction.Create.Deploy(the_bay_slot_index)))

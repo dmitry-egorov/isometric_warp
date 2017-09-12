@@ -20,18 +20,15 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             its_stream_of_dock_states = its_cell_of_locations.Select(x => x.is_a_Bay());
         }
 
-        public bool is_Docked => its_location.is_a_Bay();
         public bool can_Move => its_uses_Limiter.has_Uses_Left;
 
         public MUnitLocation s_Location => its_location;
-        public MTile s_Tile => its_location.s_Tile;
 
         public ICell<int> s_Moves_Left_Cell => its_uses_Limiter.s_Uses_Left_Cell;
         public ICell<bool> s_can_Move_Cell => its_uses_Limiter.s_Has_Uses_Left_Cell;
         public IStream<Movement> s_Movements_Stream => its_stream_of_movements;
         public IStream<bool> s_Dock_States_Stream => its_stream_of_dock_states;
 
-        public Possible<MTile> s_Location_As_a_Tile() => its_location.as_a_Tile();
         public bool is_At(MTile the_tile) => its_location.@is(the_tile);
         public bool is_Adjacent_To(MUnit the_unit) => its_location.is_Adjacent_To(the_unit.s_Location);
         public MTile must_be_At_a_Tile() => its_location.must_be_a_Tile();

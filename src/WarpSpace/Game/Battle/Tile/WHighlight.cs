@@ -17,7 +17,7 @@ namespace WarpSpace.Game.Battle.Tile
         public void Start() => it_inits();
         public void Update() => it_updates();
 
-        Possible<Material> its_highlight_material() =>
+        Possible<Material> its_current_material() =>
                   the_player.s_Selected_Unit_is_At(its_tile)              ? UnitHighlight
                 : !the_player.has_a_Command_At(its_tile, out var command) ? Possible.Empty<Material>()  
                 : command.is_a_Fire_Command()                             ? UseWeaponHighlight
@@ -36,6 +36,8 @@ namespace WarpSpace.Game.Battle.Tile
             its_renderer = GetComponent<MeshRenderer>();
             
             it_builds_the_mesh_if_neccessary();
+            it_is_up_to_date = false;
+            the_player.s_Performed_an_Action_Stream.Subscribe(x => it_is_up_to_date = false);
 
             it_is_initialized = true;
         }
@@ -52,15 +54,20 @@ namespace WarpSpace.Game.Battle.Tile
 
         private void it_updates()
         {
+            if (it_is_up_to_date)
+                return;
+            
             it_is_initialized.Must_Be_True_Otherwise_Throw("The WHighlight must be initialized before the first update");
             
             it_builds_the_mesh_if_neccessary();
             it_updates_the_material();
+
+            it_is_up_to_date = true;
         }
         
         private void it_updates_the_material()
         {
-            var the_possible_highlight_material = its_highlight_material();
+            var the_possible_highlight_material = its_current_material();
 
             if (!the_possible_highlight_material.has_a_Value(out var the_material))
             {
@@ -81,6 +88,7 @@ namespace WarpSpace.Game.Battle.Tile
         private MeshFilter its_mesh_filter;
         private MeshRenderer its_renderer;
 
+        private bool it_is_up_to_date;
         private Mesh its_parents_last_mesh;
     }
 }

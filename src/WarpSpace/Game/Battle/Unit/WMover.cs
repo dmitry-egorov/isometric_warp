@@ -75,7 +75,9 @@ namespace WarpSpace.Game.Battle.Unit
         
         private void it_updates()
         {
-            this.disables_rendering_in_limbo();
+            if (it_is_in_limbo)
+                return;
+            
             this.updates_the_target();
 
             if (this.doesnt_have_a_target(out var the_target))
@@ -93,15 +95,14 @@ namespace WarpSpace.Game.Battle.Unit
         
         private void it_destructs() => its_wiring();
 
-        private void disables_rendering_in_limbo()
+        private void disables_rendering_if_needed()
         {
-            var it_should_render = its_transform.parent != the_limbo;
             var iterator = the_renderers.s_new_iterator();
             while (iterator.has_a_Value(out var the_renderer))
             {
                 if (the_renderer != null)
                 {
-                    the_renderer.enabled = it_should_render;
+                    the_renderer.enabled = !it_is_in_limbo;
                 }
             }
         }
@@ -223,6 +224,10 @@ namespace WarpSpace.Game.Battle.Unit
             its_transform.parent = the_target.s_Parent;
             its_transform.localPosition = the_target.s_Position;
             its_transform.localRotation = the_target.s_Rotation;
+            it_is_in_limbo = the_target.s_Parent == the_limbo;
+            
+            this.disables_rendering_if_needed();
+
             this.resets_the_target();
         }
 
@@ -242,6 +247,7 @@ namespace WarpSpace.Game.Battle.Unit
         private Possible<TargetLocation> its_current_target;
         private float its_speed;
         private float its_angular_speed;
+        private bool it_is_in_limbo;
 
         private struct TargetLocation
         {

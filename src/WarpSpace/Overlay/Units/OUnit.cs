@@ -38,12 +38,6 @@ namespace WarpSpace.Overlay.Units
 
         public void LateUpdate()
         {
-            if (its_world_unit.s_Unit.is_Docked)
-            {
-                gameObject.Hides();
-                return;
-            }
-                
             var the_transform_position = its_world_unit.transform.position;
             var the_screen_position = the_camera.WorldToScreenPoint(the_transform_position).XY();
 

@@ -31,10 +31,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public Faction    s_Faction     => its_faction;
         public MWeapon    s_Weapon      => its_weapon;
         public MUnitLocation s_Location => its_mover.s_Location;
-        public MTile s_Tile => its_mover.s_Tile; 
         public Possible<DStuff> s_Inventory_Content => its_inventory.s_Stuff;
 
-        public bool is_Docked => its_mover.is_Docked;
         public bool is_Alive => its_health.is_Normal;
         public bool can_Move => its_mover.can_Move;
 
@@ -57,7 +55,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public Possible<MUnitAction> s_possible_Action_For(DUnitAction the_action_desc) => its_actions_container.s_possible_Action_For(the_action_desc);
         public Possible<UnitCommand> s_Regular_Command_At(MTile the_tile) => its_actions_container.s_Regular_Command_At(the_tile);
 
-        public Possible<MTile> s_Location_As_a_Tile() => its_mover.s_Location_As_a_Tile(); 
         public bool is_At(MTile the_tile) => its_mover.is_At(the_tile); 
         public bool is_At_a_Tile() => its_mover.is_At_a_Tile();
         public bool is_At_a_Tile(out MTile the_tile) => its_mover.is_At_a_Tile(out the_tile);
@@ -67,8 +64,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         public ICell<bool> s_can_Deploy_Cell(int the_bay_slot_index) => this.has_a_Bay(out var the_bay) ? the_bay.s_can_Deploy_Cell(the_bay_slot_index) : Cell.From(false);
 
-        public bool has_a_docked_unit_at(int the_bay_slot_index, out MUnit the_bay_unit) => this.s_possible_docked_unit_at(the_bay_slot_index).has_a_Value(out the_bay_unit);
-        public Possible<MUnit> s_possible_docked_unit_at(int the_bay_slot_index) => this.has_a_Bay(out var the_bay) ? the_bay.s_possible_unit_at(the_bay_slot_index) : Possible.Empty<MUnit>();
+        public bool has_a_docked_unit_at(int the_bay_slot_index, out MUnit the_bay_unit) => this.its_possible_docked_unit_at(the_bay_slot_index).has_a_Value(out the_bay_unit);
         public bool has_an_empty_bay_slot(out MUnitLocation the_bay_slot) => semantic_resets(out the_bay_slot) && this.has_a_Bay(out var the_bay) && the_bay.has_an_Empty_Slot(out the_bay_slot);
         public bool has_a_Bay(out MBay the_bay) => its_possible_bay.has_a_Value(out the_bay);
         public bool is_Within_the_Range_Of(MWeapon the_other_weapon) => its_mover.is_Adjacent_To(the_other_weapon.s_Owner);
@@ -88,13 +84,12 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         
         public bool can_Perform_Special_Actions() => this.has_a_Docker(); 
         public bool has_a_Docker() => its_possible_docker.has_a_Value();
-        public bool has_a_Docker(out MDocker the_docker) => its_possible_docker.has_a_Value(out the_docker);
 
         public bool can_Use_an_Exit() => its_type.can_Use_an_Exit();
         public bool can_Dock() => its_type.can_Dock();
         public bool can_Dock_At(MTile the_tile, out MUnitLocation the_dock_location) =>
             semantic_resets(out the_dock_location) &&
-            this.has_a_Docker(out var the_docker) && 
+            this.it_has_a_docker(out var the_docker) && 
             the_docker.can_Dock_At(the_tile, out the_dock_location)
         ;
 
@@ -109,6 +104,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             its_weapon.Finishes_the_Turn();
             its_mover.Finishes_the_Turn();
         }
+        
+        private bool it_has_a_docker(out MDocker the_docker) => its_possible_docker.has_a_Value(out the_docker);
+        private Possible<MUnit> its_possible_docked_unit_at(int the_bay_slot_index) => this.has_a_Bay(out var the_bay) ? the_bay.s_possible_unit_at(the_bay_slot_index) : Possible.Empty<MUnit>();
 
         private readonly UnitType its_type;
         private readonly Faction its_faction;

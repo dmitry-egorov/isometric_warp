@@ -12,21 +12,21 @@ namespace WarpSpace.Models.Game
         {
             its_board_description = the_board_description;
             its_signal_guard = new SignalGuard();
-            its_player = new MPlayer(its_signal_guard);
+            its_player = new MPlayer(this, its_signal_guard);
             its_battles_cell = GuardedCell.Empty<MBattle>(its_signal_guard);
         }
 
-        public Possible<MBattle> s_Battle => its_possible_battle;
         public ICell<Possible<MBattle>> s_Battles_Cell => its_battles_cell;
         public MPlayer s_Player => its_player;
 
         public void Starts_a_New_Battle() => it_restarts_the_battle();
+        public MBattle must_have_a_Battle() => its_possible_battle.must_have_a_Value();
 
         private void it_restarts_the_battle()
         {
             using (its_signal_guard.Holds_All_Events())
             {
-                this.s_Player.Resets_the_Selection();
+                its_player.Resets_the_Selection();
             
                 var the_battle = new MBattle(its_board_description, its_signal_guard, this);
                 its_possible_battle = the_battle;
@@ -45,5 +45,6 @@ namespace WarpSpace.Models.Game
         private readonly SignalGuard its_signal_guard;
         private readonly GuardedCell<Possible<MBattle>> its_battles_cell;
         private readonly MPlayer its_player;
+
     }
 }

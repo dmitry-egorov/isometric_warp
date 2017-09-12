@@ -18,9 +18,9 @@ namespace WarpSpace.UI.Gameplay.EndTurn
 
         private void Handle_Button_Press(TheVoid _)
         {
-            if (the_battle_component.has_a_Battle(out var the_battle))
+            if (the_battle_component.has_a_Player(out var the_player))
             {
-                the_battle.Ends_the_Turn();
+                the_player.Ends_the_Turn();
             }
         }
 

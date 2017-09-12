@@ -15,7 +15,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
                 .Select(the_bay_size => new MBay(the_bay_size, the_owner, the_signal_guard))
         ;
 
-        public MBay(int size, MUnit owner, SignalGuard the_signal_guard)
+        private MBay(int size, MUnit owner, SignalGuard the_signal_guard)
         {
             (size > 0).Otherwise_Throw("Bay size must be greater than 0");
             

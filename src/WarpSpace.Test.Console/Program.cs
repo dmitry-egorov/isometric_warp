@@ -53,7 +53,7 @@ namespace WarpSpace.Test.Console
 
         private static void Scenario(MGame the_game)
         {
-            var the_battle = the_game.s_Battle.must_have_a_Value();
+            var the_battle = the_game.must_have_a_Battle();
             var the_player = the_game.s_Player;
 
             var tiles = the_battle.s_Board.s_Tiles;
@@ -64,11 +64,6 @@ namespace WarpSpace.Test.Console
 
             var tank_tile = tiles[4, 2];
             the_player.Executes_a_Command_At(tank_tile);
-
-            the_player.s_Selected_Unit_Movements_Stream.Subscribe(_ => { Con.WriteLine("1"); });
-
-            the_player.s_Selected_Unit_Changes_Stream.Subscribe(_ => { Con.WriteLine("2"); });
-
 
             the_player.Executes_a_Command_At(tank_tile);
             the_player.Toggles_the_Selected_Action_With(DUnitAction.Create.Dock());

@@ -19,7 +19,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public ICell<bool> s_Availability_Cell => its_avalability_cell;
         public Possible<UnitCommand> s_possible_Command_at(MTile the_tile) => its_possible_command_at(the_tile);
         public bool @is(DUnitAction the_desc) => the_desc.Equals(its_desc);
-        
+        public bool is_Not_Available() => !s_Availability_Cell.s_Value; 
+
         private ICell<bool> it_selects_the_availability_cell()
         {
             if (its_desc.is_a_Fire_Action())
@@ -76,5 +77,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         private readonly MUnit its_owner;
         private readonly DUnitAction its_desc;
         private readonly ICell<bool> its_avalability_cell;
+
     }
 }

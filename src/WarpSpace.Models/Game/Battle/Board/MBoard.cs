@@ -34,7 +34,7 @@ namespace WarpSpace.Models.Game.Battle.Board
                 {
                     var adjacent = tiles.GetAdjacent(i);
                     var neighbours = tiles.GetFitNeighbours(i);
-                    tiles.Get(i).Init(adjacent, neighbours);
+                    tiles.Get(i).Init(neighbours);
                 }
                 return tiles;
 
@@ -59,16 +59,13 @@ namespace WarpSpace.Models.Game.Battle.Board
 
         public void Ends_the_Turn()
         {
-            using (the_signal_guard.Holds_All_Events())
+            var iterator = its_units_list.s_new_iterator();
+            while (iterator.has_a_Value(out var unit))
             {
-                var iterator = its_units_list.s_new_iterator();
-                while (iterator.has_a_Value(out var unit))
-                {
-                    unit.Finishes_the_Turn();
-                }
-                
-                signals_the_turns_end();
+                unit.Finishes_the_Turn();
             }
+
+            signals_the_turns_end();
         }
 
         internal void Adds_a_Unit(MUnit the_unit)

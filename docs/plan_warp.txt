@@ -1,4 +1,5 @@
 Plan
+- end turn speeds up movement greatly
 - longer weapon range
 - move several tiles at a time
 - enemy ai

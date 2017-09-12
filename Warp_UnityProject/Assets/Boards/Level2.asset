@@ -22,6 +22,6 @@ MonoBehaviour:
     Orientation: 3
   Exit:
     Position:
-      Row: 2
+      Row: 6
       Column: 6
-    Orientation: 0
+    Orientation: 3

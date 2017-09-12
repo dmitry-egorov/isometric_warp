@@ -1,5 +1,4 @@
 using System;
-using Lanski.Structures;
 
 namespace Lanski.Reactive
 {
@@ -26,10 +25,7 @@ namespace Lanski.Reactive
                 _selector = selector;
             }
 
-            public Action Subscribe(Action<TOut> action)
-            {
-                return _inCell.Subscribe(x => action(_selector(x)));
-            }
+            public Action Subscribe(Action<TOut> action) => _inCell.Subscribe(x => action(_selector(x)));
 
             public TOut s_Value => _selector(_inCell.s_Value);
         }

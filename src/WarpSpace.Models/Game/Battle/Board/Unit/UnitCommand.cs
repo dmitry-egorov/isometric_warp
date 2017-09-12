@@ -1,5 +1,4 @@
-﻿using Lanski.Reactive;
-using Lanski.Structures;
+﻿using Lanski.Structures;
 using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Weapon;
 
@@ -68,29 +67,24 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             return false;
         }
         
-        public void Executes_With(SignalGuard the_signal_guard)
+        public void Executes_With()
         {
-            using (the_signal_guard.Holds_All_Events())
+            if (this.is_a_Fire_Command(out var the_weapon, out var the_target_unit))
             {
-                if (this.is_a_Fire_Command(out var the_weapon, out var the_target_unit))
-                {
-                    the_weapon.Fires_At(the_target_unit);
-                }
-                else if (this.is_a_Move_Command(out var the_unit, out var the_destination))
-                {
-                    the_unit.Moves_To(the_destination);
-                }
-                else if (this.is_an_Interact_Command(out the_unit, out var the_target_structure))
-                {
-                    the_unit.Interacts_With(the_target_structure);
-                }
+                the_weapon.Fires_At(the_target_unit);
+            }
+            else if (this.is_a_Move_Command(out var the_unit, out var the_destination))
+            {
+                the_unit.Moves_To(the_destination);
+            }
+            else if (this.is_an_Interact_Command(out the_unit, out var the_target_structure))
+            {
+                the_unit.Interacts_With(the_target_structure);
             }
         }
-        
-        
+
         private Or<Fire, Move, Interact> its_variant;
 
-        
         public struct Fire
         {
             public readonly MWeapon Weapon;

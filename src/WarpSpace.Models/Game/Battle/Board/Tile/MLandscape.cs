@@ -1,5 +1,4 @@
 ﻿using WarpSpace.Models.Descriptions;
-using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Models.Game.Battle.Board.Tile
 {

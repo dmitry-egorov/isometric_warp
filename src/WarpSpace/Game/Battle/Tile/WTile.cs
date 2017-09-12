@@ -9,7 +9,6 @@ namespace WarpSpace.Game.Battle.Tile
     public class WTile : MonoBehaviour
     {
         public WUnitSlot s_UnitSlot => its_unit_slot;
-        public WHighlight s_Highlight => its_highlight;
         public MTile s_Tile_Model => its_tile_model;
 
         public static WTile Create(WTile prefab, Transform parent, MTile tile, Dimensions2D dimensions, MPlayer player)
@@ -31,7 +30,6 @@ namespace WarpSpace.Game.Battle.Tile
             var playerActionsDetector = GetComponentInChildren<WPlayerActionSource>();
 
             its_unit_slot = GetComponentInChildren<WUnitSlot>();
-            its_highlight = GetComponentInChildren<WHighlight>();
 
             structureSlot.Init(tile);
 
@@ -48,7 +46,6 @@ namespace WarpSpace.Game.Battle.Tile
         private static Vector3 GetPosition(Index2D i, Dimensions2D dimensions) => new Vector3(i.Column - dimensions.Columns * 0.5f, 0, dimensions.Rows * 0.5f - i.Row);
         
         private MTile its_tile_model;
-        private WHighlight its_highlight;
         private WUnitSlot its_unit_slot;
     }
 }

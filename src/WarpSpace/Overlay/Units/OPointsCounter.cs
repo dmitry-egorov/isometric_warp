@@ -133,7 +133,6 @@ namespace WarpSpace.Overlay.Units
             }
         }
 
-        
         private bool it_is_initialized;
         private MUnit its_unit;
         private ChangeStream<int, int> its_changes_stream;
