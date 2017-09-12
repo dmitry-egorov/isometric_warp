@@ -59,7 +59,7 @@ namespace Lanski.Reactive
 
         private Parameters? _last;
 
-        public void Update(T0 p0, T1 p1)
+        public void updates_with(T0 p0, T1 p1)
         {
             var p = new Parameters(p0, p1);
             

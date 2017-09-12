@@ -3,14 +3,14 @@ using Lanski.Structures;
 
 namespace WarpSpace.Models.Descriptions
 {
-    public struct UnitDescription
+    public struct DUnit
     {
         public readonly UnitType Type;
         public readonly Faction Faction;
-        public readonly Possible<Stuff> Inventory_Content;
-        public readonly Possible<IReadOnlyList<Possible<UnitDescription>>> Bay_Content;
+        public readonly Possible<DStuff> Inventory_Content;
+        public readonly Possible<IReadOnlyList<Possible<DUnit>>> Bay_Content;
 
-        public UnitDescription(UnitType type, Faction faction, Possible<Stuff> inventory_content, Possible<IReadOnlyList<Possible<UnitDescription>>> bay_content)
+        public DUnit(UnitType type, Faction faction, Possible<DStuff> inventory_content, Possible<IReadOnlyList<Possible<DUnit>>> bay_content)
         {
             Type = type;
             Inventory_Content = inventory_content;

@@ -37,6 +37,7 @@ Planet Types:
 
 
 Ideas
+- boost speed
 - traders
 - cities
 - destructable mountains - can produce volcano by chance

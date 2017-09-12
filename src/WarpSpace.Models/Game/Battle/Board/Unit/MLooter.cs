@@ -12,7 +12,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         internal void Loots(MStructure the_structure)
         {
             var the_debris = the_structure.must_be_a_Debris();
-            its_owner.Takes(the_debris.s_Loot());
+            its_owner.Takes(the_debris.s_Loot);
             the_structure.Destructs();
         }
 

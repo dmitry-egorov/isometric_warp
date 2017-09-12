@@ -5,8 +5,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public struct HealthState: IEquatable<HealthState>
     {
-        public static HealthState s_Initial_For(UnitType the_unit_type) => new HealthState(the_unit_type.s_Hit_Points());
-
         public HealthState(int the_total_hit_points): this(the_total_hit_points, the_total_hit_points) {}
         public HealthState(int the_total_hit_points, int the_current_hit_points)
         {
@@ -20,7 +18,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool is_Lethal => !is_Normal;
         public bool is_Normal => its_current_hit_points > 0;
         
-        public HealthState After_Applying(Damage damage) => new HealthState(its_total_hit_points, its_current_hit_points - damage.Amount);
+        public HealthState After_Applying(DDamage the_damage) => new HealthState(its_total_hit_points, its_current_hit_points - the_damage.Amount);
         public bool Equals(HealthState other) => its_current_hit_points == other.its_current_hit_points && its_total_hit_points == other.its_total_hit_points;
         
         private readonly int its_current_hit_points;

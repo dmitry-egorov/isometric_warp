@@ -3,34 +3,28 @@ using Lanski.Geometry;
 using Lanski.UnityExtensions;
 using UnityEngine;
 using WarpSpace.Game.Battle.Unit;
+using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Overlay.Units
 {
     [RequireComponent(typeof(RectTransform))]
-    public class OUnit : MonoBehaviour
+    public class OUnit : MonoBehaviour, IUnitReference
     {
-        private Camera _camera;
-        private RectTransform _rect_transform;
-        private WUnit _unit_component;
-
-        private Action _wirings;
-
+        public MUnit s_Unit => its_world_unit.s_Unit;
+        
         public void Init(WUnit the_world_unit)
         {
-            _camera = FindObjectOfType<Camera>();
-            _rect_transform = GetComponent<RectTransform>();
-            _unit_component = the_world_unit;
+            the_camera = FindObjectOfType<Camera>();
+            its_rect_transform = GetComponent<RectTransform>();
+            its_world_unit = the_world_unit;
 
             var the_unit = the_world_unit.s_Unit;
 
-            GetComponentInChildren<OHealth>().Inits_With(the_unit);
-            GetComponentInChildren<OOutliner>().Inits_With(the_world_unit);
-
-            _wirings = Wire_the_Docked_Events();
+            its_wirings = it_wires_the_docked_events();
             
             it_wires_the_destruction_signal();
 
-            Action Wire_the_Docked_Events() => 
+            Action it_wires_the_docked_events() => 
                 the_unit.s_Dock_States_Stream
                 .Subscribe(is_docked => gameObject.SetActive(!is_docked))
             ;
@@ -44,21 +38,27 @@ namespace WarpSpace.Overlay.Units
 
         public void LateUpdate()
         {
-            if (_unit_component.s_Unit.is_Docked)
+            if (its_world_unit.s_Unit.is_Docked)
             {
-                gameObject.Hide();
+                gameObject.Hides();
                 return;
             }
                 
-            var transformPosition = _unit_component.transform.position;
-            var screen_position = _camera.WorldToScreenPoint(transformPosition).XY();
+            var the_transform_position = its_world_unit.transform.position;
+            var the_screen_position = the_camera.WorldToScreenPoint(the_transform_position).XY();
 
-            _rect_transform.anchoredPosition = screen_position.Floor();
+            its_rect_transform.anchoredPosition = the_screen_position.Floor();
         }
 
         public void OnDestroy()
         {
-            _wirings();
+            its_wirings();
         }
+        
+        private Camera the_camera;
+        private RectTransform its_rect_transform;
+        private WUnit its_world_unit;
+
+        private Action its_wirings;
     }
 }

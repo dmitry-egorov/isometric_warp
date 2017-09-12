@@ -1,14 +1,12 @@
 ﻿namespace WarpSpace.Models.Descriptions
 {
-    public struct Damage
+    public struct DDamage
     {
         public readonly int Amount;
-        public readonly DamageType Type;
 
-        public Damage(int amount, DamageType type)
+        public DDamage(int amount)
         {
             Amount = amount;
-            Type = type;
         }
     }
 }

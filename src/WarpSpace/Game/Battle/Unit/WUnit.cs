@@ -1,26 +1,24 @@
 using System;
-using System.Collections.Generic;
 using Lanski.Reactive;
 using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Game.Battle.Board;
-using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Unit;
-using WarpSpace.Settings;
+using WarpSpace.Overlay.Units;
+using static WarpSpace.Models.Descriptions.Faction;
 
 namespace WarpSpace.Game.Battle.Unit
 {
     [RequireComponent(typeof(WMover))]
     public class WUnit : MonoBehaviour
     {
-        public MUnit s_Unit { get; private set; }
-        public Transform s_Transform { get; private set; }
+        public MUnit s_Unit => its_unit;
 
         public static WUnit Is_Created_From(WUnit prefab, MUnit unit)
         {
             var limbo = FindObjectOfType<WLimbo>().s_Transform;
-            var board = FindObjectOfType<BoardComponent>();
+            var board = FindObjectOfType<WBoard>();
             var parent = unit.is_At_a_Tile(out var tile) ? board[tile].UnitSlot.Transform : limbo;
 
             var obj = Instantiate(prefab, parent);
@@ -30,27 +28,68 @@ namespace WarpSpace.Game.Battle.Unit
             return obj;
         }
 
-        private void inits(MUnit unit)
+        public void OnDestroy()
         {
-            var unit_type = unit.s_Type;
-            
-            s_Unit = unit;
-            s_Transform = transform;
+            its_subscriptions?.Invoke();
+        }
 
-            var its_transform = transform;
-
-            GetComponentInChildren<UnitMesh>().Present(unit_type, unit.s_Faction);
+        private void inits(MUnit the_unit)
+        {
+            var unit_type = the_unit.s_Type;
             
+            its_unit = the_unit;
+            its_transform = transform;
             its_transform.localRotation = Direction2D.Left.To_Rotation();
-            Wire_the_Destruction();
+            
+            it_inits_the_mesh();
+            it_inits_the_outliner();
+            it_wires_the_destruction();
 
-            void Wire_the_Destruction()
+            void it_inits_the_mesh() => GetComponentInChildren<UnitMesh>().Present(unit_type, the_unit.s_Faction);
+
+            void it_inits_the_outliner()
             {
-                unit.s_Destruction_Signal
+                var outliner = GetComponentInChildren<OOutliner>();
+
+                if (the_unit.Belongs_To(the_Player_Faction))
+                {
+                    its_subscriptions = it_wires_the_selected_unit();
+                }
+                else
+                {
+                    Destroy(outliner.gameObject);
+                }
+            
+                //Note: every unit's outline wires to the player
+                Action it_wires_the_selected_unit() => 
+                    FindObjectOfType<BattleComponent>()
+                        .s_Players_Selected_Units_Cell
+                        .Subscribe(it_handles_the_selected_unit_change)
+                ;
+            
+                void it_handles_the_selected_unit_change(Possible<MUnit> possibly_selected_unit)
+                {
+                    if (possibly_selected_unit.has_a_Value(out var the_selected_unit) && the_selected_unit == its_unit)
+                    {
+                        outliner.Shows();
+                    }
+                    else
+                    {
+                        outliner.Hides();
+                    }
+                }
+            }
+
+            void it_wires_the_destruction()
+            {
+                the_unit.s_Destruction_Signal
                     .First()
                     .Subscribe(isAlive => Destroy(gameObject));
             }
         }
 
+        private MUnit its_unit;
+        private Transform its_transform;
+        private Action its_subscriptions;
     }
 }

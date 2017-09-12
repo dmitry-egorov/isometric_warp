@@ -10,89 +10,56 @@ using WarpSpace.Settings;
 
 namespace WarpSpace.Overlay.Units
 {
-    [RequireComponent(typeof(OutlineMeshBuilder))]
     [RequireComponent(typeof(RectTransform))]
     public class OOutliner : MonoBehaviour
     {
-        public void Inits_With(WUnit the_unit_component) => it.inits_with(the_unit_component);
-        public void OnDestroy() => it.destructs();
-        public void Update() => it.updates();
+        public float Offset;
 
-        private void inits_with(WUnit the_unit_component)
+        public void Start() => it_inits();
+        public void Update() => it_updates();
+
+        public void Shows() => gameObject.Shows();
+        public void Hides() => gameObject.Hides();
+
+        private void it_inits()
         {
-            var the_unit = the_unit_component.s_Unit;
-            if (!the_unit.s_Faction_is(Faction.Player))
-            {
-                Destroy(gameObject);
+            its_transform = GetComponent<RectTransform>();
+            its_parents_transform = transform.parent;
+            its_parents_mesh_filter = its_parents_transform.gameObject.GetComponent<MeshFilter>();
+            its_mesh_filter = GetComponent<MeshFilter>();
+            
+            it_builds_the_mesh();
+
+            it_is_initialized = true;
+        }
+
+        private void it_builds_the_mesh()
+        {
+            var the_mesh = its_parents_mesh_filter.sharedMesh;
+            if (the_mesh == its_parents_last_mesh)
                 return;
-            }
             
-            it.s_transform = GetComponent<RectTransform>();
-            it.s_component_transform = the_unit_component.s_Transform;
-            it.s_unit = the_unit;
+            its_mesh_filter.sharedMesh = OutlineMeshBuilder.Builds(the_mesh);
+            its_parents_last_mesh = the_mesh;
+        }
+
+        private void it_updates()
+        {
+            it_is_initialized.Must_Be_True_Otherwise_Throw("The OOutliner must be initialized before the first update");
             
-            it.builds_the_mesh(s_unit);
-            it.s_subscription = it.wires_the_selected_unit();
-
-            it.is_initialized = true;
+            it_builds_the_mesh();
+            
+            its_transform.rotation = its_parents_transform.rotation;
+            its_transform.position = its_parents_transform.position + Quaternion.Euler(-45, 0, 0) * Vector3.up * Offset;
         }
 
-        //Note: every unit' outline wires to the player
-        private Action wires_the_selected_unit() => 
-            FindObjectOfType<BattleComponent>()
-            .s_Players_Selected_Units_Cell
-            .Subscribe(handles_the_selected_unit_change)
-        ;
-
-        private void handles_the_selected_unit_change(Possible<MUnit> possibly_selected_unit)
-        {
-            if (possibly_selected_unit.has_a_Value(out var the_selected_unit) && the_selected_unit == it.s_unit)
-            {
-                it.activates();
-            }
-            else
-            {
-                it.deactivates();
-            }
-        }
-
-        private void deactivates()
-        {
-            gameObject.Hide();
-        }
-
-        private void activates()
-        {
-            gameObject.Show();
-        }
-
-        private void builds_the_mesh(MUnit the_unit)
-        {
-            var settings_holder = FindObjectOfType<UnitSettingsHolder>();
-            var mesh = settings_holder.For(the_unit.s_Type).Mesh;
-            var the_destination_mesh_filter = GetComponent<MeshFilter>();
-            OutlineMeshBuilder.Builds(mesh, the_destination_mesh_filter);
-        }
-
-        private void updates()
-        {
-            it.is_initialized.Must_Be_True_Otherwise_Throw("The OOutliner must be initialized before the first update");
-            it.s_transform.rotation = it.s_component_transform.rotation;
-        }
+        private bool it_is_initialized;
+        private Transform its_transform;
+        private Transform its_parents_transform;
+        private MeshFilter its_parents_mesh_filter;
+        private MeshFilter its_mesh_filter;
         
-        private void destructs()
-        {
-            if(!it.is_initialized)
-                return;
-            
-            it.s_subscription();
-        }
+        private Mesh its_parents_last_mesh;
 
-        private OOutliner it => this;
-        private bool is_initialized;
-        private Transform s_transform;
-        private Transform s_component_transform;
-        private Action s_subscription;
-        private MUnit s_unit;
     }
 }

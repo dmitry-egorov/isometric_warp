@@ -12,6 +12,7 @@ namespace Lanski.Reactive
     public class Stream<T> : IStream<T>, IConsumer<T>
     {
         private readonly List<Action<T>> _subscribers = new List<Action<T>>();
+        private readonly Queue<T> _signalQueue = new Queue<T>();
         private readonly Queue<Action<T>> _removeQueue = new Queue<Action<T>>();
         private readonly HashSet<Action<T>> _removeSet = new HashSet<Action<T>>();
         private readonly Queue<Action<T>> _subscribeQueue = new Queue<Action<T>>();
@@ -32,19 +33,24 @@ namespace Lanski.Reactive
 
         public void Next(T value)
         {
-            _isSignaling = true;
-            var iterator = _subscribers.SIterate();
-            while (iterator.has_a_Value(out var action))
+            if (!_isSignaling)
             {
-                if (_removeSet.Contains(action))
-                    continue;
+                _isSignaling = true;
+                var iterator = _subscribers.s_new_iterator();
+                while (iterator.has_a_Value(out var action))
+                {
+                    action(value);
+                }
+                _isSignaling = false;
 
-                action(value);
+                ProcessSignalQueue();
+                ProcessSubscribeQueue();
+                ProcessRemoveQueue();
             }
-            _isSignaling = false;
-
-            ProcessSubscribeQueue();
-            ProcessRemoveQueue();
+            else
+            {
+                _signalQueue.Enqueue(value);
+            }
         }
 
         private void ProcessSubscribeQueue()
@@ -66,6 +72,14 @@ namespace Lanski.Reactive
             ProcessRemoveQueue();
         }
 
+        private void ProcessSignalQueue()
+        {
+            while (_signalQueue.Count > 0)
+            {
+                var next_value = _signalQueue.Dequeue();
+                Next(next_value);
+            }
+        }
         private void ProcessRemoveQueue()
         {
             while (_removeQueue.Count > 0)

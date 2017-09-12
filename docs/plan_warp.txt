@@ -1,4 +1,6 @@
 Plan
+- use scriptable objects for predefined boards
+- select enemy to see its info
 - movement and weapon indicators
 - longer weapon range
 - move several tiles at a time
@@ -44,6 +46,8 @@ Plan
 
 
 done
++ only the player's units show moves and shots on overlay
++ fix the outline
 + gray-out unavalable special actions
 + end turn
   + weapons have uses

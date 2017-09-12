@@ -50,6 +50,7 @@
     <Compile Include="Common\Direction2DEx.cs" />
     <Compile Include="Common\Direction2DExtensions.cs" />
     <Compile Include="Common\Index2DData.cs" />
+    <Compile Include="Common\IUnitReference.cs" />
     <Compile Include="Common\MapParsing\MapParsingExtensions.cs" />
     <Compile Include="Common\MeshTransformation\MeshTransformer.cs" />
     <Compile Include="Common\Spacial2DData.cs" />
@@ -64,15 +65,15 @@
     <Compile Include="Game\Battle\Tile\UnitSlot.cs" />
     <Compile Include="Game\Battle\Tile\Water.cs" />
     <Compile Include="Game\Battle\Unit\WLimbo.cs" />
-    <Compile Include="Overlay\Units\OHealth.cs" />
     <Compile Include="Overlay\Units\OOutliner.cs" />
     <Compile Include="Overlay\Units\OPixelPerfectPanel.cs" />
+    <Compile Include="Overlay\Units\OPointsCounter.cs" />
     <Compile Include="Overlay\Units\OUnit.cs" />
     <Compile Include="Overlay\Units\OUnits.cs" />
     <Compile Include="Overlay\Units\OutlineMeshBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\UnityRandom.cs" />
-    <Compile Include="Game\Battle\Board\BoardComponent.cs" />
+    <Compile Include="Game\Battle\Board\WBoard.cs" />
     <Compile Include="Game\Battle\Board\TileCreationHelper.cs" />
     <Compile Include="Game\Battle\BattleComponent.cs" />
     <Compile Include="Game\Battle\SettingsConversionExtensions.cs" />

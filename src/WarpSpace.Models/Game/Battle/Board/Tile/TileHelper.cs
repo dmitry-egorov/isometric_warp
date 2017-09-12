@@ -1,6 +1,6 @@
 ﻿using Lanski.Structures;
 
-namespace WarpSpace.Models.Descriptions
+namespace WarpSpace.Models.Game.Battle.Board.Tile
 {
     public static class TileHelper
     {

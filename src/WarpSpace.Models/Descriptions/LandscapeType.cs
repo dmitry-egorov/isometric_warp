@@ -1,62 +1,17 @@
-﻿using System;
-
-namespace WarpSpace.Models.Descriptions
+﻿namespace WarpSpace.Models.Descriptions
 {
     public static class LandscapeTypeExtensions
     {
-        private static readonly string _chars = "MHLW";
-            
-        public static char ToChar(this LandscapeType type)
+        private const string Chars = "MHLW";
+
+        public static char s_Char(this LandscapeType type)
         {
-            return _chars[(int) type];
+            return Chars[(int) type];
         }
 
-        public static LandscapeType ToLandscapeType(this char c)
+        public static LandscapeType s_Landscape_Type(this char c)
         {
-            return (LandscapeType) _chars.IndexOf(c);
-        }
-
-        public static bool is_Passable_With(this LandscapeType landscape, ChassisType chassisType)
-        {
-            return landscape.GetPassability(chassisType) != Passability.None;
-        }
-        
-        public static Passability GetPassability(this LandscapeType type, ChassisType chassisType)
-        {
-            switch (chassisType)
-            {
-                case ChassisType.a_Hower_Pad:
-                    switch (type)
-                    {
-                        case LandscapeType.Mountain:
-                            return Passability.None;
-                        case LandscapeType.Hill:
-                            return Passability.None;
-                        case LandscapeType.Flatland:
-                            return Passability.Free;
-                        case LandscapeType.Water:
-                            return Passability.None;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                    }
-                case ChassisType.a_Track:
-                    switch (type)
-                    {
-                        case LandscapeType.Mountain:
-                            return Passability.None;
-                        case LandscapeType.Hill:
-                            return Passability.Penalty;
-                        case LandscapeType.Flatland:
-                            return Passability.Free;
-                        case LandscapeType.Water:
-                            return Passability.None;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                    }
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(chassisType), chassisType, null);
-            }
-            
+            return (LandscapeType) Chars.IndexOf(c);
         }
     }
 

@@ -3,18 +3,18 @@ using Lanski.Structures;
 
 namespace WarpSpace.Models.Descriptions
 {
-    public struct BoardDescription
+    public struct DBoard
     {
-        public readonly TileDescription[,] Tiles;
+        public readonly DTile[,] Tiles;
         public readonly Spacial2D EntranceSpacial;
 
-        public BoardDescription(TileDescription[,] tiles, Spacial2D entranceSpacial)
+        public DBoard(DTile[,] tiles, Spacial2D entranceSpacial)
         {
             Tiles = tiles;
             EntranceSpacial = entranceSpacial;
         }
 
-        public bool Equals(BoardDescription other)
+        public bool Equals(DBoard other)
         {
             return Equals(Tiles, other.Tiles) && EntranceSpacial.Equals(other.EntranceSpacial);
         }
@@ -22,7 +22,7 @@ namespace WarpSpace.Models.Descriptions
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is BoardDescription && Equals((BoardDescription) obj);
+            return obj is DBoard && Equals((DBoard) obj);
         }
 
         public override int GetHashCode()
@@ -38,7 +38,7 @@ namespace WarpSpace.Models.Descriptions
             var rows = Tiles
                 .EnumerateRows()
                 .Select(row => string.Join(" ", row
-                    .Select(t => t.Type.ToChar().ToString())
+                    .Select(t => t.Type.s_Char().ToString())
                     .ToArray()))
                 .ToArray();
             

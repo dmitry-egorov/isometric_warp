@@ -1,6 +1,7 @@
 ﻿using Lanski.Structures;
 using WarpSpace.Common;
 using WarpSpace.Game.Battle;
+using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game;
 
 using Con = System.Console;
@@ -36,13 +37,41 @@ namespace WarpSpace.Test.Console
             };
             
             var desc = board.ToDescription();
-            var game = new MGame(desc);
+            var the_game = new MGame(desc);
             
-            game.Starts();
+            the_game.Starts_a_New_Battle();
 
-            var ms = game.s_Battle.must_have_a_Value().s_Board.Units[2];
+            Scenario(the_game);
+
+            the_game.Starts_a_New_Battle();
             
-            game.s_Player.Executes_a_Command_At(game.s_Battle.must_have_a_Value().s_Board.Tiles.Get(new Index2D(3, 2)));
+            Scenario(the_game);
+            
+            Con.WriteLine("Finished");
+        }
+
+        private static void Scenario(MGame the_game)
+        {
+            var the_battle = the_game.s_Battle.must_have_a_Value();
+            var the_player = the_game.s_Player;
+
+            var tiles = the_battle.s_Board.s_Tiles;
+
+            var ms_tile = tiles[3, 2];
+            the_player.Executes_a_Command_At(ms_tile);
+            the_player.Toggles_the_Selected_Action_With(DUnitAction.Create.Deploy(0));
+
+            var tank_tile = tiles[4, 2];
+            the_player.Executes_a_Command_At(tank_tile);
+
+            the_player.s_Selected_Unit_Movements_Stream.Subscribe(_ => { Con.WriteLine("1"); });
+
+            the_player.s_Selected_Unit_Changes_Stream.Subscribe(_ => { Con.WriteLine("2"); });
+
+
+            the_player.Executes_a_Command_At(tank_tile);
+            the_player.Toggles_the_Selected_Action_With(DUnitAction.Create.Dock());
+            the_player.Executes_a_Command_At(ms_tile);
         }
     }
 }

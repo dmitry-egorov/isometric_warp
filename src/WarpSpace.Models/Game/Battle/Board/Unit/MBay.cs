@@ -11,7 +11,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
     public class MBay
     {
         public static Possible<MBay> From(MUnit the_owner, SignalGuard the_signal_guard) => 
-            the_owner.s_Type.s_bay_size().as_a_possible_positive()
+            the_owner.s_Bay_Size.as_a_possible_positive()
                 .Select(the_bay_size => new MBay(the_bay_size, the_owner, the_signal_guard))
         ;
 
@@ -21,38 +21,32 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             
             its_owner = owner;
             its_slots = it_creates_its_slots();
+            its_can_deploy_cells = it_creates_its_can_deploy_cells();
             
-            IReadOnlyList<MLocation> it_creates_its_slots() => Enumerable.Range(0, size).Select(x => new MLocation(this, the_signal_guard)).ToList();
+            IReadOnlyList<MUnitLocation> it_creates_its_slots() => Enumerable.Range(0, size).Select(x => new MUnitLocation(this, the_signal_guard)).ToList();
+            ICell<bool>[] it_creates_its_can_deploy_cells() => 
+                its_slots
+                    .Select(location => location.s_Possible_Units_Cell)
+                    .Select(x => x.SelectMany(pu => pu.Select(u => u.s_can_Move_Cell).Cell_Or_Single_Default()))
+                    .ToArray()
+            ;
         }
 
         public MUnit s_Owner => its_owner;
         public int Size => its_slots.Count;
-        public Possible<MLocation> this[int i] => i < Size ? its_slots[i] : Possible.Empty<MLocation>();
+        public Possible<MUnitLocation> this[int i] => i < Size ? its_slots[i] : Possible.Empty<MUnitLocation>();
 
-        public ICell<bool> s_has_a_docked_unit_at_cell(int the_bay_slot_index) =>
-            its_slots.has_a_Value_At(the_bay_slot_index, out var the_slot) 
-            ? the_slot.s_has_a_unit_cell 
-            : Cell.From(false);
+        public ICell<bool> s_can_Deploy_Cell(int the_bay_slot_index) => its_can_deploy_cells[the_bay_slot_index];
 
-        public void must_Contain(MUnit the_unit)
-        {
-            var iterator = its_slots.SIterate();
-            while (iterator.has_a_Value(out var the_slot))
-            {
-                if (the_slot.has_a_Unit(out var the_slot_unit) && the_slot_unit == the_unit)
-                    return;
-            }
-            
-            throw new InvalidOperationException("Doesn't contain the unit");
-        }
-
-        public bool has_an_Empty_Slot(out MLocation the_empty_slot) => its_slots.SFirst(slot => slot.is_Empty()).has_a_Value(out the_empty_slot);
+        public bool has_an_Empty_Slot(out MUnitLocation the_empty_slot) => its_slots.SFirst(slot => slot.is_Empty()).has_a_Value(out the_empty_slot);
 
         public Possible<MUnit> s_possible_unit_at(int the_bay_slot_index) => its_slots[the_bay_slot_index].s_Possible_Unit;
         
 
         private readonly MUnit its_owner;
-        private readonly IReadOnlyList<MLocation> its_slots;
+        private readonly IReadOnlyList<MUnitLocation> its_slots;
+        private readonly IReadOnlyList<ICell<bool>> its_can_deploy_cells;
+
 
     }
 }

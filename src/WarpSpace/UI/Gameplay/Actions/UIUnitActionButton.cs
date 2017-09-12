@@ -23,7 +23,7 @@ namespace WarpSpace.UI.Gameplay.Actions
             the_battle_component.s_Players_Selections_Cell
                 .SelectMany(ps => 
                     ps.SelectMany(the_selection => 
-                        the_selection.s_Unit.s_possible_action_for(the_action_desc)
+                        the_selection.s_Unit.s_possible_Action_For(the_action_desc)
                         .Select(the_action => the_action.s_Availability_Cell.Select(is_available => (is_available, the_selection.s_action_is(the_action_desc)))))
                     .Cell_Or_Single_Empty()
                 )
@@ -36,7 +36,7 @@ namespace WarpSpace.UI.Gameplay.Actions
                 if (!the_battle_component.has_a_Player(out var the_player))
                     return;
                 
-                the_player.toggles_the_selected_action_with(the_action_desc);
+                the_player.Toggles_the_Selected_Action_With(the_action_desc);
             }
             
             void it_updates_the_button(Possible<(bool s_action_is_available, bool s_action_is_selected)> the_possible_selection)
@@ -56,11 +56,11 @@ namespace WarpSpace.UI.Gameplay.Actions
                         the_button.Becomes_Normal();
                     }
 
-                    gameObject.Show();
+                    gameObject.Shows();
                 }
                 else
                 {
-                    gameObject.Hide();
+                    gameObject.Hides();
                 }
             }
         }

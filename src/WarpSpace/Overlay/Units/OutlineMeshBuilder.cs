@@ -6,9 +6,9 @@ namespace WarpSpace.Overlay.Units
 {
     public class OutlineMeshBuilder
     {
-        public static void Builds(Mesh source_mesh, MeshFilter the_destination) => builds(source_mesh, the_destination);
+        public static Mesh Builds(Mesh source_mesh) => builds(source_mesh);
         
-        private static void builds(Mesh source_mesh, MeshFilter the_destination)
+        private static Mesh builds(Mesh source_mesh)
         {
             var new_vertices = new List<VertexAccumulator>();
             var vertex_map = new Dictionary<Vector3, int>();
@@ -32,14 +32,12 @@ namespace WarpSpace.Overlay.Units
                 }                
             }
 
-            var newMesh = new Mesh
+            return new Mesh
             {
                 vertices = new_vertices.Select(x => x.Position).ToArray(),
                 normals = new_vertices.Select(x => x.Normal).Select(x => x.normalized).ToArray(),
                 triangles = source_mesh.triangles.Select(i => vertex_map[src_vertices[i]]).ToArray()
             };
-            
-            the_destination.sharedMesh = newMesh;
         }
         
         private class VertexAccumulator

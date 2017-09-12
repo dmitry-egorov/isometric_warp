@@ -8,7 +8,7 @@ namespace WarpSpace.Game.Battle
 {
     public static class SettingsConversionExtensions
     {
-        public static BoardDescription ToDescription(this BoardData boardData)
+        public static DBoard ToDescription(this BoardData boardData)
         {
             var entrance = ToSpacial2D(boardData.Entrance);
             var exit = ToSpacial2D(boardData.Exit);
@@ -27,29 +27,29 @@ namespace WarpSpace.Game.Battle
                     .Map(CreateTile)
                 ;
 
-            return new BoardDescription(tiles, entrance);
+            return new DBoard(tiles, entrance);
     
-            LandscapeType ParseLandscapeChar(char c) => c.ToLandscapeType();
+            LandscapeType ParseLandscapeChar(char c) => c.s_Landscape_Type();
 
-            Possible<UnitType> ParseUnitChar(char c) => c.ToUnitType();
+            Possible<UnitType> ParseUnitChar(char c) => c.s_Unit_Type();
                 
-            TileDescription CreateTile(LandscapeType t, Index2D i) => 
-                new TileDescription(t, SelectContent(i));
+            DTile CreateTile(LandscapeType t, Index2D i) => 
+                new DTile(t, SelectContent(i));
 
             //TODO: generate random loot from settings?
-            Possible<UnitDescription> CreateUnitDescritpion(Possible<UnitType> arg) => 
-                arg.Select(type => new UnitDescription(type, Faction.Natives, Stuff.Initial_For(type), Possible.Empty<IReadOnlyList<Possible<UnitDescription>>>()))
+            Possible<DUnit> CreateUnitDescritpion(Possible<UnitType> arg) => 
+                arg.Select(type => new DUnit(type, Faction.the_Natives, type.s_Initial_Staff(), Possible.Empty<IReadOnlyList<Possible<DUnit>>>()))
             ; 
             
-            TileSiteDescription SelectContent(Index2D i)
+            DTileSite SelectContent(Index2D i)
             {
                 if (i == entrance.Position)
-                    return StructureDescription.Create.Entrance(entrance.Orientation);
+                    return DStructure.Create.Entrance(entrance.Orientation);
                 if (i == exit.Position)
-                    return StructureDescription.Create.Exit(exit.Orientation);
+                    return DStructure.Create.Exit(exit.Orientation);
 
                 return units.Get(i).has_a_Value(out var unit) 
-                    ? (TileSiteDescription) unit 
+                    ? (DTileSite) unit 
                     : TheVoid.Instance;
             }
             

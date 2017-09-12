@@ -123,13 +123,12 @@ namespace Lanski.Reactive
 
             public Action Subscribe(Action<(T previous, T current)> action)
             {
-                var possible_prev = default(Possible<T>);
+                var possible_prev = Possible.Empty<T>();
                 return this.s_stream.Subscribe(v =>
                 {
                     if (possible_prev.has_a_Value(out var prev))
                     {
                         action((prev, v));
-                        
                     }
                     possible_prev = v;
                 });

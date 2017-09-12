@@ -9,14 +9,14 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         {
             its_owner = the_owner;
 
-            var the_initial_state = HealthState.s_Initial_For(the_owner.s_Type);
+            var the_initial_state = new HealthState(the_owner.s_Total_Hit_Points);
             its_states_cell = new GuardedCell<HealthState>(the_initial_state, the_signal_guard);
         }
 
         public ICell<HealthState> s_States_Cell => its_states_cell;
         public bool is_Normal => its_state.is_Normal;
 
-        public void Takes(Damage the_damage)
+        public void Takes(DDamage the_damage)
         {
             var the_new_state = its_state.After_Applying(the_damage);
             

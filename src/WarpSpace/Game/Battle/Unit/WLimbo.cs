@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Lanski.UnityExtensions;
+using UnityEngine;
 
 namespace WarpSpace.Game.Battle.Unit
 {
@@ -7,5 +8,10 @@ namespace WarpSpace.Game.Battle.Unit
         private Transform its_transform;
         
         public Transform s_Transform => its_transform ?? (its_transform = transform);
+
+        public void Destroys_All_Children()
+        {
+            gameObject.DestroyChildren();
+        }
     }
 }

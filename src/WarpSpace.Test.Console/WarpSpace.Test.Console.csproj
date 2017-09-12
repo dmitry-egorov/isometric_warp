@@ -48,6 +48,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Lanski.Reactive\Lanski.Reactive.csproj">
+      <Project>{227702c3-257d-432f-9ae9-7d49a34ebbdf}</Project>
+      <Name>Lanski.Reactive</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Lanski.Structures\Lanski.Structures.csproj">
       <Project>{ECA31E07-DC35-46FC-9C5B-F0F32F9152B1}</Project>
       <Name>Lanski.Structures</Name>

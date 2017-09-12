@@ -10,10 +10,10 @@ namespace WarpSpace.Game.Battle.Unit
     {
         public void Present(UnitType type, Faction faction)
         {
-            inits();
+            it_inits();
 
-            s_mesh_filter.sharedMesh = it.s_settings_holder.For(type).Mesh;
-            s_mesh_renderer.sharedMaterial = it.s_settings_holder.For(faction).Material;
+            its_mesh_filter.sharedMesh = its_settings_holder.For(type).Mesh;
+            its_mesh_renderer.sharedMaterial = its_settings_holder.For(faction).Material;
             
             Show();
         }
@@ -28,21 +28,20 @@ namespace WarpSpace.Game.Battle.Unit
             gameObject.SetActive(true);
         }
 
-        private void inits()
+        private void it_inits()
         {
-            if (it.s_initialized)
+            if (its_initialized)
                 return;
-            it.s_initialized = true;
+            its_initialized = true;
             
-            it.s_settings_holder = FindObjectOfType<UnitSettingsHolder>();
-            it.s_mesh_filter = GetComponent<MeshFilter>();
-            it.s_mesh_renderer = GetComponent<MeshRenderer>();
+            its_settings_holder = FindObjectOfType<UnitSettingsHolder>();
+            its_mesh_filter = GetComponent<MeshFilter>();
+            its_mesh_renderer = GetComponent<MeshRenderer>();
         }
 
-        private UnitMesh it => this;
-        private UnitSettingsHolder s_settings_holder;
-        private MeshFilter s_mesh_filter;
-        private MeshRenderer s_mesh_renderer;
-        private bool s_initialized;
+        private UnitSettingsHolder its_settings_holder;
+        private MeshFilter its_mesh_filter;
+        private MeshRenderer its_mesh_renderer;
+        private bool its_initialized;
     }
 }

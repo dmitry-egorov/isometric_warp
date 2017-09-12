@@ -8,30 +8,19 @@ namespace WarpSpace.Models.Game
 {
     public class MGame
     {
-        public MGame(BoardDescription the_board_description)
+        public MGame(DBoard the_board_description)
         {
             its_board_description = the_board_description;
             its_signal_guard = new SignalGuard();
             its_player = new MPlayer(its_signal_guard);
-            
-            its_battles_cell = it_create_its_battles_cell();
-
-            it_wires_the_stream_of_exits();
-            
-            GuardedCell<Possible<MBattle>> it_create_its_battles_cell() => GuardedCell.Empty<MBattle>(its_signal_guard);
-
-            void it_wires_the_stream_of_exits() => 
-                its_battles_cell
-                .SelectMany(b => b.Select(x => x.s_Stream_Of_Exits).Value_Or_Empty())
-                .Subscribe(_ => it_restarts_the_battle())
-            ;
+            its_battles_cell = GuardedCell.Empty<MBattle>(its_signal_guard);
         }
 
         public Possible<MBattle> s_Battle => its_possible_battle;
         public ICell<Possible<MBattle>> s_Battles_Cell => its_battles_cell;
         public MPlayer s_Player => its_player;
 
-        public void Starts() => it_restarts_the_battle();
+        public void Starts_a_New_Battle() => it_restarts_the_battle();
 
         private void it_restarts_the_battle()
         {
@@ -39,7 +28,7 @@ namespace WarpSpace.Models.Game
             {
                 this.s_Player.Resets_the_Selection();
             
-                var the_battle = new MBattle(its_board_description, its_signal_guard);
+                var the_battle = new MBattle(its_board_description, its_signal_guard, this);
                 its_possible_battle = the_battle;
             
                 the_battle.Starts();                
@@ -52,7 +41,7 @@ namespace WarpSpace.Models.Game
             set => its_battles_cell.s_Value = value;
         }
 
-        private readonly BoardDescription its_board_description;
+        private readonly DBoard its_board_description;
         private readonly SignalGuard its_signal_guard;
         private readonly GuardedCell<Possible<MBattle>> its_battles_cell;
         private readonly MPlayer its_player;

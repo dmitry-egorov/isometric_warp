@@ -1,6 +1,4 @@
-﻿using Lanski.Reactive;
-using Lanski.Structures;
-using WarpSpace.Models.Game.Battle.Board.Tile;
+﻿using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Player;
 using static WarpSpace.Game.Battle.Tile.HighlightType;
 
@@ -19,12 +17,12 @@ namespace WarpSpace.Game.Battle.Tile
 
         public void Updates_the_Highlight()
         {
-            var highlight_type = Get_the_Highlight_Type();
+            var the_highlight_type = its_highlight_type();
 
-            the_landscape.Set_the_Highlight_To(highlight_type);
+            the_landscape.s_Highlight_Becomes(the_highlight_type);
             
-            HighlightType Get_the_Highlight_Type() =>
-                  the_selected_unit_is_at_the_tile()                          ? Placeholder
+            HighlightType its_highlight_type() =>
+                  the_selected_unit_is_at_the_tile()                      ? Placeholder
                 : !the_player.has_a_Command_At(the_tile, out var command) ? None  
                 : command.is_a_Fire_Command()                             ? Attack
                 : command.is_a_Tile_Move_Command()                        ? Move 

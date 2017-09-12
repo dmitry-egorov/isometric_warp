@@ -1,11 +1,11 @@
 ﻿namespace WarpSpace.Models.Descriptions
 {
-    public struct TileDescription
+    public struct DTile
     {
         public readonly LandscapeType Type;
-        public readonly TileSiteDescription Initial_Site;
+        public readonly DTileSite Initial_Site;
 
-        public TileDescription(LandscapeType type, TileSiteDescription initial_site)
+        public DTile(LandscapeType type, DTileSite initial_site)
         {
             Type = type;
             Initial_Site = initial_site;

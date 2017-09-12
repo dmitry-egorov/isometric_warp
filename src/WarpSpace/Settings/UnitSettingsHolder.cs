@@ -26,9 +26,9 @@ namespace WarpSpace.Settings
         {
             switch (faction)
             {
-                case Faction.Player:
+                case Faction.the_Player_Faction:
                     return Factions.Player;
-                case Faction.Natives:
+                case Faction.the_Natives:
                     return Factions.Natives;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(faction), faction, null);

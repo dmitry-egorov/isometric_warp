@@ -1,28 +1,23 @@
 ﻿using System;
-using Lanski.Reactive;
 using Lanski.Structures;
 using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Tile;
-using static WarpSpace.Models.Descriptions.UnitType;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     internal class MInteractor
     {
-        public MInteractor(MUnit the_owner, SignalGuard the_signal_guard)
+        public MInteractor(MUnit the_owner, MGame the_game)
         {
             its_owner = the_owner;
-
-            its_exit_signal = new GuardedStream<TheVoid>(the_signal_guard);
+            this.the_game = the_game;
         }
-
-        public IStream<TheVoid> s_Exit_Signal => its_exit_signal;
 
         public bool can_Interact_With(MStructure the_structure) => 
             its_owner.is_Adjacent_To(the_structure) && 
             (
-                the_structure.is_an_Exit() && its_owner.@is(a_Mothership) || 
-                the_structure.is_a_Debris()
+                the_structure.is_an_Exit() && its_owner.can_Use_an_Exit() && its_owner.can_Move || 
+                the_structure.is_a_Debris() 
             )
         ;
         
@@ -37,7 +32,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
             if (the_structure.is_an_Exit())
             {
-                it_sends_the_exit_signal();
+                the_game.Starts_a_New_Battle();
             }
             else if (the_structure.is_a_Debris())
             {
@@ -49,9 +44,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             }
         }
 
-        private void it_sends_the_exit_signal() => its_exit_signal.Next();
-
         private readonly MUnit its_owner;
-        private readonly GuardedStream<TheVoid> its_exit_signal;
+        private readonly MGame the_game;
     }
 }

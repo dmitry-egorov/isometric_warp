@@ -5,6 +5,7 @@ using UnityEngine;
 using WarpSpace.Common.MeshTransformation;
 using WarpSpace.Game.Battle.Board;
 using WarpSpace.Models.Descriptions;
+using WarpSpace.Models.Game.Battle.Board.Tile;
 
 namespace WarpSpace.Game.Battle.Tile
 {
@@ -25,7 +26,7 @@ namespace WarpSpace.Game.Battle.Tile
             LandscapeMeshFilter.sharedMesh = GenerateMesh(position, neighbourhood);
         }
 
-        public void Set_the_Highlight_To(HighlightType type)
+        public void s_Highlight_Becomes(HighlightType type)
         {
             Renderer.sharedMaterial = SelectMaterial();
 

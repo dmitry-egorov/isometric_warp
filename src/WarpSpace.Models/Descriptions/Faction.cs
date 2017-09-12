@@ -2,8 +2,8 @@
 {
     public enum Faction
     {
-        Player,
-        Natives
+        the_Player_Faction,
+        the_Natives
     }
     
     public static class FactionExtensions

@@ -5,6 +5,7 @@ using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Game.Battle.Board;
 using WarpSpace.Models.Descriptions;
+using WarpSpace.Models.Game.Battle.Board.Tile;
 
 namespace WarpSpace.Game.Battle.Tile
 {

@@ -49,7 +49,7 @@ namespace Lanski.Structures
         /// </summary>
         public static T GetFit<T>(this T[,] array, Index2D index)
         {
-            return array.Get(index.FitTo(array.GetDimensions()));
+            return array.Get(index.FitTo(array.s_Dimensions()));
         }
 
         public static void Set<T>(this T[,] array, Index2D index, T value)
@@ -57,7 +57,7 @@ namespace Lanski.Structures
             array[index.Row, index.Column] = value;
         }
 
-        public static Dimensions2D GetDimensions<T>(this T[,] array)
+        public static Dimensions2D s_Dimensions<T>(this T[,] array)
         {
             return new Dimensions2D(array.GetRowsCount(), array.GetColumnsCount());
         }
@@ -74,12 +74,12 @@ namespace Lanski.Structures
 
         public static TResult[,] Map<T, TResult>(this T[,] array, Func<T, TResult> selector)
         {
-            return Array2D.Create(array.GetDimensions(), i => selector(array.Get(i)));
+            return Array2D.Create(array.s_Dimensions(), i => selector(array.Get(i)));
         }
         
         public static TResult[,] Map<T, TResult>(this T[,] array, Func<T, Index2D, TResult> selector)
         {
-            return Array2D.Create(array.GetDimensions(), i => selector(array.Get(i), i));
+            return Array2D.Create(array.s_Dimensions(), i => selector(array.Get(i), i));
         }
 
         public static IEnumerable<T> Enumerate<T>(this T[,] array)
@@ -94,7 +94,7 @@ namespace Lanski.Structures
         
         public static IEnumerable<Index2D> EnumerateIndex<T>(this T[,] array)
         {
-            var d = array.GetDimensions();
+            var d = array.s_Dimensions();
             
             for (var row = 0; row < d.Rows; row++)
             for (var column = 0; column < d.Columns; column++)
@@ -105,14 +105,14 @@ namespace Lanski.Structures
         
         public static IEnumerable<IEnumerable<T>> EnumerateRows<T>(this T[,] array)
         {
-            for (var row = 0; row < array.GetDimensions().Rows; row++)
+            for (var row = 0; row < array.s_Dimensions().Rows; row++)
             {
                 yield return EnumerateRow(row);
             }
 
             IEnumerable<T> EnumerateRow(int row)
             {
-                for (var column = 0; column < array.GetDimensions().Columns; column++)
+                for (var column = 0; column < array.s_Dimensions().Columns; column++)
                 {
                     yield return array[row, column];
                 }
@@ -343,7 +343,7 @@ namespace Lanski.Structures
 
         public bool Fits<T>(T[,] array)
         {
-            var d = array.GetDimensions();
+            var d = array.s_Dimensions();
             
             return Column >= 0 
                 && Column < d.Columns 

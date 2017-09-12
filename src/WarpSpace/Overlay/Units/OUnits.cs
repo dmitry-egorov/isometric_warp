@@ -16,21 +16,23 @@ namespace WarpSpace.Overlay.Units
         public void Start()
         {
             var battle = FindObjectOfType<BattleComponent>();
-            battle.s_Battles_Cell.SelectMany(SelectWorldUnitsStream).Subscribe(CreateUiUnitComponent);
+            battle.s_Battles_Cell.SelectMany(it_selects_the_unit_creation_stream).Subscribe(it_create_an_overlay_unit);
         }
 
-        private void CreateUiUnitComponent(WUnit unit_component)
+        private void it_create_an_overlay_unit(WUnit unit_component)
         {
-            var unit = Instantiate(UnitPrefab, transform).GetComponent<OUnit>();
-            unit.Init(unit_component);
+            Debug.Log("New Unit!");
+
+            Instantiate(UnitPrefab, transform).Init(unit_component);
         }
 
-        private IStream<WUnit> SelectWorldUnitsStream(Possible<MBattle> possible_battle)
+        private IStream<WUnit> it_selects_the_unit_creation_stream(Possible<MBattle> possible_battle)
         {
+            Debug.Log("New Battle!");
             gameObject.DestroyChildren();
             
             return possible_battle.has_a_Value() 
-                ? FindObjectOfType<BoardComponent>().s_Created_Units_Stream 
+                ? FindObjectOfType<WBoard>().s_Created_Units_Stream 
                 : Stream.Empty<WUnit>();
         }
     }

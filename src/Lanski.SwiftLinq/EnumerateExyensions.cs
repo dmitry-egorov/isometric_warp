@@ -4,7 +4,7 @@ namespace Lanski.SwiftLinq
 {
     public static class EnumerateExyensions
     {
-        public static SIterator<T> SIterate<T>(this IReadOnlyList<T> list) => new SIterator<T>(list);
+        public static SIterator<T> s_new_iterator<T>(this IReadOnlyList<T> list) => new SIterator<T>(list);
 
         public struct SIterator<T>
         {

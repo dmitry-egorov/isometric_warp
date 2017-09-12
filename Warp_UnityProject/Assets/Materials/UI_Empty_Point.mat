@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: UI_Empty_Health_Point
+  m_Name: UI_Empty_Point
   m_Shader: {fileID: 4800000, guid: 79f0bfdd6608c4cb2b394cc50455713b, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4

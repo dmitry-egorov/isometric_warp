@@ -32,7 +32,7 @@ namespace WarpSpace.Game.Battle.Tile
             }
         }
 
-        private GameObject GetPrefab(StructureDescription structure)
+        private GameObject GetPrefab(DStructure structure)
         {
             if (structure.is_an_Entrance())
                 return Settings.EntrancePrefab;

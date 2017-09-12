@@ -3,7 +3,6 @@ using Lanski.Reactive;
 using Lanski.Structures;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
-using WarpSpace.Models.Game.Battle.Player;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
@@ -14,25 +13,21 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             its_owner = the_owner; 
             its_desc = the_desc;
 
-            its_avalability_cell = select_the_availability_cell();
+            its_avalability_cell = selects_the_availability_cell();
             
-            ICell<bool> select_the_availability_cell()
+            ICell<bool> selects_the_availability_cell()
             {
                 if (its_desc.is_a_Fire_Action())
-                    return its_owner.s_Weapon.s_Can_Fire_Cell
-                        ;
+                    return its_owner.s_Weapon.s_Can_Fire_Cell;
 
-                if (its_desc.is_a_Deploy_Action(out var the_deploy_action))
-                    return its_owner.s_has_a_docked_unit_at_cell(the_deploy_action.s_bay_slot_index)
-                        ;
+                if (its_desc.is_a_Deploy_Action(out var the_deploy))
+                    return its_owner.s_can_Deploy_Cell(the_deploy.s_bay_slot_index);
 
                 if (its_desc.is_a_Dock_Action())
-                    return its_owner.s_can_Move_Cell
-                        ;
+                    return its_owner.s_can_Move_Cell;
 
                 if (its_desc.is_a_Move_Action())
-                    return its_owner.s_can_Move_Cell
-                        ;
+                    return its_owner.s_can_Move_Cell;
 
                 if (its_desc.is_an_Interact_Action())
                     return Cell.From(true);
@@ -43,9 +38,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         public ICell<bool> s_Availability_Cell => its_avalability_cell;
         
-        public bool is_available() => its_avalability_cell.s_Value;
-        
-
         public Possible<UnitCommand> s_possible_Command_at(MTile the_tile)
         {
             if (its_desc.is_a_Fire_Action())
@@ -54,13 +46,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
                 if (the_owners_weapon.can_Fire_At_a_Unit_At(the_tile, out var the_target_unit))
                     return UnitCommand.Create.Fire(the_owners_weapon, the_target_unit);
             }
-            else if (its_desc.is_a_Deploy_Action(out var the_deploy_action))
+            else if (its_desc.is_a_Deploy_Action(out var the_deploy))
             {
-                if 
-                (
-                    its_owner.has_a_docked_unit_at(the_deploy_action.s_bay_slot_index, out var the_docked_unit) && 
-                    the_docked_unit.can_Move_To(the_tile, out var the_target_location)
-                )
+                if (its_owner.can_Deploy(the_deploy.s_bay_slot_index, the_tile, out var the_docked_unit, out var the_target_location))
                     return UnitCommand.Create.Move(the_docked_unit, the_target_location);
             }
             else if (its_desc.is_a_Dock_Action())

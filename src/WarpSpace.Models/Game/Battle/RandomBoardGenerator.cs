@@ -17,19 +17,19 @@ namespace WarpSpace.Models.Game.Battle
             _random = random;
         }
 
-        public BoardDescription GenerateRandomMap()
+        public DBoard GenerateRandomMap()
         {
             var types = GenerateTiles();
             
             var entranceSpacial = Get_Structure_Spacial();
             var exitSpacial = Get_Structure_Spacial();
 
-            var entranceStructure = StructureDescription.Create.Entrance(entranceSpacial.Orientation);
-            var exitStructure = StructureDescription.Create.Exit(exitSpacial.Orientation);
+            var entranceStructure = DStructure.Create.Entrance(entranceSpacial.Orientation);
+            var exitStructure = DStructure.Create.Exit(exitSpacial.Orientation);
 
-            var tiles = types.Map((t, i) => new TileDescription(t, SelectContent(i)));
+            var tiles = types.Map((t, i) => new DTile(t, SelectContent(i)));
             
-            return new BoardDescription(tiles, entranceSpacial);
+            return new DBoard(tiles, entranceSpacial);
             
             LandscapeType[,] GenerateTiles() => 
                 Array2D.Create(new Dimensions2D(Rows, Columns), p => _random.Random_Landscape_Type());
@@ -47,7 +47,7 @@ namespace WarpSpace.Models.Game.Battle
                 .ToArray()
             ;
 
-            TileSiteDescription SelectContent(Index2D i)
+            DTileSite SelectContent(Index2D i)
             {
                 if (i == entranceSpacial.Position) 
                     return entranceStructure;
@@ -84,7 +84,7 @@ namespace WarpSpace.Models.Game.Battle
             
             bool IsPassable(LandscapeType? landscape)
             {
-                return landscape.Is(x => x.is_Passable_With(ChassisType.a_Hower_Pad));
+                return landscape.Is(x => ChassisType.a_Hower_Pad.can_Pass(x));
             }
         }
 

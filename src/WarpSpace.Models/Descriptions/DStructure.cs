@@ -3,18 +3,18 @@ using Lanski.Structures;
 
 namespace WarpSpace.Models.Descriptions
 {
-    public struct StructureDescription
+    public struct DStructure
     {
         public readonly Direction2D s_Orientation;//Debris might not need orientation
 
         public static class Create
         {
-            public static StructureDescription Entrance(Direction2D orientation) => new StructureDescription(orientation) { the_variant = new Entrance() };
-            public static StructureDescription Exit(Direction2D orientation) => new StructureDescription(orientation) { the_variant = new Exit() };
-            public static StructureDescription Debris(Direction2D orientation, Possible<Stuff> loot) => new StructureDescription(orientation) { the_variant = new Debris(loot) };            
+            public static DStructure Entrance(Direction2D orientation) => new DStructure(orientation) { the_variant = new Entrance() };
+            public static DStructure Exit(Direction2D orientation) => new DStructure(orientation) { the_variant = new Exit() };
+            public static DStructure Debris(Direction2D orientation, Possible<DStuff> loot) => new DStructure(orientation) { the_variant = new Debris(loot) };            
         }
         
-        private StructureDescription(Direction2D orientation): this() => s_Orientation = orientation;
+        private DStructure(Direction2D orientation): this() => s_Orientation = orientation;
 
         [Pure] public bool is_an_Entrance() => the_variant.is_a_T1();
         [Pure] public bool is_an_Exit() => the_variant.is_a_T2();
@@ -28,11 +28,11 @@ namespace WarpSpace.Models.Descriptions
 
         public struct Debris
         {
-            public Possible<Stuff> s_Loot() => the_loot;
+            public Possible<DStuff> s_Loot => the_loot;
 
-            public Debris(Possible<Stuff> possible_loot) => the_loot = possible_loot;
+            public Debris(Possible<DStuff> possible_loot) => the_loot = possible_loot;
 
-            private readonly Possible<Stuff> the_loot;
+            private readonly Possible<DStuff> the_loot;
         }
 
         private Or<Entrance, Exit, Debris> the_variant;

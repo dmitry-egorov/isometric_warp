@@ -37,7 +37,7 @@ namespace Lanski.Behaviours.Overlay
         {
             Init();
             
-            _changes.Update(ReferencePixelPerfectHeight, Screen.height);
+            _changes.updates_with(ReferencePixelPerfectHeight, Screen.height);
         }
 
         private void Init()
