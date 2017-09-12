@@ -80,10 +80,11 @@ Material:
     - _StripeWidth: 0.12
     - _TopRadialFade: 0
     - _UVSec: 0
+    - _Width: 0.1
     - _ZWrite: 1
     m_Colors:
     - _BottomAmbientColor: {r: 0.14705884, g: 0.02270762, b: 0.12268599, a: 0}
-    - _Color: {r: 0.853, g: 0.737417, b: 0.558715, a: 0}
+    - _Color: {r: 0.969, g: 0.9483302, b: 0.26259902, a: 0.68}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _LeftColor: {r: 0.672, g: 0.6056064, b: 0.50601596, a: 0}
     - _RightColor: {r: 0.23731354, g: 0.23513597, b: 0.352, a: 0}

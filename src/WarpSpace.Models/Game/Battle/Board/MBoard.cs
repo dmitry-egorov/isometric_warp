@@ -33,7 +33,8 @@ namespace WarpSpace.Models.Game.Battle.Board
                 foreach (var i in tiles.EnumerateIndex())
                 {
                     var adjacent = tiles.GetAdjacent(i);
-                    tiles.Get(i).Init(adjacent);
+                    var neighbours = tiles.GetFitNeighbours(i);
+                    tiles.Get(i).Init(adjacent, neighbours);
                 }
                 return tiles;
 

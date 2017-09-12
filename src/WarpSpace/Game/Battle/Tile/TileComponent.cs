@@ -1,5 +1,4 @@
-﻿using Lanski.Reactive;
-using Lanski.Structures;
+﻿using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
@@ -10,33 +9,30 @@ namespace WarpSpace.Game.Battle.Tile
     public class TileComponent : MonoBehaviour
     {
         public UnitSlot UnitSlot { get; private set; }
-        public HighlightElement Highlight { get; private set; }
-        
-        public static TileComponent Create(TileComponent prefab, Transform parent, MTile tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, MPlayer player)
+        public WHighlight Highlight { get; private set; }
+        public MTile s_Tile_Model => its_tile_model;
+
+        public static TileComponent Create(TileComponent prefab, Transform parent, MTile tile, Dimensions2D dimensions, MPlayer player)
         {
             var component = Instantiate(prefab, parent);
-            component.Init(tile, neighbourhood, dimensions, player);
+            component.Init(tile, dimensions, player);
             return component;
         }
 
-        private void Init(MTile tile, FullNeighbourhood2D<LandscapeType> neighbourhood, Dimensions2D dimensions, MPlayer player)
+        private void Init(MTile tile, Dimensions2D dimensions, MPlayer player)
         {
-            _tile = tile;
+            its_tile_model = tile;
             var position = tile.s_Position;
 
             transform.localPosition = GetPosition(position, dimensions);
             name = $"Tile ({position.Column}, {position.Row})";
             
-            var landscape = GetComponentInChildren<Landscape>();
-            var water = GetComponentInChildren<Water>();
             var structureSlot = GetComponentInChildren<StructureSlot>();
             var playerActionsDetector = GetComponentInChildren<PlayerActionSource>();
 
             UnitSlot = GetComponentInChildren<UnitSlot>();
-            Highlight = new HighlightElement(player, tile, landscape);
+            Highlight = GetComponentInChildren<WHighlight>();
 
-            landscape.Init(position, neighbourhood);
-            water.Init(position, neighbourhood);
             structureSlot.Init(tile);
 
             playerActionsDetector.Init();
@@ -51,6 +47,6 @@ namespace WarpSpace.Game.Battle.Tile
 
         private static Vector3 GetPosition(Index2D i, Dimensions2D dimensions) => new Vector3(i.Column - dimensions.Columns * 0.5f, 0, dimensions.Rows * 0.5f - i.Row);
         
-        private MTile _tile;//For debug
+        private MTile its_tile_model;
     }
 }

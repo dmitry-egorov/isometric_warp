@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using Lanski.Reactive;
+﻿using Lanski.Reactive;
 using Lanski.Structures;
 using Lanski.UnityExtensions;
 using UnityEngine;
 using WarpSpace.Game.Battle.Tile;
 using WarpSpace.Game.Battle.Unit;
 using WarpSpace.Models.Game.Battle;
+using WarpSpace.Models.Game.Battle.Board;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Player;
@@ -17,15 +17,17 @@ namespace WarpSpace.Game.Battle.Board
         public TileComponent TilePrefab;
         public WUnit UnitPrefab;
         
+        public IStream<Possible<MBattle>> s_New_Battles_Stream => its_new_Battle_stream;
         public IStream<WUnit> s_Created_Units_Stream => its_created_units_stream;
         public TileComponent this[MTile the_tile] => its_tile.Get(the_tile.s_Position);
 
         void Awake()
         {
-            its_created_units_stream = new Stream<WUnit>();
+            its_created_units_stream = new RepeatAllStream<WUnit>();
+            its_new_Battle_stream = new RepeatAllStream<Possible<MBattle>>();
             its_limbo = FindObjectOfType<WLimbo>();
             its_transform = transform;
-            its_world_battle = GetComponentInParent<BattleComponent>();
+            its_world_battle = GetComponentInParent<WGame>();
         }
 
         void Start()
@@ -73,6 +75,8 @@ namespace WarpSpace.Game.Battle.Board
         {
             gameObject.DestroyChildren();
             its_limbo.Destroys_All_Children();
+            
+            its_new_Battle_stream.Next(the_possible_battle);
 
             if (!the_possible_battle.has_a_Value(out var the_battle))
                 return;
@@ -81,25 +85,11 @@ namespace WarpSpace.Game.Battle.Board
 
             var the_player = its_world_battle.s_Player.must_have_a_Value();
             its_tile = it_creates_the_tiles(the_board.s_Tiles, the_player);
-
-            it_create_the_units_from(the_board.s_Units);
         }
 
         private TileComponent[,] it_creates_the_tiles(MTile[,] the_board_tiles, MPlayer the_player)
         {
-            return the_board_tiles.Map((tile, index) =>
-            {
-                var n = the_board_tiles.GetFitNeighbours(index).Map(t => t.s_Landscape_Type());
-                return TileComponent.Create(TilePrefab, its_transform, tile, n, the_board_tiles.s_Dimensions(), the_player);
-            });
-        }
-
-        private void it_create_the_units_from(IReadOnlyList<MUnit> the_units)
-        {
-            foreach (var the_unit in the_units)
-            {
-                it_creates_a_unit_from(the_unit);
-            }
+            return the_board_tiles.Map((tile, index) => TileComponent.Create(TilePrefab, its_transform, tile, the_board_tiles.s_Dimensions(), the_player));
         }
         
         private void it_creates_a_unit_from(MUnit the_model_unit)
@@ -122,10 +112,11 @@ namespace WarpSpace.Game.Battle.Board
         
         private void it_updates_the_highlight_of(MTile tile) => this[tile].Highlight.Updates_the_Highlight();
 
-        private Stream<WUnit> its_created_units_stream;
+        private RepeatAllStream<WUnit> its_created_units_stream;
+        private RepeatAllStream<Possible<MBattle>> its_new_Battle_stream;
         private TileComponent[,] its_tile;
         private WLimbo its_limbo;
         private Transform its_transform;
-        private BattleComponent its_world_battle;
+        private WGame its_world_battle;
     }
 }

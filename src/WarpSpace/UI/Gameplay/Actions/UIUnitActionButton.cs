@@ -2,6 +2,7 @@
 using Lanski.Structures;
 using Lanski.UnityExtensions;
 using UnityEngine;
+using WarpSpace.Game;
 using WarpSpace.Game.Battle;
 using WarpSpace.UI.Common;
 
@@ -17,7 +18,7 @@ namespace WarpSpace.UI.Gameplay.Actions
             var index = transform.GetSiblingIndex();
             var the_action_desc = Type.as_a_description(index);
         
-            var the_battle_component = FindObjectOfType<BattleComponent>();
+            var the_battle_component = FindObjectOfType<WGame>();
             var the_button = GetComponent<UIButton>();
 
             the_battle_component.s_Players_Selections_Cell

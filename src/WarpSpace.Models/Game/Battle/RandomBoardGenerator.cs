@@ -17,7 +17,7 @@ namespace WarpSpace.Models.Game.Battle
             _random = random;
         }
 
-        public DBoard GenerateRandomMap()
+        public DBoard Generates_a_Board()
         {
             var types = GenerateTiles();
             

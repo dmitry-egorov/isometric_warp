@@ -1,6 +1,7 @@
 ﻿using Lanski.Structures;
 using WarpSpace.Common;
 using WarpSpace.Game.Battle;
+using WarpSpace.Game.Battle.BoardGenerators;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game;
 
@@ -13,7 +14,7 @@ namespace WarpSpace.Test.Console
         public static void Main(string[] args)
         {
             Con.WriteLine("Start");
-            var board = new BoardData { 
+            var board = new PredefinedBoard { 
                 Units = 
                 "- - - - - - - -\n" +
                 "- - - - - - - -\n" +

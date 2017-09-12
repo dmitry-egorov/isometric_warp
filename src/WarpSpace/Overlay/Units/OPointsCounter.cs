@@ -46,6 +46,15 @@ namespace WarpSpace.Overlay.Units
             it_is_initialized = true;
         }
 
+        private void it_updates()
+        {
+            it_inits();
+
+            its_changes_stream?.updates_with(Total, Current);
+        }
+        
+        private void it_destructs() => its_subscription?.Invoke();
+
         private bool its_avalable_for_the_unit()
         {
             switch (Type)
@@ -99,14 +108,6 @@ namespace WarpSpace.Overlay.Units
             });
         }
 
-
-        private void it_updates()
-        {
-            it_inits();
-
-            its_changes_stream.updates_with(Total, Current);
-        }
-
         private void it_updates_its_children()
         {
             it_adds_missing_children();
@@ -132,7 +133,6 @@ namespace WarpSpace.Overlay.Units
             }
         }
 
-        private void it_destructs() => its_subscription?.Invoke();
         
         private bool it_is_initialized;
         private MUnit its_unit;

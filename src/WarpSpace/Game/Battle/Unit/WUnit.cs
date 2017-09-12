@@ -49,7 +49,7 @@ namespace WarpSpace.Game.Battle.Unit
 
             void it_inits_the_outliner()
             {
-                var outliner = GetComponentInChildren<OOutliner>();
+                var outliner = GetComponentInChildren<WOutliner>();
 
                 if (the_unit.Belongs_To(the_Player_Faction))
                 {
@@ -62,7 +62,7 @@ namespace WarpSpace.Game.Battle.Unit
             
                 //Note: every unit's outline wires to the player
                 Action it_wires_the_selected_unit() => 
-                    FindObjectOfType<BattleComponent>()
+                    FindObjectOfType<WGame>()
                         .s_Players_Selected_Units_Cell
                         .Subscribe(it_handles_the_selected_unit_change)
                 ;

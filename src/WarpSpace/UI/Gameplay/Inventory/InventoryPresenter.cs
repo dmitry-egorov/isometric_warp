@@ -3,6 +3,7 @@ using Lanski.Reactive;
 using Lanski.Structures;
 using UnityEngine;
 using UnityEngine.UI;
+using WarpSpace.Game;
 using WarpSpace.Game.Battle;
 
 namespace WarpSpace.UI.Gameplay.Inventory
@@ -14,7 +15,7 @@ namespace WarpSpace.UI.Gameplay.Inventory
         {
             var cache = FindObjectOfType<IntStringsCache>();
             var text = GetComponent<Text>();
-            FindObjectOfType<BattleComponent>()
+            FindObjectOfType<WGame>()
                 .s_Players_Selected_Units_Cell
                 .SelectMany(pu => pu.Select(u => u.s_Inventory_Contents_Cell).Cell_Or_Single_Default())
                 .Subscribe(possible_content =>

@@ -1,11 +1,11 @@
-- fix double the units
-- fix overlay creation
 - use scriptable objects instead of types
 - rework highlight subscriptions?
 - fix the outline
 - turn Selection into a class?
 
 done:
+- fix double the units
+- fix overlay creation
 - Highlights moves and fire at the same time -- selection changes before action is processed
 - button not toggling unless mouse exits
 - rename Unit to CUnit (as in component)

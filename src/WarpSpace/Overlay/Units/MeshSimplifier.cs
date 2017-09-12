@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace WarpSpace.Overlay.Units
 {
-    public class OutlineMeshBuilder
+    public class MeshSimplifier
     {
-        public static Mesh Builds(Mesh source_mesh) => builds(source_mesh);
+        public static Mesh Removes_Duplicate_Vertices_From(Mesh source_mesh) => it_removes_duplicate_vertices(source_mesh);
         
-        private static Mesh builds(Mesh source_mesh)
+        private static Mesh it_removes_duplicate_vertices(Mesh source_mesh)
         {
             var new_vertices = new List<VertexAccumulator>();
             var vertex_map = new Dictionary<Vector3, int>();

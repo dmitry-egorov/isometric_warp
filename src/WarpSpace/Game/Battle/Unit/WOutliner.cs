@@ -1,17 +1,13 @@
-﻿using System;
-using Lanski.Structures;
+﻿using Lanski.Structures;
 using Lanski.UnityExtensions;
 using UnityEngine;
-using WarpSpace.Game.Battle;
-using WarpSpace.Game.Battle.Unit;
-using WarpSpace.Models.Descriptions;
-using WarpSpace.Models.Game.Battle.Board.Unit;
-using WarpSpace.Settings;
+using WarpSpace.Overlay.Units;
 
-namespace WarpSpace.Overlay.Units
+namespace WarpSpace.Game.Battle.Unit
 {
-    [RequireComponent(typeof(RectTransform))]
-    public class OOutliner : MonoBehaviour
+    [RequireComponent(typeof(Transform))]
+    [RequireComponent(typeof(MeshFilter))]
+    public class WOutliner : MonoBehaviour
     {
         public float Offset;
 
@@ -23,7 +19,7 @@ namespace WarpSpace.Overlay.Units
 
         private void it_inits()
         {
-            its_transform = GetComponent<RectTransform>();
+            its_transform = GetComponent<Transform>();
             its_parents_transform = transform.parent;
             its_parents_mesh_filter = its_parents_transform.gameObject.GetComponent<MeshFilter>();
             its_mesh_filter = GetComponent<MeshFilter>();
@@ -39,7 +35,7 @@ namespace WarpSpace.Overlay.Units
             if (the_mesh == its_parents_last_mesh)
                 return;
             
-            its_mesh_filter.sharedMesh = OutlineMeshBuilder.Builds(the_mesh);
+            its_mesh_filter.sharedMesh = MeshSimplifier.Removes_Duplicate_Vertices_From(the_mesh);
             its_parents_last_mesh = the_mesh;
         }
 

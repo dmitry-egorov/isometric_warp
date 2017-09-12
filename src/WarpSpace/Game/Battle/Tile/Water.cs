@@ -14,9 +14,11 @@ namespace WarpSpace.Game.Battle.Tile
         public OwnSettings Settings;
         public MeshFilter MeshFilter;
         
-        public void Init(Index2D index, FullNeighbourhood2D<LandscapeType> neighbors)
+        public void Start()
         {
-            var anyWaterAround = neighbors.Elements.Enumerate().Any(x => x == LandscapeType.Water);
+            var the_tile = GetComponentInParent<TileComponent>().s_Tile_Model;
+            var the_position = the_tile.s_Position;
+            var anyWaterAround = the_tile.s_Neighbors.Elements.Enumerate().Any(x => x.s_Landscape_Type == LandscapeType.Water);
 
             if (anyWaterAround)
             {
@@ -27,9 +29,9 @@ namespace WarpSpace.Game.Battle.Tile
                 its_transform.localScale = GetScale();
             }
 
-            Mesh SelectMesh() => Settings.Meshes.SelectBy(index);
-            Vector3 GetScale() => TileCreationHelper.GetMirror(index) ? new Vector3(-1, 1, 1) : Vector3.one;
-            Quaternion GetRotation() => TileHelper.GetOrientation(index).To_Rotation();
+            Mesh SelectMesh() => Settings.Meshes.SelectBy(the_position);
+            Vector3 GetScale() => TileCreationHelper.GetMirror(the_position) ? new Vector3(-1, 1, 1) : Vector3.one;
+            Quaternion GetRotation() => TileHelper.GetOrientation(the_position).To_Rotation();
         }
         
         [Serializable]

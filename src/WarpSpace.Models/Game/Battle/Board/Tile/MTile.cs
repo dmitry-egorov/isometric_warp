@@ -34,14 +34,17 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
             }
         }
         
-        public void Init(AdjacentRef<MTile> adjacent_tiles)
+        public void Init(AdjacentRef<MTile> adjacent_tiles, FullNeighbourhood2D<MTile> the_neighbourhood)
         {
             s_Adjacent_Tiles = adjacent_tiles;
+            s_Neighbors = the_neighbourhood;
         }
         
         public Index2D s_Position => its_position;
+        public FullNeighbourhood2D<MTile> s_Neighbors { get; private set; }
         public AdjacentRef<MTile> s_Adjacent_Tiles { get; private set; }
         public ICell<TileSite> s_Sites_Cell => its_sites_cell;
+        public LandscapeType s_Landscape_Type => its_landscape.s_Type;
 
         public bool has_a_unit_with_an_empty_bay_slot(out MUnitLocation the_bay_slot) => 
             semantic_resets(out the_bay_slot) && 
@@ -55,7 +58,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         public bool is_Adjacent_To(MTile destination) => its_position.Is_Adjacent_To(destination.its_position);
         public Direction2D Direction_To(MTile destination) => its_position.Direction_To(destination.its_position);
         public bool has_a_Structure(out MStructure structure) => its_site.is_a_Structure(out structure);
-        public LandscapeType s_Landscape_Type() => its_landscape.s_Type;
 
         internal void Creates_a_Debris_with(Possible<DStuff> inventory_content)
         {

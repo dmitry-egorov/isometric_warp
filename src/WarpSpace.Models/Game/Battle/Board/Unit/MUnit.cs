@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Lanski.Reactive;
+﻿using Lanski.Reactive;
 using Lanski.Structures;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Structure;

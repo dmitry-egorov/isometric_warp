@@ -1,27 +1,36 @@
 ﻿using System.Collections.Generic;
 using Lanski.Structures;
+using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Common.MapParsing;
 using WarpSpace.Models.Descriptions;
 
-namespace WarpSpace.Game.Battle
+namespace WarpSpace.Game.Battle.BoardGenerators
 {
-    public static class SettingsConversionExtensions
+    [CreateAssetMenu(fileName = "Board", menuName = "Custom/Boards/Predefined", order = 1)]
+    public class PredefinedBoard : BoardSettings
     {
-        public static DBoard ToDescription(this BoardData boardData)
-        {
-            var entrance = ToSpacial2D(boardData.Entrance);
-            var exit = ToSpacial2D(boardData.Exit);
+        [TextArea(8,8)] public string Tiles;
+        [TextArea(8,8)] public string Units;
+        public Spacial2DData Entrance;
+        public Spacial2DData Exit;
 
-            var units = boardData
-                    .Units
+        public override DBoard s_Description => ToDescription();
+        
+        public DBoard ToDescription()
+        {
+            var entrance = ToSpacial2D(Entrance);
+            var exit = ToSpacial2D(Exit);
+
+            var units = 
+                    Units
                     .ToArray2D()
                     .Map(ParseUnitChar)
                     .Map(CreateUnitDescritpion)
                 ;
             
-            var tiles = boardData
-                    .Tiles
+            var tiles = 
+                    Tiles
                     .ToArray2D()
                     .Map(ParseLandscapeChar)
                     .Map(CreateTile)

@@ -1,5 +1,6 @@
 ﻿using Lanski.Structures;
 using UnityEngine;
+using WarpSpace.Game;
 using WarpSpace.Game.Battle;
 using WarpSpace.Game.Battle.Unit;
 using WarpSpace.Models.Game.Battle.Player;
@@ -14,7 +15,7 @@ namespace WarpSpace.UI.Gameplay.Bay
         {
             var index = transform.GetSiblingIndex();
             var unit_mesh = GetComponentInChildren<UnitMesh>();
-            var the_battle_component = FindObjectOfType<BattleComponent>();
+            var the_battle_component = FindObjectOfType<WGame>();
 
             the_battle_component.s_Players_Selections_Cell.Subscribe(updates_the_mesh);
             

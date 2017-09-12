@@ -1,7 +1,4 @@
 Plan
-- use scriptable objects for predefined boards
-- select enemy to see its info
-- movement and weapon indicators
 - longer weapon range
 - move several tiles at a time
 - enemy ai
@@ -10,6 +7,7 @@ Plan
 - weapon models
 - fire weapon animation
 
+- select enemy to see its info
 - highlight end turn when no more actions are available
 - hover over water
 - faction materials
@@ -46,6 +44,9 @@ Plan
 
 
 done
++ movement and weapon indicators
++ landscape highlight as a seprate game object
++ use scriptable objects for predefined boards
 + only the player's units show moves and shots on overlay
 + fix the outline
 + gray-out unavalable special actions

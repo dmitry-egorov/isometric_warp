@@ -1,6 +1,7 @@
 ﻿using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
+using WarpSpace.Game;
 using WarpSpace.Game.Battle;
 using WarpSpace.UI.Common;
 
@@ -11,7 +12,7 @@ namespace WarpSpace.UI.Gameplay.EndTurn
     {
         void Start()
         {
-            the_battle_component = FindObjectOfType<BattleComponent>();
+            the_battle_component = FindObjectOfType<WGame>();
             GetComponent<UIButton>().s_Presses_Stream.Subscribe(Handle_Button_Press);
         }
 
@@ -23,6 +24,6 @@ namespace WarpSpace.UI.Gameplay.EndTurn
             }
         }
 
-        private BattleComponent the_battle_component;
+        private WGame the_battle_component;
     }
 }

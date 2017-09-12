@@ -9,45 +9,19 @@ using WarpSpace.Models.Game.Battle.Board.Tile;
 
 namespace WarpSpace.Game.Battle.Tile
 {
-    public class Landscape: MonoBehaviour
+    [RequireComponent(typeof(MeshFilter))]
+    [RequireComponent(typeof(MeshRenderer))]
+    public class Landscape: MonoBehaviour//TODO: rename to WLandscape
     {
         public OwnSettings Settings;
         
-        public MeshFilter LandscapeMeshFilter;
-        public MeshRenderer Renderer;
-        public Material Normal;
-        public Material MoveHighlight;
-        public Material UnitHighlight;
-        public Material InteractionHighlight;
-        public Material UseWeaponHighlight;
-
-        public void Init(Index2D position, FullNeighbourhood2D<LandscapeType> neighbourhood)
+        public void Start()
         {
-            LandscapeMeshFilter.sharedMesh = GenerateMesh(position, neighbourhood);
-        }
+            its_mesh_filter = GetComponent<MeshFilter>();
 
-        public void s_Highlight_Becomes(HighlightType type)
-        {
-            Renderer.sharedMaterial = SelectMaterial();
-
-            Material SelectMaterial()
-            {
-                switch (type)
-                {
-                    case HighlightType.None:
-                        return Normal;
-                    case HighlightType.Move:
-                        return MoveHighlight;
-                    case HighlightType.Placeholder:
-                        return UnitHighlight;
-                    case HighlightType.Interact:
-                        return InteractionHighlight;
-                    case HighlightType.Attack:
-                        return UseWeaponHighlight;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                }
-            }
+            var the_tile = GetComponentInParent<TileComponent>().s_Tile_Model;
+            
+            its_mesh_filter.sharedMesh = GenerateMesh(the_tile.s_Position, the_tile.s_Neighbors.Map(x => x.s_Landscape_Type));
         }
 
         private Mesh GenerateMesh(Index2D index, FullNeighbourhood2D<LandscapeType> neighbourhood)
@@ -124,7 +98,7 @@ namespace WarpSpace.Game.Battle.Tile
             }
         }
 
-        
+        private MeshFilter its_mesh_filter;
 
         private struct TypeAndSettings
         {

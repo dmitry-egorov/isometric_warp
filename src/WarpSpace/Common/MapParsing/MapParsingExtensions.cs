@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Lanski.Structures;
 
 namespace WarpSpace.Common.MapParsing
@@ -7,7 +8,8 @@ namespace WarpSpace.Common.MapParsing
     {
         public static char[,] ToArray2D(this string data)
         {
-            return data.Split('\n')
+            return new String(data.Where(x => x != '\r').ToArray())
+                .Split('\n')
                 .Select(row => row.Split(' ')
                     .Select(s => s[0]))
                 .To2DArray();

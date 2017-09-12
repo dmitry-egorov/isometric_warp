@@ -1,5 +1,6 @@
 ﻿using Lanski.Structures;
 using UnityEngine;
+using WarpSpace.Game;
 using WarpSpace.Game.Battle;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 
@@ -9,7 +10,7 @@ namespace WarpSpace.UI.Gameplay
     {
         public void Start()
         {
-            var battle = FindObjectOfType<BattleComponent>();
+            var battle = FindObjectOfType<WGame>();
             
             Wire_Player_Selection();
             
