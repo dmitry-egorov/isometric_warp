@@ -29,7 +29,7 @@ namespace WarpSpace.Game.Battle.Tile
 
         private void it_inits()
         {
-            the_player = FindObjectOfType<WGame>().s_Player.must_have_a_Value();
+            the_player = FindObjectOfType<WGame>().s_Player;
             its_tile = GetComponentInParent<WTile>().s_Tile_Model;
             its_parents_mesh_filter = transform.parent.gameObject.GetComponent<MeshFilter>();
             its_mesh_filter = GetComponent<MeshFilter>();

@@ -1,19 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using Lanski.Structures;
 
 namespace Lanski.UnityExtensions
 {
     [Serializable]
     public abstract class Optional<T>
-        where T : struct
     {
         public bool Enabled;
         public T Value;
 
-        public T? Nullable => Enabled ? Value : default(T?);
+        public Possible<T> s_Possible => Enabled ? Value : Possible.Empty<T>();
 
         protected bool Equals(Optional<T> other)
         {
-            return Enabled == other.Enabled && Value.Equals(other.Value);
+            return Enabled == other.Enabled && EqualityComparer<T>.Default.Equals(Value, other.Value);
         }
 
         public override bool Equals(object obj)
@@ -28,7 +29,7 @@ namespace Lanski.UnityExtensions
         {
             unchecked
             {
-                return (Enabled.GetHashCode() * 397) ^ Value.GetHashCode();
+                return (Enabled.GetHashCode() * 397) ^ EqualityComparer<T>.Default.GetHashCode(Value);
             }
         }
     }

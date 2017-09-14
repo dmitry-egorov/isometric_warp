@@ -5,17 +5,18 @@ using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using static Lanski.Structures.Semantics;
-using static WarpSpace.Models.Descriptions.Faction;
+using static WarpSpace.Models.Game.MFaction;
 
 namespace WarpSpace.Models.Game.Battle.Player
 {
     public class MPlayer
     {
-        public MPlayer(MGame the_game, SignalGuard the_signal_guard)
+        public MPlayer(MGame the_game, MFaction the_its_faction, SignalGuard the_signal_guard)
         {
             this.the_game = the_game;
             this.the_signal_guard = the_signal_guard;
-            
+            its_faction = the_its_faction;
+
             its_selections_cell = new GuardedCell<Possible<Selection>>(Possible.Empty<Selection>(), the_signal_guard);
             its_performed_an_action_stream = new GuardedStream<TheVoid>(the_signal_guard);
             
@@ -29,7 +30,8 @@ namespace WarpSpace.Models.Game.Battle.Player
         public bool s_Selected_Unit_is_At(MTile the_tile) => it_has_a_unit_selected(out var the_selected_unit) && the_selected_unit.is_At(the_tile);
 
         public bool has_a_Command_At(MTile the_tile, out UnitCommand the_command) => it_has_a_command_at(the_tile, out the_command);
-
+        public bool Owns(MUnit the_unit) => it_owns(the_unit);
+        
 
         public void Resets_the_Selection() => its_selection_becomes_empty();
 
@@ -41,7 +43,7 @@ namespace WarpSpace.Models.Game.Battle.Player
                 {
                     the_command.Executes_With();
                 }
-                else if (it_can_select_a_unit_at(the_tile, out var the_target_unit))
+                else if (it_owns_a_unit_at(the_tile, out var the_target_unit))
                 {
                     its_selected_unit_becomes(the_target_unit);
                 }
@@ -104,8 +106,8 @@ namespace WarpSpace.Models.Game.Battle.Player
         private bool it_has_a_selection(out Selection the_selection) => its_possible_selection.has_a_Value(out the_selection);
         private bool it_has_a_unit_selected(out MUnit the_selected_unit) => its_possible_selected_unit.has_a_Value(out the_selected_unit);
 
-        private bool it_can_select_a_unit_at(MTile the_tile, out MUnit the_target_unit) => the_tile.has_a_Unit(out the_target_unit) && it_can_select(the_target_unit);
-        private bool it_can_select(MUnit the_unit) => the_unit.Belongs_To(the_Player_Faction);
+        private bool it_owns_a_unit_at(MTile the_tile, out MUnit the_target_unit) => the_tile.has_a_Unit(out the_target_unit) && it_owns(the_target_unit);
+        private bool it_owns(MUnit the_unit) => the_unit.Belongs_To(its_faction);
 
         private void its_selected_unit_becomes(MUnit unit) => its_selections_cell.s_Value = new Selection(unit, Possible.Empty<MUnitAction>());
         private void its_selected_action_becomes_empty() => its_selected_action_becomes(Possible.Empty<MUnitAction>());
@@ -124,6 +126,7 @@ namespace WarpSpace.Models.Game.Battle.Player
 
         private readonly ICell<Possible<MUnit>> its_selected_units_cell;
         private readonly GuardedStream<TheVoid> its_performed_an_action_stream;
+        private readonly MFaction its_faction;
 
         public struct Selection: IEquatable<Selection> //Maybe add a class, move some mutation methods there?
         {
@@ -161,5 +164,7 @@ namespace WarpSpace.Models.Game.Battle.Player
             private readonly MUnit its_unit;
             private readonly Possible<MUnitAction> its_possible_action;
         }
+
+        
     }
 }

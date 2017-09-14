@@ -3,6 +3,7 @@ using Lanski.Structures;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Tile;
+using static WarpSpace.Models.Descriptions.Passability;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
@@ -53,13 +54,19 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         {
             this.can_Move_To(the_destination).Otherwise_Throw("Can't move the unit to the destination");
 
-            the_destination.must_be_Empty();
-            
             var the_old_location = its_location;
             this.s_location_becomes(the_destination);
             the_old_location.Becomes_Empty();
             the_destination.s_Occupant_Becomes(its_owner);
-            its_uses_Limiter.Spends_a_Use();
+            
+            if (the_destination.s_Passability_With(its_chassis_type) == Free)
+            {
+                its_uses_Limiter.Spends_a_Use();
+            }
+            else
+            {
+                its_uses_Limiter.Spends_all_Uses();
+            }
         }
 
         internal void Finishes_the_Turn() => its_uses_Limiter.Restores_the_Uses();
@@ -69,7 +76,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         private MUnitLocation its_location => its_cell_of_locations.s_Value;
 
         private readonly MUnit its_owner;
-        private readonly ChassisType its_chassis_type;
+        private readonly MChassisType its_chassis_type;
         private readonly MUsesLimiter its_uses_Limiter;
         private readonly GuardedCell<MUnitLocation> its_cell_of_locations;
         private readonly IStream<Movement> its_stream_of_movements;

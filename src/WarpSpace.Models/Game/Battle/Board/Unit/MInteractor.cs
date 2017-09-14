@@ -39,7 +39,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         private bool it_can_interact_with(MStructure the_structure) => 
             its_owner.is_Adjacent_To(the_structure) && 
             (
-                the_structure.is_an_Exit() && its_owner.can_Use_an_Exit() && its_owner.can_Move || 
+                the_structure.is_an_Exit() && its_owner.can_Exit && its_owner.can_Move || 
                 the_structure.is_a_Debris() 
             )
         ;

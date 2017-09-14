@@ -26,16 +26,16 @@ namespace WarpSpace.Game.Battle.Board
             its_new_Battle_stream = new RepeatAllStream<Possible<MBattle>>();
             its_limbo = FindObjectOfType<WLimbo>();
             its_transform = transform;
-            its_world_battle = GetComponentInParent<WGame>();
+            its_game = GetComponentInParent<WGame>();
         }
 
         void Start()
         {
-            its_world_battle.s_Battles_Cell
+            its_game.s_Battles_Cell
                 .Subscribe(battle => it_handles_a_new_battle(battle))
             ;
             
-            its_world_battle.s_Battles_Cell
+            its_game.s_Battles_Cell
                 .SelectMany_Or_Empty(the_battle => the_battle.s_Board.s_Stream_Of_Unit_Creations)
                 .Subscribe(the_unit => it_creates_a_unit_from(the_unit))
             ;
@@ -53,7 +53,7 @@ namespace WarpSpace.Game.Battle.Board
 
             var the_board = the_battle.s_Board;
 
-            var the_player = its_world_battle.s_Player.must_have_a_Value();
+            var the_player = its_game.s_Player;
             its_tile = it_creates_the_tiles(the_board.s_Tiles, the_player);
         }
 
@@ -74,6 +74,6 @@ namespace WarpSpace.Game.Battle.Board
         private WTile[,] its_tile;
         private WLimbo its_limbo;
         private Transform its_transform;
-        private WGame its_world_battle;
+        private WGame its_game;
     }
 }

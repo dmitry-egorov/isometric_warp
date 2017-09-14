@@ -54,7 +54,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         public bool has_a_Location(out MUnitLocation unit) => its_site.is_a_Location(out unit);
         public bool has_a_Unit(out MUnit unit) => its_site.has_a_Unit(out unit);
-        public bool is_Passable_By(ChassisType chassis_type) => its_landscape.is_Passable_With(chassis_type);
+        public Passability s_Passability_With(MChassisType the_chassis_type) => its_landscape.s_Passability_With(the_chassis_type);
+        public bool is_Passable_By(MChassisType chassis_type) => its_landscape.is_Passable_With(chassis_type);
         public bool is_Adjacent_To(MTile destination) => its_position.Is_Adjacent_To(destination.its_position);
         public Direction2D Direction_To(MTile destination) => its_position.Direction_To(destination.its_position);
         public bool has_a_Structure(out MStructure structure) => its_site.is_a_Structure(out structure);
@@ -91,5 +92,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         private readonly Index2D its_position;
         private readonly SignalGuard the_signal_guard;
         private FullNeighbourhood2D<MTile> its_neighbors;
+
     }
 }

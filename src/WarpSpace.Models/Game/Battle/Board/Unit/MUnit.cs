@@ -10,15 +10,15 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public class MUnit
     {
-        internal MUnit(UnitType the_type, Faction the_faction, Possible<DStuff> possible_stuff, MUnitLocation the_initial_location, MGame the_game, SignalGuard the_signal_guard)
+        internal MUnit(DUnit the_desc, MUnitLocation the_initial_location, MGame the_game, SignalGuard the_signal_guard)
         {
-            its_type = the_type;
-            its_faction = the_faction;
+            its_type = the_desc.s_Type;
+            its_faction = the_desc.s_Faction;
 
             its_mover             = new MMover(this, the_initial_location, the_signal_guard);
             its_weapon            = new MWeapon(this, the_signal_guard);
             its_health            = new MHealth(this, the_signal_guard);
-            its_inventory         = new MInventory(possible_stuff, the_signal_guard);
+            its_inventory         = new MInventory(the_desc.s_Inventory_Content, the_signal_guard);
             its_looter            = new MLooter(this);
             its_interactor        = new MInteractor(this, the_game);
             its_destructor        = new MDestructor(this, the_signal_guard);
@@ -27,20 +27,23 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             its_actions_container = new MActionsContainer(this);
         }
 
-        public UnitType   s_Type        => its_type;
-        public Faction    s_Faction     => its_faction;
+        public MUnitType  s_Type        => its_type;
+        public MFaction   s_Faction     => its_faction;
         public MWeapon    s_Weapon      => its_weapon;
+        public bool       can_Exit      => its_type.can_Exit;
+        public bool       can_Dock      => its_type.can_Dock;
         public MUnitLocation s_Location => its_mover.s_Location;
         public Possible<DStuff> s_Inventory_Content => its_inventory.s_Stuff;
 
         public bool is_Alive => its_health.is_Normal;
         public bool can_Move => its_mover.can_Move;
 
-        public WeaponType s_Weapon_Type => its_type.s_Weapon_Type();
-        public int s_Total_Moves => its_type.s_Total_Moves();
-        public int s_Total_Hit_Points => its_type.s_Total_Hit_Points();
-        public int s_Bay_Size => its_type.s_Bay_Size();
-        public ChassisType s_Chassis_Type => its_type.s_Chassis_Type();
+        public WeaponType s_Weapon_Type => its_type.s_Weapon_Type;
+        public int s_Total_Moves => its_type.s_Total_Moves;
+        public int s_Total_Hit_Points => its_type.s_Total_Hit_Points;
+        public int s_Bay_Size => its_type.s_Bay_Size;
+        public MChassisType s_Chassis_Type => its_type.s_Chassis_Type;
+        public Possible<DStuff> s_Loot => its_type.s_Loot; 
 
         public ICell<HealthState> s_Health_States_Cell => its_health.s_States_Cell;
         public ICell<bool> s_can_Move_Cell => its_mover.s_can_Move_Cell;
@@ -68,8 +71,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool has_an_empty_bay_slot(out MUnitLocation the_bay_slot) => semantic_resets(out the_bay_slot) && this.has_a_Bay(out var the_bay) && the_bay.has_an_Empty_Slot(out the_bay_slot);
         public bool has_a_Bay(out MBay the_bay) => its_possible_bay.has_a_Value(out the_bay);
         public bool is_Within_the_Range_Of(MWeapon the_other_weapon) => its_mover.is_Adjacent_To(the_other_weapon.s_Owner);
-        public bool is_Hostile_Towards(MUnit the_other_unit) => its_faction.Is_Hostile_Towards(the_other_unit.its_faction);
-        public bool Belongs_To(Faction the_requested_faction) => its_faction == the_requested_faction;
+        public bool is_Hostile_Towards(MUnit the_other_unit) => the_other_unit.s_Faction.Is_Hostile_Towards(its_faction);
+        public bool Belongs_To(MFaction the_requested_faction) => its_faction == the_requested_faction;
 
         public bool can_Move_To(MUnitLocation the_destination) => its_mover.can_Move_To(the_destination);
         public bool can_Move_To(MTile the_tile, out MUnitLocation the_tiles_location) => its_mover.can_Move_To(the_tile, out the_tiles_location);
@@ -85,8 +88,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool can_Perform_Special_Actions() => this.has_a_Docker(); 
         public bool has_a_Docker() => its_possible_docker.has_a_Value();
 
-        public bool can_Use_an_Exit() => its_type.can_Use_an_Exit();
-        public bool can_Dock() => its_type.can_Dock();
+        
         public bool can_Dock_At(MTile the_tile, out MUnitLocation the_dock_location) =>
             semantic_resets(out the_dock_location) &&
             this.it_has_a_docker(out var the_docker) && 
@@ -108,8 +110,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         private bool it_has_a_docker(out MDocker the_docker) => its_possible_docker.has_a_Value(out the_docker);
         private Possible<MUnit> its_possible_docked_unit_at(int the_bay_slot_index) => this.has_a_Bay(out var the_bay) ? the_bay.s_possible_unit_at(the_bay_slot_index) : Possible.Empty<MUnit>();
 
-        private readonly UnitType its_type;
-        private readonly Faction its_faction;
+        private readonly MUnitType its_type;
+        private readonly MFaction its_faction;
         private readonly MWeapon its_weapon;
         private readonly MMover its_mover;
         private readonly Possible<MDocker> its_possible_docker;

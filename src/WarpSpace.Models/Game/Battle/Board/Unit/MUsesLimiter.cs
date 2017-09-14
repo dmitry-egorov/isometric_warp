@@ -17,6 +17,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool has_Uses_Left => its_has_uses_left_cell.s_Value;
 
         public void Spends_a_Use() => its_uses_left--;
+        public void Spends_all_Uses() => its_uses_left = 0;
         public void Restores_the_Uses() => its_uses_left = its_total_uses;
 
         private int its_uses_left
@@ -29,5 +30,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         private readonly GuardedCell<int> its_uses_left_cell;
         
         private readonly ICell<bool> its_has_uses_left_cell;
+
     }
 }

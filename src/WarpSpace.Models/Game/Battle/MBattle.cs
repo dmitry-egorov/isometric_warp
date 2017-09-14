@@ -7,9 +7,9 @@ namespace WarpSpace.Models.Game.Battle
 {
     public class MBattle
     {
-        public MBattle(DBoard board_description, SignalGuard the_signal_guard, MGame the_game)
+        public MBattle(DBoard the_board_desc, DUnit the_mothership_desc, SignalGuard the_signal_guard, MGame the_game)
         {
-            its_board = new MBoard(board_description, the_signal_guard, the_game);
+            its_board = new MBoard(the_board_desc, the_mothership_desc, the_signal_guard, the_game);
         }
         
         public MBoard s_Board => its_board;

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -556945154, guid: b5035fe32e8853442beb87cb342037d7, type: 3}
+  m_Name: Tank
+  m_EditorClassIdentifier: 
+  Model:
+    TotalHitPoints: 2
+    TotalMoves: 3
+    BaySize: 0
+    WeaponType: 1
+    ChassisType: {fileID: 11400000, guid: 6e3afeedb00580f42a76a8aeaef11ddc, type: 2}
+    Loot: 10
+    InitialInventory: 0
+    CanDock: 1
+    CanExit: 0
+    SerializationSymbol: 84
+  Movement:
+    MaxAngularSpeed: 70
+    MinAngularSpeed: 5
+    AnglularAccelerationDistance: 25
+    MaxSpeed: 1
+    MinSpeed: 0.2
+    AccelerationDistance: 0.5
+  Mesh: {fileID: 4300002, guid: c6ecbcd9c6dec44d1a49d30cc64f2796, type: 3}

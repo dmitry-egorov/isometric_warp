@@ -21,7 +21,7 @@ namespace WarpSpace.Models.Game.Battle.Board
         {
             initial_location.is_Empty().Otherwise_Throw("Can't create a unit, since it's initial location is not emoty");
 
-            var the_new_unit = new MUnit(desc.Type, desc.Faction, desc.Inventory_Content, initial_location, the_game, the_signal_guard);
+            var the_new_unit = new MUnit(desc, initial_location, the_game, the_signal_guard);
 
             initial_location.s_Occupant_Becomes(the_new_unit);
 
@@ -37,12 +37,12 @@ namespace WarpSpace.Models.Game.Battle.Board
             if (!unit.has_a_Bay(out var bay)) 
                 return;
             
-            var content = desc.Bay_Content.must_have_a_Value();
-            (bay.Size >= content.Count).Otherwise_Throw("Actual unit's bay size is smaller then the described content size");
+            var the_bay_units = desc.s_Bay_Units;
+            (bay.Size >= the_bay_units.Count).Otherwise_Throw("Actual unit's bay size is smaller then the described content size");
 
-            for (var i = 0; i < content.Count; i++)
+            for (var i = 0; i < the_bay_units.Count; i++)
             {
-                var possible_unit_in_the_bay = content[i];
+                var possible_unit_in_the_bay = the_bay_units[i];
                 if (possible_unit_in_the_bay.has_a_Value(out var unit_in_the_bay))
                     Creates_a_Unit(unit_in_the_bay, bay[i].must_have_a_Value());
             }

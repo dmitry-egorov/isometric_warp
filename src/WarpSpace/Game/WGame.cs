@@ -8,26 +8,29 @@ using WarpSpace.Models.Game;
 using WarpSpace.Models.Game.Battle;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Player;
+using WarpSpace.Settings;
 
 namespace WarpSpace.Game
 {
     public class WGame: MonoBehaviour
     {
         public BoardSettings Board;
+        public UnitSettings Mothership;
+        public FactionSettings PlayersFaction;
+        public FactionSettings NativesFaction;
         
         [TextArea(8,8)] public string LastMapString;//For inspector
         
         public void Awake() => it_inits();
         public void Start() => this.Restarts();
         
-        public bool has_a_Battle(out MBattle the_battle) => its_battles_cell.has_a_Value(out the_battle);
         public bool has_a_Player(out MPlayer the_player) => its_players_cell.has_a_Value(out the_player);
         
         public ICell<Possible<MUnit>> s_Players_Selected_Units_Cell => its_players_selected_units_cell;
         public ICell<Possible<MPlayer.Selection>> s_Players_Selections_Cell => its_players_selections_cell;
         public ICell<Possible<MBattle>> s_Battles_Cell => its_battles_cell;
-        public ICell<Possible<MPlayer>> s_Players_Cell => its_players_cell;
-        public Possible<MPlayer> s_Player => its_players_cell.s_Value;
+        public Possible<MPlayer> s_Possible_Player => its_players_cell.s_Value;
+        public MPlayer s_Player => this.s_Possible_Player.must_have_a_Value();
 
         [ExposeMethodInEditor]
         public void Restarts()
@@ -54,12 +57,19 @@ namespace WarpSpace.Game
 
         private MGame it_creates_a_game()
         {
-            var the_board_desc = Board.s_Description;
+            var the_faction_settings_holder = FindObjectOfType<FactionSettingsHolder>();
+            var the_unit_type_settings_holder = FindObjectOfType<UnitTypeSettingsHolder>();
+
+            var the_players_faction = the_faction_settings_holder.s_Model_Of(PlayersFaction);
+            var the_natives_faction = the_faction_settings_holder.s_Model_Of(NativesFaction);
+
+            var the_mothership = Mothership.s_Description_With(the_unit_type_settings_holder, the_faction_settings_holder);
+            var the_board_desc = Board.s_Description_With(the_unit_type_settings_holder.s_All_Models, the_natives_faction, the_mothership.s_Type.s_Chassis_Type);
 
             _lastMap = the_board_desc;
             LastMapString = the_board_desc.Display();
             
-            return new MGame(the_board_desc);
+            return new MGame(the_board_desc, the_mothership, the_players_faction);
         }
 
         private void its_game_becomes(MGame the_game) => its_games_cell.s_Value = the_game;

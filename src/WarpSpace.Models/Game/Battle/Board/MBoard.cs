@@ -17,10 +17,11 @@ namespace WarpSpace.Models.Game.Battle.Board
         public IStream<MUnit> s_Unit_Destructions_Stream => its_unit_destructions_stream;
         public IStream<TheVoid> s_Turn_Ends_Stream => its_turn_ends_stream;
 
-        public MBoard(DBoard description, SignalGuard the_signal_guard, MGame the_game)
+        public MBoard(DBoard the_description, DUnit the_mothership_desc, SignalGuard the_signal_guard, MGame the_game)
         {
+            this.the_mothership_desc = the_mothership_desc;
             this.the_signal_guard = the_signal_guard;
-            its_entrances_spacial = description.EntranceSpacial;
+            its_entrances_spacial = the_description.EntranceSpacial;
             its_unit_destructions_stream = new GuardedStream<MUnit>(the_signal_guard);
             its_turn_ends_stream = new GuardedStream<TheVoid>(the_signal_guard);
             its_unit_factory = new MUnitFactory(this, the_game, the_signal_guard);
@@ -29,7 +30,7 @@ namespace WarpSpace.Models.Game.Battle.Board
 
             MTile[,] creates_the_tiles()
             {
-                var tiles = description.Tiles.Map((tile_desc, position) => CreateTile(position, tile_desc));
+                var tiles = the_description.Tiles.Map((tile_desc, position) => CreateTile(position, tile_desc));
                 foreach (var i in tiles.EnumerateIndex())
                 {
                     var adjacent = tiles.GetAdjacent(i);
@@ -49,12 +50,12 @@ namespace WarpSpace.Models.Game.Battle.Board
             var position = its_entrances_spacial.Position;
             var orientation = its_entrances_spacial.Orientation;
 
-            var tank1 = new DUnit(UnitType.a_Tank, Faction.the_Player_Faction, Possible.Empty<DStuff>(), Possible.Empty<IReadOnlyList<Possible<DUnit>>>());
-            var tank2 = new DUnit(UnitType.a_Tank, Faction.the_Player_Faction, Possible.Empty<DStuff>(), Possible.Empty<IReadOnlyList<Possible<DUnit>>>());
-            var bay_units = new List<Possible<DUnit>> {tank1, tank2};
-            var desc = new DUnit(UnitType.a_Mothership, Faction.the_Player_Faction, Possible.Empty<DStuff>(), bay_units);
+//            var tank1 = new DUnitType(UnitType.a_Tank, Faction.the_Player_Faction, Possible.Empty<DStuff>(), Possible.Empty<IReadOnlyList<Possible<DUnitType>>>());
+//            var tank2 = new DUnitType(UnitType.a_Tank, Faction.the_Player_Faction, Possible.Empty<DStuff>(), Possible.Empty<IReadOnlyList<Possible<DUnitType>>>());
+//            var bay_units = new List<Possible<DUnitType>> {tank1, tank2};
+//            var desc = new DUnitType(UnitType.a_Mothership, Faction.the_Player_Faction, Possible.Empty<DStuff>(), bay_units);
 
-            creates_a_unit(desc, position + orientation);
+            creates_a_unit(the_mothership_desc, position + orientation);
         }
 
         public void Ends_the_Turn()
@@ -102,6 +103,7 @@ namespace WarpSpace.Models.Game.Battle.Board
         private readonly GuardedStream<MUnit> its_unit_destructions_stream;
         private readonly Spacial2D its_entrances_spacial;
         private readonly MUnitFactory its_unit_factory;
+        private readonly DUnit the_mothership_desc;
         private readonly SignalGuard the_signal_guard;
         
         private readonly MTile[,] its_tiles;

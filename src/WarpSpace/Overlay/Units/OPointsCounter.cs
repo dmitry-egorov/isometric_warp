@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Lanski.Reactive;
 using UnityEngine;
 using UnityEngine.UI;
+using WarpSpace.Game;
 using WarpSpace.Models.Game.Battle.Board.Unit;
-using static WarpSpace.Models.Descriptions.Faction;
+using WarpSpace.Models.Game.Battle.Player;
 
 namespace WarpSpace.Overlay.Units
 {
@@ -26,6 +27,8 @@ namespace WarpSpace.Overlay.Units
         {
             if (it_is_initialized)
                 return;
+
+            the_player = FindObjectOfType<WGame>().s_Player;
 
             its_unit = gameObject.GetComponentInParent<IUnitReference>().s_Unit;
             if (!its_avalable_for_the_unit())
@@ -62,9 +65,9 @@ namespace WarpSpace.Overlay.Units
                 case CounterType.Health:
                     return true;
                 case CounterType.Moves:
-                    return its_unit.Belongs_To(the_Player_Faction);
+                    return the_player.Owns(its_unit);
                 case CounterType.CanFire:
-                    return its_unit.Belongs_To(the_Player_Faction);
+                    return the_player.Owns(its_unit);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -134,6 +137,7 @@ namespace WarpSpace.Overlay.Units
         }
 
         private bool it_is_initialized;
+        private MPlayer the_player;
         private MUnit its_unit;
         private ChangeStream<int, int> its_changes_stream;
         private IList<Image> its_children;

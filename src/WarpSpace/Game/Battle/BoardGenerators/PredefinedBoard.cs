@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Common.MapParsing;
 using WarpSpace.Models.Descriptions;
+using WarpSpace.Models.Game;
+using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Game.Battle.BoardGenerators
 {
@@ -15,10 +18,9 @@ namespace WarpSpace.Game.Battle.BoardGenerators
         public Spacial2DData Entrance;
         public Spacial2DData Exit;
 
-        public override DBoard s_Description => ToDescription();
-        
-        public DBoard ToDescription()
+        public override DBoard s_Description_With(IReadOnlyList<MUnitType> the_unit_types, MFaction the_native_faction, MChassisType the_mothership_chassis_type)
         {
+            var the_unti_types_map = the_unit_types.ToDictionary(ut => ut.s_Serialization_Symbol);
             var entrance = ToSpacial2D(Entrance);
             var exit = ToSpacial2D(Exit);
 
@@ -40,14 +42,14 @@ namespace WarpSpace.Game.Battle.BoardGenerators
     
             LandscapeType ParseLandscapeChar(char c) => c.s_Landscape_Type();
 
-            Possible<UnitType> ParseUnitChar(char c) => c.s_Unit_Type();
+            Possible<MUnitType> ParseUnitChar(char c) => c == '-' ? Possible.Empty<MUnitType>() : the_unti_types_map[c];
                 
             DTile CreateTile(LandscapeType t, Index2D i) => 
                 new DTile(t, SelectContent(i));
 
             //TODO: generate random loot from settings?
-            Possible<DUnit> CreateUnitDescritpion(Possible<UnitType> arg) => 
-                arg.Select(type => new DUnit(type, Faction.the_Natives, type.s_Initial_Staff(), Possible.Empty<IReadOnlyList<Possible<DUnit>>>()))
+            Possible<DUnit> CreateUnitDescritpion(Possible<MUnitType> arg) => 
+                arg.Select(type => new DUnit(type, type.s_Initial_Inventory_Content, new List<Possible<DUnit>>(), the_native_faction))
             ; 
             
             DTileSite SelectContent(Index2D i)

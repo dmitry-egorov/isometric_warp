@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using WarpSpace.Models.Descriptions;
+using WarpSpace.Models.Game;
+using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Settings;
 
 namespace WarpSpace.Game.Battle.Unit
@@ -8,12 +9,12 @@ namespace WarpSpace.Game.Battle.Unit
     [RequireComponent(typeof(MeshRenderer))]
     public class UnitMesh : MonoBehaviour
     {
-        public void Present(UnitType type, Faction faction)
+        public void Present(MUnitType type, MFaction faction)
         {
             it_inits();
 
-            its_mesh_filter.sharedMesh = its_settings_holder.For(type).Mesh;
-            its_mesh_renderer.sharedMaterial = its_settings_holder.For(faction).Material;
+            its_mesh_filter.sharedMesh = its_unit_type_settings_holder.s_Settings_Of(type).Mesh;
+            its_mesh_renderer.sharedMaterial = its_faction_settings_holder.s_Settings_Of(faction).Material;
             
             Show();
         }
@@ -34,12 +35,14 @@ namespace WarpSpace.Game.Battle.Unit
                 return;
             its_initialized = true;
             
-            its_settings_holder = FindObjectOfType<UnitSettingsHolder>();
+            its_unit_type_settings_holder = FindObjectOfType<UnitTypeSettingsHolder>();
+            its_faction_settings_holder = FindObjectOfType<FactionSettingsHolder>();
             its_mesh_filter = GetComponent<MeshFilter>();
             its_mesh_renderer = GetComponent<MeshRenderer>();
         }
 
-        private UnitSettingsHolder its_settings_holder;
+        private UnitTypeSettingsHolder its_unit_type_settings_holder;
+        private FactionSettingsHolder its_faction_settings_holder;
         private MeshFilter its_mesh_filter;
         private MeshRenderer its_mesh_renderer;
         private bool its_initialized;

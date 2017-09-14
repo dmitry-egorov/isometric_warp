@@ -1,5 +1,6 @@
 ﻿using Lanski.Reactive;
 using Lanski.Structures;
+using WarpSpace.Models.Descriptions;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
@@ -15,7 +16,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         internal void Destructs()
         {
-            var the_loot = its_owner.s_Inventory_Content;
+            var the_loot = its_owner.s_Inventory_Content.and(its_owner.s_Loot);
 
             if (its_owner.is_At_a_Tile(out var the_tile))
                 the_tile.Creates_a_Debris_with(the_loot);

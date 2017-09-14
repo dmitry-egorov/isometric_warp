@@ -6,7 +6,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
     public class MDocker
     {
         public static Possible<MDocker> From(MUnit the_unit) =>
-            the_unit.can_Dock() 
+            the_unit.can_Dock 
             ? new MDocker(the_unit) 
             : Possible.Empty<MDocker>()
         ;

@@ -8,13 +8,12 @@ namespace WarpSpace.Models.Game.Battle
 {
     public class RandomBoardGenerator
     {
-        private readonly IRandom _random;
-        private const int Rows = 8;
-        private const int Columns = 8;
+        
 
-        public RandomBoardGenerator(IRandom random)
+        public RandomBoardGenerator(IRandom random, MChassisType the_mothership_chassis_type)
         {
             _random = random;
+            this.the_motherships_chassis_type = the_mothership_chassis_type;
         }
 
         public DBoard Generates_a_Board()
@@ -82,12 +81,12 @@ namespace WarpSpace.Models.Game.Battle
                     yield return Direction2D.Down;
             }
             
-            bool IsPassable(LandscapeType? landscape)
-            {
-                return landscape.Is(x => ChassisType.a_Hower_Pad.can_Pass(x));
-            }
+            bool IsPassable(LandscapeType? landscape) => landscape.Is(x => the_motherships_chassis_type.can_Pass(x));
         }
 
-        
+        private readonly IRandom _random;
+        private readonly MChassisType the_motherships_chassis_type;
+        private const int Rows = 8;
+        private const int Columns = 8;
     }
 }

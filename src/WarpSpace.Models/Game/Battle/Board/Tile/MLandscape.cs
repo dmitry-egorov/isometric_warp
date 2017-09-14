@@ -11,7 +11,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
             its_type = type; //Note: can check value here
         }
 
-        public bool is_Passable_With(ChassisType the_chassis_type) => the_chassis_type.can_Pass(its_type);
+        public Passability s_Passability_With(MChassisType the_chassis_type) => the_chassis_type.s_Passability_Of(its_type);
+        public bool is_Passable_With(MChassisType the_chassis_type) => the_chassis_type.can_Pass(its_type);
         
         private readonly LandscapeType its_type;
     }

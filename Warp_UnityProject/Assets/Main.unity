@@ -389,6 +389,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Board: {fileID: 11400000, guid: edb3daf416c989e439e7f501b9a852d6, type: 2}
+  Mothership:
+    Type: {fileID: 11400000, guid: 542a70eb76f783947a5bb8b2b7bec81e, type: 2}
+    Faction: {fileID: 11400000, guid: d31fca1f52745d241ab4d18423845195, type: 2}
+    InventoryContent: 0
+    Bay_Units:
+    - Enabled: 1
+      Value:
+        Type: {fileID: 11400000, guid: 6c168b434dba234489f06d97e900f2a4, type: 2}
+        Faction: {fileID: 11400000, guid: d31fca1f52745d241ab4d18423845195, type: 2}
+        InventoryContent: 0
+        Bay_Units: []
+    - Enabled: 1
+      Value:
+        Type: {fileID: 11400000, guid: 6c168b434dba234489f06d97e900f2a4, type: 2}
+        Faction: {fileID: 11400000, guid: d31fca1f52745d241ab4d18423845195, type: 2}
+        InventoryContent: 0
+        Bay_Units: []
+  PlayersFaction: {fileID: 11400000, guid: d31fca1f52745d241ab4d18423845195, type: 2}
+  NativesFaction: {fileID: 11400000, guid: 08b6a0b0cafb14e4a813fb8ffbbe7252, type: 2}
   LastMapString: 
 --- !u!1 &232251696
 GameObject:
@@ -1376,6 +1395,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 595612940}
+  - component: {fileID: 595612943}
+  - component: {fileID: 595612942}
+  - component: {fileID: 595612941}
   m_Layer: 0
   m_Name: Settings
   m_TagString: Untagged
@@ -1392,11 +1414,43 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1303661592}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &595612941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 595612939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1586011709, guid: b5035fe32e8853442beb87cb342037d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &595612942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 595612939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1244590073, guid: b5035fe32e8853442beb87cb342037d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &595612943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 595612939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1396345115, guid: b5035fe32e8853442beb87cb342037d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &622044012
 GameObject:
   m_ObjectHideFlags: 0
@@ -3684,70 +3738,6 @@ Transform:
   m_Father: {fileID: 622044013}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1303661591
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1303661592}
-  - component: {fileID: 1303661593}
-  m_Layer: 0
-  m_Name: Unit
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1303661592
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1303661591}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 595612940}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1303661593
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1303661591}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1648237027, guid: b5035fe32e8853442beb87cb342037d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Factions:
-    Player:
-      Material: {fileID: 2100000, guid: e9ddd735974c04cf3b79af9bbe721267, type: 2}
-    Natives:
-      Material: {fileID: 2100000, guid: 706e988280c654180ab8be275c7f271a, type: 2}
-  Units:
-    Mothership:
-      Movement:
-        MaxAngularSpeed: 45
-        MinAngularSpeed: 5
-        AnglularAccelerationDistance: 15
-        MaxSpeed: 0.45
-        MinSpeed: 0.02
-        AccelerationDistance: 0.15
-      Mesh: {fileID: 4300002, guid: effdf2cc1371148a1bc7c49d358a2f94, type: 3}
-    Tank:
-      Movement:
-        MaxAngularSpeed: 70
-        MinAngularSpeed: 5
-        AnglularAccelerationDistance: 25
-        MaxSpeed: 1
-        MinSpeed: 0.2
-        AccelerationDistance: 0.5
-      Mesh: {fileID: 4300002, guid: c6ecbcd9c6dec44d1a49d30cc64f2796, type: 3}
 --- !u!1 &1306729194
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace WarpSpace.Game.Battle.Unit
+namespace WarpSpace.Settings
 {
     [Serializable]
     public struct MovementSettings

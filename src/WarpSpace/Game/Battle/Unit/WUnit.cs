@@ -5,7 +5,7 @@ using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Game.Battle.Board;
 using WarpSpace.Models.Game.Battle.Board.Unit;
-using static WarpSpace.Models.Descriptions.Faction;
+using WarpSpace.Models.Game.Battle.Player;
 
 namespace WarpSpace.Game.Battle.Unit
 {
@@ -19,10 +19,11 @@ namespace WarpSpace.Game.Battle.Unit
             var limbo = FindObjectOfType<WLimbo>().s_Transform;
             var board = FindObjectOfType<WBoard>();
             var parent = unit.is_At_a_Tile(out var tile) ? board[tile].s_UnitSlot.Transform : limbo;
+            var the_player = FindObjectOfType<WGame>().s_Player;
 
             var obj = Instantiate(prefab, parent);
 
-            obj.inits(unit);
+            obj.inits(unit, the_player);
 
             return obj;
         }
@@ -32,7 +33,7 @@ namespace WarpSpace.Game.Battle.Unit
             its_subscriptions?.Invoke();
         }
 
-        private void inits(MUnit the_unit)
+        private void inits(MUnit the_unit, MPlayer the_player)
         {
             var unit_type = the_unit.s_Type;
             
@@ -50,7 +51,7 @@ namespace WarpSpace.Game.Battle.Unit
             {
                 var outliner = GetComponentInChildren<WOutliner>();
 
-                if (the_unit.Belongs_To(the_Player_Faction))
+                if (the_player.Owns(the_unit))
                 {
                     its_subscriptions = it_wires_the_selected_unit();
                 }

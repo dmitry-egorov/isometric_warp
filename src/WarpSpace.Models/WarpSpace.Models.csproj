@@ -47,15 +47,14 @@
     <Compile Include="Descriptions\ChassisType.cs" />
     <Compile Include="Descriptions\DDamage.cs" />
     <Compile Include="Descriptions\DUnitAction.cs" />
-    <Compile Include="Descriptions\Faction.cs" />
     <Compile Include="Descriptions\DStuff.cs" />
     <Compile Include="Descriptions\LandscapeType.cs" />
+    <Compile Include="Descriptions\MChassisType.cs" />
     <Compile Include="Descriptions\Spacial2D.cs" />
     <Compile Include="Descriptions\DStructure.cs" />
     <Compile Include="Descriptions\DTileSite.cs" />
     <Compile Include="Descriptions\DTile.cs" />
     <Compile Include="Descriptions\DUnit.cs" />
-    <Compile Include="Descriptions\UnitType.cs" />
     <Compile Include="Descriptions\WeaponType.cs" />
     <Compile Include="Game\Battle\Board\MUnitFactory.cs" />
     <Compile Include="Game\Battle\Board\Tile\TileHelper.cs" />
@@ -66,8 +65,10 @@
     <Compile Include="Game\Battle\Board\Unit\MInteractor.cs" />
     <Compile Include="Game\Battle\Board\Unit\MLooter.cs" />
     <Compile Include="Game\Battle\Board\Unit\MUnitAction.cs" />
+    <Compile Include="Game\Battle\Board\Unit\MUnitType.cs" />
     <Compile Include="Game\Battle\Board\Unit\MUsesLimiter.cs" />
     <Compile Include="Game\Battle\Board\Unit\UnitCommand.cs" />
+    <Compile Include="Game\MFaction.cs" />
     <Compile Include="StreamCache.cs" />
     <Compile Include="Game\Battle\Board\MBoard.cs" />
     <Compile Include="Game\Battle\Board\Structure\StructureDestroyed.cs" />
