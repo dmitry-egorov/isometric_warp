@@ -12,7 +12,9 @@ namespace WarpSpace.Models.Descriptions
         public readonly Possible<DStuff> s_Inventory_Content;
         public readonly IReadOnlyList<Possible<DUnit>> s_Bay_Units;
 
-        public DUnit(MUnitType the_type, Possible<DStuff> the_inventory_content, IReadOnlyList<Possible<DUnit>> the_bay_units, MFaction the_faction)
+        public DUnit(MUnitType the_type, MFaction the_faction) : this(the_type, the_faction, Possible.Empty<DStuff>(), new List<Possible<DUnit>>()) {}
+
+        public DUnit(MUnitType the_type, MFaction the_faction, Possible<DStuff> the_inventory_content, IReadOnlyList<Possible<DUnit>> the_bay_units)
         {
             s_Type = the_type;
             s_Inventory_Content = the_inventory_content;

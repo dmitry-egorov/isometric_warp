@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1196594566, guid: b5035fe32e8853442beb87cb342037d7, type: 3}
+  m_Name: Mountain
+  m_EditorClassIdentifier: 
+  World:
+    OwnHeight: 0.15
+    SameTypeHeight: 0.3
+    SameTypeHeightCross: 0.15
+    Falloff: 2.5
+    Meshes:
+    - {fileID: 4300000, guid: b54cd3d4d1cc0490fac08cc3b7fcfcf7, type: 3}
+    - {fileID: 4300000, guid: ff676e1051f2841c39c095fc11459429, type: 3}
+  SerializationSymbol: 77
+  IsWaterLayer: 0

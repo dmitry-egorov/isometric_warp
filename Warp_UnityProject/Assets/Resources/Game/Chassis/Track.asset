@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: Track
   m_EditorClassIdentifier: 
   PassableLandscapeTypes:
-  - LandscapeType: 1
+  - LandscapeType: {fileID: 11400000, guid: bf4c1de56bb43e64ebe124bc529e9e54, type: 2}
     Passability: 1
-  - LandscapeType: 2
+  - LandscapeType: {fileID: 11400000, guid: 24d90ac4ff027374c9388a4c8ae56ff1, type: 2}
     Passability: 2

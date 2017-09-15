@@ -44,18 +44,18 @@
   <ItemGroup>
     <Compile Include="Debug.cs" />
     <Compile Include="Descriptions\DBoard.cs" />
-    <Compile Include="Descriptions\ChassisType.cs" />
     <Compile Include="Descriptions\DDamage.cs" />
     <Compile Include="Descriptions\DUnitAction.cs" />
     <Compile Include="Descriptions\DStuff.cs" />
-    <Compile Include="Descriptions\LandscapeType.cs" />
+    <Compile Include="Descriptions\Passability.cs" />
     <Compile Include="Descriptions\MChassisType.cs" />
+    <Compile Include="Descriptions\MLandscapeType.cs" />
     <Compile Include="Descriptions\Spacial2D.cs" />
     <Compile Include="Descriptions\DStructure.cs" />
     <Compile Include="Descriptions\DTileSite.cs" />
     <Compile Include="Descriptions\DTile.cs" />
     <Compile Include="Descriptions\DUnit.cs" />
-    <Compile Include="Descriptions\WeaponType.cs" />
+    <Compile Include="Descriptions\MWeaponType.cs" />
     <Compile Include="Game\Battle\Board\MUnitFactory.cs" />
     <Compile Include="Game\Battle\Board\Tile\TileHelper.cs" />
     <Compile Include="Game\Battle\Board\Unit\HealthState.cs" />
@@ -91,7 +91,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Randomness\IRandom.cs" />
     <Compile Include="Randomness\RandomExtensions.cs" />
-    <Compile Include="Randomness\RandomnessExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Lanski.Linq\Lanski.Linq.csproj">

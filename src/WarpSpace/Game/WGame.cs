@@ -57,14 +57,13 @@ namespace WarpSpace.Game
 
         private MGame it_creates_a_game()
         {
-            var the_faction_settings_holder = FindObjectOfType<FactionSettingsHolder>();
-            var the_unit_type_settings_holder = FindObjectOfType<UnitTypeSettingsHolder>();
-
-            var the_players_faction = the_faction_settings_holder.s_Model_Of(PlayersFaction);
-            var the_natives_faction = the_faction_settings_holder.s_Model_Of(NativesFaction);
-
-            var the_mothership = Mothership.s_Description_With(the_unit_type_settings_holder, the_faction_settings_holder);
-            var the_board_desc = Board.s_Description_With(the_unit_type_settings_holder.s_All_Models, the_natives_faction, the_mothership.s_Type.s_Chassis_Type);
+            var the_players_faction = FactionSettings.s_Model_Of(PlayersFaction);
+            var the_natives_faction = FactionSettings.s_Model_Of(NativesFaction);
+            var the_landscape_types = LandscapeTypeSettings.s_All_Models;
+            var the_unit_types = UnitTypeSettings.s_All_Models;
+            
+            var the_mothership = Mothership.s_Description_With(the_players_faction);
+            var the_board_desc = Board.s_Description_With(the_unit_types, the_landscape_types, the_natives_faction, the_mothership.s_Type.s_Chassis_Type);
 
             _lastMap = the_board_desc;
             LastMapString = the_board_desc.Display();

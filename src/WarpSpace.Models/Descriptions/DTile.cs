@@ -2,10 +2,10 @@
 {
     public struct DTile
     {
-        public readonly LandscapeType Type;
+        public readonly MLandscapeType Type;
         public readonly DTileSite Initial_Site;
 
-        public DTile(LandscapeType type, DTileSite initial_site)
+        public DTile(MLandscapeType type, DTileSite initial_site)
         {
             Type = type;
             Initial_Site = initial_site;

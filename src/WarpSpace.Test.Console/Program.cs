@@ -5,9 +5,7 @@ using WarpSpace.Game.Battle.BoardGenerators;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game;
 using WarpSpace.Models.Game.Battle.Board.Unit;
-using static WarpSpace.Models.Descriptions.LandscapeType;
 using static WarpSpace.Models.Descriptions.Passability;
-using static WarpSpace.Models.Descriptions.WeaponType;
 using Con = System.Console;
 
 namespace WarpSpace.Test.Console
@@ -17,16 +15,26 @@ namespace WarpSpace.Test.Console
         public static void Main(string[] args)
         {
             Con.WriteLine("Start");
-            var a_track     = new MChassisType(new Dictionary<LandscapeType, Passability> {{Flatland, Free}, {Hill, Penalty}, {Mountain, None}, {Water, None}});
-            var a_hower_pad = new MChassisType(new Dictionary<LandscapeType, Passability> {{Flatland, Free}, {Hill, None},    {Mountain, None}, {Water, None}});
+            var the_flatland = new MLandscapeType('L');
+            var the_hill     = new MLandscapeType('H');
+            var the_mountain = new MLandscapeType('M');
+            var the_water    = new MLandscapeType('W');
+            var the_lanscape_types = new[] { the_flatland, the_hill, the_mountain, the_water };
             
-            var tank_type = new MUnitType(2, 3, 0, a_Cannon, a_track, new DStuff(10), Possible.Empty<DStuff>(), true, false, 'T');
-            var mothership_type = new MUnitType(5, 2, 4, a_Missle, a_hower_pad, new DStuff(50), Possible.Empty<DStuff>(), false, true, 'M');
+            var a_track     = new MChassisType(new Dictionary<MLandscapeType, Passability> {{the_flatland, Free}, {the_hill, Penalty}, {the_mountain, None}, {the_water, None}});
+            var a_hower_pad = new MChassisType(new Dictionary<MLandscapeType, Passability> {{the_flatland, Free}, {the_hill, None},    {the_mountain, None}, {the_water, None}});
+
+            var a_missale_launcher = new MWeaponType(2, new DDamage(1));
+            var a_cannon = new MWeaponType(1, new DDamage(2));
+            
+            var tank_type = new MUnitType(2, 3, 0, a_cannon, a_track, new DStuff(10), Possible.Empty<DStuff>(), true, false, 'T');
+            var mothership_type = new MUnitType(5, 2, 4, a_missale_launcher, a_hower_pad, new DStuff(50), Possible.Empty<DStuff>(), false, true, 'M');
+            var the_unit_types = new [] {tank_type, mothership_type};
 
             var the_players_faction = new MFaction();
             var the_natives_faction = new MFaction();
-            var tank = new DUnit(tank_type, Possible.Empty<DStuff>(), new List<Possible<DUnit>>(), the_players_faction).as_a_Possible();
-            var the_mothership = new DUnit(mothership_type, Possible.Empty<DStuff>(), new[] {tank, tank}, the_players_faction);
+            var tank = new DUnit(tank_type, the_players_faction).as_a_Possible();
+            var the_mothership = new DUnit(mothership_type, the_players_faction, Possible.Empty<DStuff>(), new[] {tank, tank});
 
             var board = new PredefinedBoard
             {
@@ -60,7 +68,7 @@ namespace WarpSpace.Test.Console
                 },
             };
 
-            var desc = board.s_Description_With(new [] {tank_type, mothership_type}, the_natives_faction, mothership_type.s_Chassis_Type);
+            var desc = board.s_Description_With(the_unit_types, the_lanscape_types, the_natives_faction, mothership_type.s_Chassis_Type);
             var the_game = new MGame(desc, the_mothership, the_players_faction);
 
             the_game.Starts_a_New_Battle();

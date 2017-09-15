@@ -44,7 +44,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         public FullNeighbourhood2D<MTile> s_Neighbors => its_neighbors;
 
         public ICell<TileSite> s_Sites_Cell => its_sites_cell;
-        public LandscapeType s_Landscape_Type => its_landscape.s_Type;
+        public MLandscapeType s_Landscape_Type => its_landscape.s_Type;
 
         public bool has_a_unit_with_an_empty_bay_slot(out MUnitLocation the_bay_slot) => 
             semantic_resets(out the_bay_slot) && 

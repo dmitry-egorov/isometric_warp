@@ -1,6 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using Lanski.UnityExtensions;
+using Lanski.Structures;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game;
 
@@ -10,20 +11,17 @@ namespace WarpSpace.Settings
     public class UnitSettings
     {
         public UnitTypeSettings Type;
-        public FactionSettings Faction;
         public int InventoryContent;
-        public OptionalUnitSettings[] Bay_Units;
+        public UnitTypeSettings[] Bay_Units;
         
-        public DUnit s_Description_With(UnitTypeSettingsHolder types_map, FactionSettingsHolder faction_map) => 
+        public DUnit s_Description_With(MFaction faction) => 
             new DUnit
             (
-                types_map.s_Model_Of(Type), 
+                UnitTypeSettings.s_Model_Of(Type),
+                faction, 
                 InventoryHelper.Possible_Stuff_From(InventoryContent), 
-                Bay_Units.Select(ous => ous.s_Possible.Select(us => us.s_Description_With(types_map, faction_map))).ToArray(),
-                faction_map.s_Model_Of(Faction)
-            );
+                Bay_Units.Select(type => new DUnit(UnitTypeSettings.s_Model_Of(type), faction).as_a_Possible()).ToArray()
+            )
+        ;
     }
-    
-    [Serializable]
-    public class OptionalUnitSettings : Optional<UnitSettings>{}
 }

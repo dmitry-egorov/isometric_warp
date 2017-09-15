@@ -48,12 +48,13 @@ namespace Lanski.Structures
         
         [Pure] public T must_have_a_Value() => has_a_Value(out var value) ? value : throw new InvalidOperationException("Must have a value");
 
+        [Pure] public bool @is(Func<T, bool> selector) => this.has_a_Value(out var the_value) && selector(the_value);
         [Pure] public Possible<TResult> map<TResult>(Func<T, TResult> selector) => Select(selector);
         [Pure] public Possible<TResult> fmap<TResult>(Func<T, Possible<TResult>> selector) => SelectMany(selector);
         [Pure] public Possible<TResult> SelectMany<TResult>(Func<T, Possible<TResult>> selector) => has_a_Value(out var value) ? selector(value) : default(Possible<TResult>);
         [Pure] public Possible<TResult> Select<TResult>(Func<T, TResult> selector) => has_a_Value(out var value) ? new Possible<TResult>(true, selector(value)) : default(Possible<TResult>);
         
-        public T Value_Or(T defaultValue) => has_a_Value(out var value) ? value : defaultValue;
+        public T s_Value_Or(T defaultValue) => has_a_Value(out var value) ? value : defaultValue;
         
         public bool Equals(Possible<T> other) => _has_a_value == other._has_a_value && (!_has_a_value || EqualityComparer<T>.Default.Equals(_obj, other._obj));
 

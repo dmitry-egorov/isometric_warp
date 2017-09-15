@@ -1,5 +1,7 @@
 Plan
 - end turn speeds up movement greatly
+- draw movement queue line
+- the units wait for each other for docking and undocking
 - longer weapon range
 - move several tiles at a time
 - enemy ai
@@ -7,6 +9,7 @@ Plan
 - more weapon types
 - weapon models
 - fire weapon animation
+- the units wait for each other if their path is crossed
 
 - select enemy to see its info
 - highlight end turn when no more actions are available
@@ -15,7 +18,6 @@ Plan
 - multiple objects per unit
 - weapon models for the mothership
 - destruction animation
-- draw movement queue line
 - multiple weapons
 - tilt and offest units by terrain
 - gate model
@@ -29,11 +31,7 @@ Plan
 - hp overlay points animation on damage
 - weapon ui models
 - special actions show "no target"
-
-- better docking (the mothership turns to recieve a unit)
 - cooldowns
-
-
 
 * Landscape
 - different types of terrain

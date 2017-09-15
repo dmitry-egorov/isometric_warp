@@ -16,10 +16,10 @@ namespace WarpSpace.Models.Game.Battle.Board.Weapon
             
             var the_weapon_type = the_owner.s_Weapon_Type;
             
-            var its_max_uses = the_weapon_type.s_Max_Uses();
+            var its_max_uses = the_weapon_type.s_Max_Uses;
             its_uses_limiter = new MUsesLimiter(its_max_uses, the_signal_guard);
             
-            its_damage = the_weapon_type.s_Damage_Description();
+            its_damage = the_weapon_type.s_Damage;
         }
 
         public ICell<bool> s_Can_Fire_Cell => its_uses_limiter.s_Has_Uses_Left_Cell;

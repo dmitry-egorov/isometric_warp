@@ -1,10 +1,12 @@
-﻿namespace WarpSpace.Models.Randomness
+﻿using System.Collections.Generic;
+
+namespace WarpSpace.Models.Randomness
 {
     public static class RandomExtensions
     {
-        public static T Random_Element_Of<T>(this IRandom random, T[] array)
+        public static T Random_Element_Of<T>(this IRandom random, IReadOnlyList<T> list)
         {
-            return array[random.Range(0, array.Length)];
+            return list[random.Range(0, list.Count)];
         }
     }
 }

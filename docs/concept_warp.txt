@@ -10,7 +10,7 @@ The stars are being drained by the invaders. Over time the planets get colder an
 Visiting a captured planet makes the ship suffer damage over time.
 
 Alternatively:
-Bigger individual maps with iconic locations (still rendomly generated). Zoltan homeworlds, Golden Bay, Iceland etc.
+Bigger individual maps with iconic locations (still half-rendomly generated). Homeworlds, Golden Bay, Iceland etc.
 
 Inspirations:
 Into the Breach (the board, destructable terrain, natural disasters, roguelike, unit's abilities) 

@@ -1,30 +1,28 @@
-﻿using System;
-using Lanski.Maths;
+﻿using Lanski.Maths;
 using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common.MeshTransformation;
 using WarpSpace.Game.Battle.Board;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
+using WarpSpace.Settings;
 
 namespace WarpSpace.Game.Battle.Tile
 {
     [RequireComponent(typeof(MeshFilter))]
     [RequireComponent(typeof(MeshRenderer))]
-    public class Landscape: MonoBehaviour//TODO: rename to WLandscape
+    public class WLandscape: MonoBehaviour
     {
-        public OwnSettings Settings;
-        
         public void Start()
         {
             its_mesh_filter = GetComponent<MeshFilter>();
-
+            
             var the_tile = GetComponentInParent<WTile>().s_Tile_Model;
             
             its_mesh_filter.sharedMesh = GenerateMesh(the_tile.s_Position, the_tile.s_Neighbors.Map(x => x.s_Landscape_Type));
         }
 
-        private Mesh GenerateMesh(Index2D index, FullNeighbourhood2D<LandscapeType> neighbourhood)
+        private Mesh GenerateMesh(Index2D index, FullNeighbourhood2D<MLandscapeType> neighbourhood)
         {
             var n = GetTypeAndSpecs();
             var spec = n.Center.Spec;
@@ -38,22 +36,7 @@ namespace WarpSpace.Game.Battle.Tile
             {
                 return neighbourhood.Map(t => new TypeAndSettings(t, GetDataFor(t)));
                 
-                OwnSettings.Type GetDataFor(LandscapeType type)
-                {
-                    switch (type)
-                    {
-                        case LandscapeType.Mountain:
-                            return Settings.Mountain;
-                        case LandscapeType.Hill:
-                            return Settings.Hill;
-                        case LandscapeType.Flatland:
-                            return Settings.Flatland;
-                        case LandscapeType.Water:
-                            return Settings.Water;
-                        default:
-                            throw new ArgumentOutOfRangeException(nameof(type), type, null);
-                    }
-                }
+                LandscapeTypeSettings.WorldSettings GetDataFor(MLandscapeType type) => LandscapeTypeSettings.Of(type).World;
             }
 
             FullNeighbourhood2D<float> CalculateElevations()
@@ -102,10 +85,10 @@ namespace WarpSpace.Game.Battle.Tile
 
         private struct TypeAndSettings
         {
-            public readonly LandscapeType Type;
-            public readonly OwnSettings.Type Spec;
+            public readonly MLandscapeType Type;
+            public readonly LandscapeTypeSettings.WorldSettings Spec;
 
-            public TypeAndSettings(LandscapeType type, OwnSettings.Type spec)
+            public TypeAndSettings(MLandscapeType type, LandscapeTypeSettings.WorldSettings spec)
             {
                 Type = type;
                 Spec = spec;
@@ -126,27 +109,8 @@ namespace WarpSpace.Game.Battle.Tile
             {
                 unchecked
                 {
-                    return ((int) Type * 397) ^ Spec.GetHashCode();
+                    return (Type.GetHashCode() * 397) ^ Spec.GetHashCode();
                 }
-            }
-        }
-
-        [Serializable]
-        public struct OwnSettings
-        {
-            public Type Mountain;
-            public Type Hill;
-            public Type Flatland;
-            public Type Water;
-
-            [Serializable]
-            public struct Type
-            {
-                public float OwnHeight;
-                public float SameTypeHeight;
-                public float SameTypeHeightCross;
-                public float Falloff;
-                public Mesh[] Meshes;
             }
         }
     }

@@ -7,6 +7,7 @@ using WarpSpace.Common.MapParsing;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game;
 using WarpSpace.Models.Game.Battle.Board.Unit;
+using WarpSpace.Settings;
 
 namespace WarpSpace.Game.Battle.BoardGenerators
 {
@@ -18,9 +19,10 @@ namespace WarpSpace.Game.Battle.BoardGenerators
         public Spacial2DData Entrance;
         public Spacial2DData Exit;
 
-        public override DBoard s_Description_With(IReadOnlyList<MUnitType> the_unit_types, MFaction the_native_faction, MChassisType the_mothership_chassis_type)
+        public override DBoard s_Description_With(IReadOnlyList<MUnitType> the_unit_types, IReadOnlyList<MLandscapeType> the_landscape_types, MFaction the_native_faction, MChassisType the_mothership_chassis_type)
         {
-            var the_unti_types_map = the_unit_types.ToDictionary(ut => ut.s_Serialization_Symbol);
+            var the_unit_types_map = the_unit_types.ToDictionary(ut => ut.s_Serialization_Symbol);
+            var the_landscape_types_map = the_landscape_types.ToDictionary(ut => ut.s_Serialization_Symbol);
             var entrance = ToSpacial2D(Entrance);
             var exit = ToSpacial2D(Exit);
 
@@ -40,16 +42,16 @@ namespace WarpSpace.Game.Battle.BoardGenerators
 
             return new DBoard(tiles, entrance);
     
-            LandscapeType ParseLandscapeChar(char c) => c.s_Landscape_Type();
+            MLandscapeType ParseLandscapeChar(char c) => the_landscape_types_map[c];
 
-            Possible<MUnitType> ParseUnitChar(char c) => c == '-' ? Possible.Empty<MUnitType>() : the_unti_types_map[c];
+            Possible<MUnitType> ParseUnitChar(char c) => c == '-' ? Possible.Empty<MUnitType>() : the_unit_types_map[c];
                 
-            DTile CreateTile(LandscapeType t, Index2D i) => 
+            DTile CreateTile(MLandscapeType t, Index2D i) => 
                 new DTile(t, SelectContent(i));
 
             //TODO: generate random loot from settings?
             Possible<DUnit> CreateUnitDescritpion(Possible<MUnitType> arg) => 
-                arg.Select(type => new DUnit(type, type.s_Initial_Inventory_Content, new List<Possible<DUnit>>(), the_native_faction))
+                arg.Select(type => new DUnit(type, the_native_faction, type.s_Initial_Inventory_Content, new List<Possible<DUnit>>()))
             ; 
             
             DTileSite SelectContent(Index2D i)

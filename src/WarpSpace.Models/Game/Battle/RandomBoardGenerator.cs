@@ -8,12 +8,11 @@ namespace WarpSpace.Models.Game.Battle
 {
     public class RandomBoardGenerator
     {
-        
-
-        public RandomBoardGenerator(IRandom random, MChassisType the_mothership_chassis_type)
+        public RandomBoardGenerator(IRandom random, MChassisType the_mothership_chassis_type, IReadOnlyList<MLandscapeType> the_landscape_types)
         {
             _random = random;
             this.the_motherships_chassis_type = the_mothership_chassis_type;
+            this.the_landscape_types = the_landscape_types;
         }
 
         public DBoard Generates_a_Board()
@@ -30,8 +29,8 @@ namespace WarpSpace.Models.Game.Battle
             
             return new DBoard(tiles, entranceSpacial);
             
-            LandscapeType[,] GenerateTiles() => 
-                Array2D.Create(new Dimensions2D(Rows, Columns), p => _random.Random_Landscape_Type());
+            MLandscapeType[,] GenerateTiles() => 
+                Array2D.Create(new Dimensions2D(Rows, Columns), p => _random.Random_Element_Of(the_landscape_types));
 
             Spacial2D Get_Structure_Spacial() => 
                 _random.Random_Element_Of(Get_Possible_Structure_Spacials())
@@ -40,7 +39,7 @@ namespace WarpSpace.Models.Game.Battle
             Spacial2D[] Get_Possible_Structure_Spacials() => 
                 types
                 .EnumerateWithIndex()
-                .Where(e => e.element == LandscapeType.Flatland || e.element == LandscapeType.Hill)
+                .Where(e => the_motherships_chassis_type.can_Pass(e.element))
                 .Select(p => the_orientation_to_random_passable_neighbour_from(types.GetAdjacentNeighbours(p.index)).Select(d => new Spacial2D(p.index, d)))
                 .SkipNull()
                 .ToArray()
@@ -57,7 +56,7 @@ namespace WarpSpace.Models.Game.Battle
             }
         }
 
-        private Direction2D? the_orientation_to_random_passable_neighbour_from(AdjacentNeighbourhood2D<LandscapeType> n)
+        private Direction2D? the_orientation_to_random_passable_neighbour_from(AdjacentNeighbourhood2D<MLandscapeType> n)
         {
             var passableDirections = PassableDirections().ToArray();
 
@@ -81,11 +80,12 @@ namespace WarpSpace.Models.Game.Battle
                     yield return Direction2D.Down;
             }
             
-            bool IsPassable(LandscapeType? landscape) => landscape.Is(x => the_motherships_chassis_type.can_Pass(x));
+            bool IsPassable(Possible<MLandscapeType> landscape) => landscape.@is(x => the_motherships_chassis_type.can_Pass(x));
         }
 
         private readonly IRandom _random;
         private readonly MChassisType the_motherships_chassis_type;
+        private readonly IReadOnlyList<MLandscapeType> the_landscape_types;
         private const int Rows = 8;
         private const int Columns = 8;
     }

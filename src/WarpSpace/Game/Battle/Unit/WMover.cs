@@ -22,10 +22,9 @@ namespace WarpSpace.Game.Battle.Unit
         private void it_inits()
         {
             var the_unit = GetComponent<WUnit>().s_Unit;
-            var the_settings_holder = FindObjectOfType<UnitTypeSettingsHolder>();
 
             its_queue = new Queue<TargetLocation>(16);
-            its_settings = the_settings_holder.s_Settings_Of(the_unit.s_Type).Movement;
+            its_settings = UnitTypeSettings.Of(the_unit.s_Type).Movement;
             its_transform = transform;
             the_limbo = FindObjectOfType<WLimbo>().s_Transform;
             the_board = FindObjectOfType<WBoard>();

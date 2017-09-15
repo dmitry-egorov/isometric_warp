@@ -15,12 +15,12 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         public bool can_Interact_With_a_Structure_At(MTile the_tile, out MStructure the_target_structure) => 
             the_tile.has_a_Structure(out the_target_structure) && 
-            this.it_can_interact_with(the_target_structure)
+            it_can_interact_with(the_target_structure)
         ;
 
         public void Interacts_With(MStructure the_structure)
         {
-            this.it_can_interact_with(the_structure).Otherwise_Throw("Can't interact with the structure");
+            it_can_interact_with(the_structure).Otherwise_Throw("Can't interact with the structure");
 
             if (the_structure.is_an_Exit())
             {

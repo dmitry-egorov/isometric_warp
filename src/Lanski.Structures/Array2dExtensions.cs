@@ -145,19 +145,18 @@ namespace Lanski.Structures
             
             IEnumerable<Possible<T>> Neighbours()
             {
-                yield return array.TryGetRef(i.Left());
-                yield return array.TryGetRef(i.Up());
-                yield return array.TryGetRef(i.Right());
-                yield return array.TryGetRef(i.Down());
+                yield return array.TryGet(i.Left());
+                yield return array.TryGet(i.Up());
+                yield return array.TryGet(i.Right());
+                yield return array.TryGet(i.Down());
             }
         }
         
         public static AdjacentNeighbourhood2D<T> GetAdjacentNeighbours<T>(this T[,] array, Index2D i)
-            where T: struct
         {
             return new AdjacentNeighbourhood2D<T>(Neighbours().ToArray());
             
-            IEnumerable<T?> Neighbours()
+            IEnumerable<Possible<T>> Neighbours()
             {
                 yield return array.TryGet(i.Left());
                 yield return array.TryGet(i.Up());
@@ -167,23 +166,14 @@ namespace Lanski.Structures
         }
 
         public static bool Is<T>(this T[,] array, Index2D i, Func<T, bool> condition, bool defaultValue = false) 
-            where T : struct
         {
-            return array.TryGet(i).Select(condition).GetValueOrDefault(defaultValue);
+            return array.TryGet(i).Select(condition).s_Value_Or(defaultValue);
         }
 
-        public static Possible<T> TryGetRef<T>(this T[,] array, Index2D i)
-            where T: class
+        public static Possible<T> TryGet<T>(this T[,] array, Index2D i)
         {
             return i.Fits(array) ? array.Get(i) 
                                  : Possible.Empty<T>();
-        }
-        
-        public static T? TryGet<T>(this T[,] array, Index2D i)
-            where T: struct
-        {
-            return i.Fits(array) ? array.Get(i) 
-                                 : default(T?);
         }
     }
 
@@ -233,15 +223,14 @@ namespace Lanski.Structures
     }
 
     public struct AdjacentNeighbourhood2D<T>
-        where T: struct
     {
-        public T? Left  => Adjacent[0]; 
-        public T? Up    => Adjacent[1]; 
-        public T? Right => Adjacent[2]; 
-        public T? Down  => Adjacent[3]; 
-        public readonly T?[] Adjacent;//TODO: use read-only interface
+        public Possible<T> Left  => Adjacent[0]; 
+        public Possible<T> Up    => Adjacent[1]; 
+        public Possible<T> Right => Adjacent[2]; 
+        public Possible<T> Down  => Adjacent[3]; 
+        public readonly Possible<T>[] Adjacent;//TODO: use read-only interface
 
-        public AdjacentNeighbourhood2D(T?[] adjacent)
+        public AdjacentNeighbourhood2D(Possible<T>[] adjacent)
         {
             Adjacent = adjacent;
         }

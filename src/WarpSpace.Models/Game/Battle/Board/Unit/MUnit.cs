@@ -38,7 +38,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool is_Alive => its_health.is_Normal;
         public bool can_Move => its_mover.can_Move;
 
-        public WeaponType s_Weapon_Type => its_type.s_Weapon_Type;
+        public MWeaponType s_Weapon_Type => its_type.s_Weapon_Type;
         public int s_Total_Moves => its_type.s_Total_Moves;
         public int s_Total_Hit_Points => its_type.s_Total_Hit_Points;
         public int s_Bay_Size => its_type.s_Bay_Size;

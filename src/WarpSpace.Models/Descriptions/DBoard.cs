@@ -38,7 +38,7 @@ namespace WarpSpace.Models.Descriptions
             var rows = Tiles
                 .EnumerateRows()
                 .Select(row => string.Join(" ", row
-                    .Select(t => t.Type.s_Char().ToString())
+                    .Select(t => t.Type.s_Serialization_Symbol.ToString())
                     .ToArray()))
                 .ToArray();
             

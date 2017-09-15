@@ -1,18 +1,16 @@
 ﻿using System;
 using Lanski.Structures;
-using UnityEngine;
-using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Settings
 {
     [Serializable]
-    public class UnitTypeModelSettings
+    public struct UnitTypeModelSettings
     {
         public int TotalHitPoints;
         public int TotalMoves;
         public int BaySize;
-        public WeaponType WeaponType;
+        public WeaponTypeSettings WeaponType;
         public ChassisTypeSettings ChassisType;
         public int Loot;
         public int InitialInventory;
@@ -24,8 +22,8 @@ namespace WarpSpace.Settings
             TotalHitPoints,
             TotalMoves,
             BaySize,
-            WeaponType,
-            UnityEngine.Object.FindObjectOfType<ChassisTypeSettingsHolder>().s_Model_Of(ChassisType),
+            WeaponTypeSettings.s_Model_Of(WeaponType),
+            ChassisTypeSettings.s_Model_Of(ChassisType),
             InventoryHelper.Possible_Stuff_From(Loot),
             InventoryHelper.Possible_Stuff_From(InitialInventory),
             CanDock,

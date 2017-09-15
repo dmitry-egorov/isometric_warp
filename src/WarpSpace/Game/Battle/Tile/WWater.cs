@@ -4,25 +4,25 @@ using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
 using WarpSpace.Game.Battle.Board;
-using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
+using WarpSpace.Settings;
 
 namespace WarpSpace.Game.Battle.Tile
 {
-    public class Water : MonoBehaviour
+    public class WWater : MonoBehaviour
     {
         public OwnSettings Settings;
-        public MeshFilter MeshFilter;
         
         public void Start()
         {
             var the_tile = GetComponentInParent<WTile>().s_Tile_Model;
+            var the_mesh_filter = GetComponentInChildren<MeshFilter>();
             var the_position = the_tile.s_Position;
-            var anyWaterAround = the_tile.s_Neighbors.Elements.Enumerate().Any(x => x.s_Landscape_Type == LandscapeType.Water);
+            var anyWaterAround = the_tile.s_Neighbors.Elements.Enumerate().Any(x => LandscapeTypeSettings.Of(x.s_Landscape_Type).World.IsWaterLayer);
 
             if (anyWaterAround)
             {
-                MeshFilter.sharedMesh = SelectMesh();
+                the_mesh_filter.sharedMesh = SelectMesh();
                 
                 var its_transform = transform;
                 its_transform.localRotation = GetRotation();

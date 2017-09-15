@@ -15,7 +15,7 @@ MonoBehaviour:
     TotalHitPoints: 5
     TotalMoves: 2
     BaySize: 4
-    WeaponType: 0
+    WeaponType: {fileID: 11400000, guid: 17e60f20bd7abc047af16b8523942131, type: 2}
     ChassisType: {fileID: 11400000, guid: be7458749f9cc7a44ab486c683f50460, type: 2}
     Loot: 0
     InitialInventory: 0

@@ -10,13 +10,12 @@ namespace WarpSpace.UI.Common
     [RequireComponent(typeof(Image))]
     public class UIButton: MonoBehaviour, IPointerClickHandler, IPointerUpHandler, IPointerDownHandler, IPointerExitHandler, IPointerEnterHandler
     {
-        public bool Warning_Mode;
+        public UIButtonSettings Settings;
         public Stream<TheVoid> s_Presses_Stream => its_presses_stream;
 
         public void Awake()
         {
             its_image = GetComponent<Image>();
-            the_settings = FindObjectOfType<UISettingsHolder>();
             its_presses_stream = new Stream<TheVoid>();
         }
 
@@ -83,22 +82,19 @@ namespace WarpSpace.UI.Common
         
         private void updates_the_material()
         {
-            its_image.material = it_is_disabled ? the_settings.DisabledButtonMaterial
+            its_image.material = it_is_disabled ? Settings.DisabledMaterial
                                                 :
                 its_pressing_is_in_progress ?
-                !it_is_toggled ? the_settings.PressedButtonMaterial 
-                : Warning_Mode ? the_settings.PressedWarningButtonMaterial
-                               : the_settings.PressedHighlightedButtonMaterial
+                !it_is_toggled ? Settings.PressedMaterial 
+                               : Settings.PressedToggledMaterial
                                             :
-                !it_is_toggled ? the_settings.NormalButtonMaterial 
-                : Warning_Mode ? the_settings.NormalWarningButtonMaterial
-                               : the_settings.NormalHighlightedButtonMaterial
+                !it_is_toggled ? Settings.NormalMaterial 
+                               : Settings.NormalToggledMaterial
                 ;
             ;
         }
         
         private Image its_image;
-        private UISettingsHolder the_settings;
         private Stream<TheVoid> its_presses_stream;
 
         private bool its_pressing_is_in_progress;

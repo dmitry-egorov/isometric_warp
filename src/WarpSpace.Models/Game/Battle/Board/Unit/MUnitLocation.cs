@@ -31,7 +31,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool is_Passable_By(MChassisType the_chassis_type) => this.is_a_Bay() || this.is_a_Tile(out var the_tile) && the_tile.is_Passable_By(the_chassis_type); 
         public bool is_Accessible_From(MUnitLocation the_other_location) => its_tile.is_Adjacent_To(the_other_location.s_Tile);
         public bool is_Adjacent_To(MStructure structure) => is_a_Tile(out var own_tile) && own_tile.is_Adjacent_To(structure.s_Location);
-        public void must_be_Empty() => this.is_Empty().Must_Be_True();
         public bool has_a_Unit(out MUnit unit) => its_possible_unit.has_a_Value(out unit);
         public bool is_Empty() => its_possible_unit.Has_Nothing();
 

@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1196594566, guid: b5035fe32e8853442beb87cb342037d7, type: 3}
+  m_Name: Water
+  m_EditorClassIdentifier: 
+  World:
+    OwnHeight: -0.2
+    SameTypeHeight: -0.4
+    SameTypeHeightCross: -0.45
+    Falloff: 0.5
+    Meshes:
+    - {fileID: 4300002, guid: edcbd94b089b0416396c4a9601c15a62, type: 3}
+    IsWaterLayer: 1
+  SerializationSymbol: 87

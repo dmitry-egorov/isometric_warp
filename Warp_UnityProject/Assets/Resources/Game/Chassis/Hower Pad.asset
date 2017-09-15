@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Name: Hower Pad
   m_EditorClassIdentifier: 
   PassableLandscapeTypes:
-  - LandscapeType: 2
+  - LandscapeType: {fileID: 11400000, guid: 24d90ac4ff027374c9388a4c8ae56ff1, type: 2}
     Passability: 2
