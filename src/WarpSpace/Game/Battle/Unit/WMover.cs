@@ -15,6 +15,13 @@ namespace WarpSpace.Game.Battle.Unit
     [RequireComponent(typeof(WUnit))]
     public class WMover: MonoBehaviour
     {
+        public float BoostSpeedMultiplier; 
+        
+        public bool is_Moving => it_has_a_target() || it_has_a_pending_target();
+        
+        public void Fast_Forwards() => it_is_fast_forwarding = true;
+        public void Resumes_Normal_Speed() => it_is_fast_forwarding = false;
+
         public void Start() => it_inits();
         public void Update() => it_updates();
         public void OnDestroy() => it_destructs();
@@ -32,6 +39,8 @@ namespace WarpSpace.Game.Battle.Unit
 
             its_acceleration = the_acceleration_from(its_settings.MaxSpeed, its_settings.MinSpeed, its_settings.AccelerationDistance);
             its_angular_acceleration = the_acceleration_from(its_settings.MaxAngularSpeed, its_settings.MinAngularSpeed, its_settings.AnglularAccelerationDistance);
+
+            its_transform.localRotation = Direction2D.Left.To_Rotation();
             
             it_disables_rendering_if_needed();
             
@@ -48,19 +57,21 @@ namespace WarpSpace.Game.Battle.Unit
                 return Mathf.Abs((v1 * v1 - v0 * v0) / (2f * d));
             }
         }
-        
-        private bool has_a_pending_target(out TargetLocation the_pending_target)
+
+        private bool it_has_a_pending_target() => its_queue.Count != 0;
+        private bool it_has_a_pending_target(out TargetLocation the_pending_target)
         {
             the_pending_target = default(TargetLocation);
-            if (its_queue.Count == 0) 
+            if (!it_has_a_pending_target()) 
                 return false;
                 
             the_pending_target = its_queue.Peek();
             return true;
         }
 
-        private bool has_a_target(out TargetLocation current_target) => its_current_target.has_a_Value(out current_target);
-        private bool doesnt_have_a_target(out TargetLocation current_target) => !has_a_target(out current_target);
+        private bool it_has_a_target() => its_current_target.has_a_Value();
+        private bool it_has_a_target(out TargetLocation current_target) => its_current_target.has_a_Value(out current_target);
+        private bool it_doesnt_have_a_target(out TargetLocation current_target) => !it_has_a_target(out current_target);
         private bool it_is_in_limbo() => its_transform.parent == the_limbo;
         
         private void enqueues_a_move(MUnitLocation source, MUnitLocation target)
@@ -92,7 +103,7 @@ namespace WarpSpace.Game.Battle.Unit
         {
             this.updates_the_target();
 
-            if (this.doesnt_have_a_target(out var the_target))
+            if (this.it_doesnt_have_a_target(out var the_target))
                 return;
 
             if (the_target.is_Teleportation)
@@ -109,9 +120,9 @@ namespace WarpSpace.Game.Battle.Unit
 
         private void updates_the_target()
         {
-            while (this.has_a_pending_target(out var the_pending_target) && 
+            while (this.it_has_a_pending_target(out var the_pending_target) && 
                    (
-                       !this.has_a_target(out var the_target) 
+                       !this.it_has_a_target(out var the_target) 
                        || 
                        the_target.can_be_Merged_With(the_pending_target)
                    )
@@ -127,7 +138,8 @@ namespace WarpSpace.Game.Battle.Unit
             var dt = Time.deltaTime;
             var tr = the_target_tile.s_Rotation;
             var tp = the_target_tile.s_Position;
-                
+            var boost = it_is_fast_forwarding ? BoostSpeedMultiplier : 1f;
+
             updates_the_parent();
                 
             var r = its_transform.localRotation;
@@ -164,7 +176,7 @@ namespace WarpSpace.Game.Battle.Unit
 
                 float the_target_speed() => dr > maxdr ? maxs : mins;
                 float new_rotation_speed() => Mathf.MoveTowards(s, ts, a * dt);
-                Quaternion new_rotation() => Quaternion.RotateTowards(r, tr, s * dt);
+                Quaternion new_rotation() => Quaternion.RotateTowards(r, tr, boost * s * dt);
             }
 
             void updates_objects_position()
@@ -189,7 +201,7 @@ namespace WarpSpace.Game.Battle.Unit
 
                 float the_target_speed() => dp > maxdp ? maxs : mins; 
                 float new_speed() => Mathf.MoveTowards(s, ts, a * dt);
-                Vector3 new_position() => Vector3.MoveTowards(p, tp, s * dt);
+                Vector3 new_position() => Vector3.MoveTowards(p, tp, boost * s * dt);
             }
 
             void checks_if_target_Is_reached()
@@ -225,7 +237,7 @@ namespace WarpSpace.Game.Battle.Unit
 
         private void it_disables_rendering_if_needed()
         {
-            var iterator = the_renderers.s_new_iterator();
+            var iterator = the_renderers.s_New_Iterator();
             while (iterator.has_a_Value(out var the_renderer))
             {
                 if (the_renderer != null)
@@ -244,13 +256,14 @@ namespace WarpSpace.Game.Battle.Unit
         private IReadOnlyList<MeshRenderer> the_renderers;
         private Action its_wiring;
 
+        private Possible<TargetLocation> its_current_target;
         private Queue<TargetLocation> its_queue;
         private float its_acceleration;
         private float its_angular_acceleration;
 
-        private Possible<TargetLocation> its_current_target;
         private float its_speed;
         private float its_angular_speed;
+        private bool it_is_fast_forwarding;
 
         private struct TargetLocation
         {

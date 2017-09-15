@@ -36,7 +36,7 @@ namespace Lanski.Reactive
             if (!_isSignaling)
             {
                 _isSignaling = true;
-                var iterator = _subscribers.s_new_iterator();
+                var iterator = _subscribers.s_New_Iterator();
                 while (iterator.has_a_Value(out var action))
                 {
                     action(value);

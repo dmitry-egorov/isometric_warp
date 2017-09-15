@@ -22,21 +22,38 @@ namespace WarpSpace.Models.Game.Battle.Player
             
             its_selected_units_cell = its_selections_cell.Select(x => x.Select(s => s.s_Unit));
         }
-        
+
+        public Possible<Selection> s_Selection => its_possible_selection;
         public ICell<Possible<MUnit>> s_Selected_Units_Cell => its_selected_units_cell;
         public ICell<Possible<Selection>> s_Selections_Cell => its_selections_cell;
         public IStream<TheVoid> s_Performed_an_Action_Stream => its_performed_an_action_stream;
 
         public bool s_Selected_Unit_is_At(MTile the_tile) => it_has_a_unit_selected(out var the_selected_unit) && the_selected_unit.is_At(the_tile);
-
         public bool has_a_Command_At(MTile the_tile, out UnitCommand the_command) => it_has_a_command_at(the_tile, out the_command);
         public bool Owns(MUnit the_unit) => it_owns(the_unit);
-        
 
-        public void Resets_the_Selection() => its_selection_becomes_empty();
+        public void Suspends()
+        {
+            (!it_is_suspended).Must_Be_True();
+            
+            its_selection_before_suspending = its_possible_selection;
+            its_selection_becomes_empty();
+            it_is_suspended = true;
+        }
+
+        public void Resumes()
+        {
+            it_is_suspended.Must_Be_True();
+            
+            its_selection_becomes(its_selection_before_suspending);
+            it_is_suspended = false;
+        }
 
         public void Executes_a_Command_At(MTile the_tile)
         {
+            if (it_is_suspended)
+                return;
+            
             using (the_signal_guard.Holds_All_Events())
             {
                 if (it_has_a_command_at(the_tile, out var the_command))
@@ -62,6 +79,9 @@ namespace WarpSpace.Models.Game.Battle.Player
 
         public void Toggles_the_Selected_Action_With(DUnitAction the_action_desc)
         {
+            if (it_is_suspended)
+                return;
+            
             using (the_signal_guard.Holds_All_Events())
             {
                 var the_selection = its_possible_selection.must_have_a_Value();
@@ -83,6 +103,9 @@ namespace WarpSpace.Models.Game.Battle.Player
         
         public void Ends_the_Turn()
         {
+            if (it_is_suspended)
+                return;
+            
             using (the_signal_guard.Holds_All_Events())
             {
                 the_game.must_have_a_Battle().Ends_the_Turn();
@@ -90,6 +113,8 @@ namespace WarpSpace.Models.Game.Battle.Player
                 its_performed_an_action_stream.Next();
             }
         }
+        
+        public void Resets_the_Selection() => its_selection_becomes_empty();
 
         private Possible<Selection> its_possible_selection => its_selections_cell.s_Value;
         private Possible<MUnit> its_possible_selected_unit => its_selected_units_cell.s_Value;
@@ -127,6 +152,8 @@ namespace WarpSpace.Models.Game.Battle.Player
         private readonly ICell<Possible<MUnit>> its_selected_units_cell;
         private readonly GuardedStream<TheVoid> its_performed_an_action_stream;
         private readonly MFaction its_faction;
+        private bool it_is_suspended;
+        private Possible<Selection> its_selection_before_suspending;
 
         public struct Selection: IEquatable<Selection> //Maybe add a class, move some mutation methods there?
         {
@@ -165,6 +192,5 @@ namespace WarpSpace.Models.Game.Battle.Player
             private readonly Possible<MUnitAction> its_possible_action;
         }
 
-        
     }
 }

@@ -1,9 +1,10 @@
 Plan
-- end turn speeds up movement greatly
-- draw movement queue line
+- draw movement queue lines
 - the units wait for each other for docking and undocking
 - longer weapon range
 - move several tiles at a time
+- highlight the movement in fill and not stripes
+- on mouse down show the path for movement and affected units for attacking (design it for mobile?)
 - enemy ai
 - weapons can fire at empty tiles
 - more weapon types
@@ -43,6 +44,10 @@ Plan
 
 
 done
++ end turn speeds up movement greatly
+  + end turn waits for the mover
+  + end turn increses speed of all movers
+  + end turn saves and restores selection
 + movement and weapon indicators
 + landscape highlight as a seprate game object
 + use scriptable objects for predefined boards

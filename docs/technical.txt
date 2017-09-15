@@ -1,10 +1,10 @@
 - use scriptable objects instead of types
 - move MDocker to Mover ("moves" action doesn't check for dock)
-- rework highlight subscriptions?
-- fix the outline
 - turn Selection into a class?
 
 done:
+- fix the outline
+- rework highlight subscriptions?
 - undocks to limbo, after docking
 - fix double the units
 - fix overlay creation

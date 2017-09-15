@@ -39,7 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EnumerateExyensions.cs" />
+    <Compile Include="EnumerateExtensions.cs" />
     <Compile Include="LinqExyensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

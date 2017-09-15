@@ -13,6 +13,8 @@ namespace WarpSpace.Game.Battle.Unit
     public class WUnit : MonoBehaviour
     {
         public MUnit s_Unit => its_unit;
+        public bool is_Moving => its_mover.is_Moving;
+        public IStream<TheVoid> s_Destruction_Signal => its_destruction_signal;
 
         public static WUnit Is_Created_From(WUnit prefab, MUnit unit)
         {
@@ -27,10 +29,14 @@ namespace WarpSpace.Game.Battle.Unit
 
             return obj;
         }
+        
+        public void Fast_Forwards_the_Movement() => its_mover.Fast_Forwards();
+        public void Resumes_the_Movement_To_Normal_Speed() => its_mover.Resumes_Normal_Speed();
 
         public void OnDestroy()
         {
             its_subscriptions?.Invoke();
+            its_destruction_signal.Next();
         }
 
         private void inits(MUnit the_unit, MPlayer the_player)
@@ -38,8 +44,8 @@ namespace WarpSpace.Game.Battle.Unit
             var unit_type = the_unit.s_Type;
             
             its_unit = the_unit;
-            its_transform = transform;
-            its_transform.localRotation = Direction2D.Left.To_Rotation();
+            its_mover = GetComponent<WMover>();
+            its_destruction_signal = new Stream<TheVoid>();
             
             it_inits_the_mesh();
             it_inits_the_outliner();
@@ -89,7 +95,8 @@ namespace WarpSpace.Game.Battle.Unit
         }
 
         private MUnit its_unit;
-        private Transform its_transform;
         private Action its_subscriptions;
+        private WMover its_mover;
+        private Stream<TheVoid> its_destruction_signal;
     }
 }

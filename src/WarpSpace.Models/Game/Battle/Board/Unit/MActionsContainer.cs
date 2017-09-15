@@ -39,7 +39,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         public Possible<UnitCommand> s_Regular_Command_At(MTile the_tile)
         {
-            var it = its_regular_actions.s_new_iterator();
+            var it = its_regular_actions.s_New_Iterator();
             while (it.has_a_Value(out var the_regular_action))
             {
                 if (the_regular_action.s_possible_Command_at(the_tile).has_a_Value(out var the_command))

@@ -60,7 +60,7 @@ namespace WarpSpace.Models.Game.Battle.Board
 
         public void Ends_the_Turn()
         {
-            var iterator = its_units_list.s_new_iterator();
+            var iterator = its_units_list.s_New_Iterator();
             while (iterator.has_a_Value(out var unit))
             {
                 unit.Finishes_the_Turn();
