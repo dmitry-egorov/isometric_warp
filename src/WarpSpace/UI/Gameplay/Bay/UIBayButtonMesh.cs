@@ -1,5 +1,6 @@
 ﻿using Lanski.Structures;
 using UnityEngine;
+using WarpSpace.Common.Behaviours;
 using WarpSpace.Game;
 using WarpSpace.Game.Battle;
 using WarpSpace.Game.Battle.Unit;
@@ -14,7 +15,9 @@ namespace WarpSpace.UI.Gameplay.Bay
         public void Start()
         {
             var index = transform.GetSiblingIndex();
-            var unit_mesh = GetComponentInChildren<UnitMesh>();
+            
+            var the_mesh_renderer = GetComponentInChildren<MeshRenderer>();
+            var mesh_presenter = new UnitMeshPresenter(the_mesh_renderer);
             var the_battle_component = FindObjectOfType<WGame>();
 
             the_battle_component.s_Players_Selections_Cell.Subscribe(updates_the_mesh);
@@ -27,11 +30,11 @@ namespace WarpSpace.UI.Gameplay.Bay
                     the_selection.s_Unit.has_a_docked_unit_at(index, out var the_docked_unit)
                 )
                 {
-                    unit_mesh.Present(the_docked_unit.s_Type, the_docked_unit.s_Faction);
+                    mesh_presenter.Presents(the_docked_unit);
                 }
                 else
                 {
-                    unit_mesh.Hide();
+                    mesh_presenter.Hides();
                 }
             }
         }

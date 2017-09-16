@@ -32,7 +32,7 @@ namespace Lanski.Structures
         [Pure]public bool Has_Nothing() => !has_a_Value();
         [Pure]public bool has_a_Value() => _has_a_value;
 
-        [Pure]public bool Doesnt_Have_a_Value(out T o) => !has_a_Value(out o);
+        [Pure]public bool Does_Not_Have_a_Value(out T o) => !has_a_Value(out o);
 
         public void Do(Action<T> action)
         {

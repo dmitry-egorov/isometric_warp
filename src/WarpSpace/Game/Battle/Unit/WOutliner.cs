@@ -1,61 +1,49 @@
-﻿using Lanski.Structures;
-using Lanski.UnityExtensions;
-using UnityEngine;
-using WarpSpace.Overlay.Units;
+using System;
+using Lanski.Structures;
+using WarpSpace.Common.Behaviours;
+using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Game.Battle.Unit
 {
-    [RequireComponent(typeof(Transform))]
-    [RequireComponent(typeof(MeshFilter))]
-    public class WOutliner : MonoBehaviour
+    public class WOutliner
     {
-        public float Offset;
-
-        public void Start() => it_inits();
-        public void Update() => it_updates();
-
-        public void Shows() => gameObject.Shows();
-        public void Hides() => gameObject.Hides();
-
-        private void it_inits()
+        public WOutliner(WUnit the_world_unit, WGame the_game)
         {
-            its_transform = GetComponent<Transform>();
-            its_parents_transform = transform.parent;
-            its_parents_mesh_filter = its_parents_transform.gameObject.GetComponent<MeshFilter>();
-            its_mesh_filter = GetComponent<MeshFilter>();
+            var the_outline = the_world_unit.GetComponentInChildren<Outline>();
+            var the_unit = the_world_unit.s_Unit;
+            var the_player = the_game.s_Player;
             
-            it_builds_the_mesh();
-
-            it_is_initialized = true;
+            if (the_player.Owns(the_unit))
+            {
+                its_wire = it_wires_the_selected_unit();
+            }
+            else
+            {
+                UnityEngine.Object.Destroy(the_outline.gameObject);
+            }
+            
+            //Note: every unit's outliner is wired to the player, wich is not the best in terms of performance.
+            Action it_wires_the_selected_unit() => 
+                the_game
+                    .s_Players_Selected_Units_Cell
+                    .Subscribe(it_handles_the_selected_unit_change)
+            ;
+            
+            void it_handles_the_selected_unit_change(Possible<MUnit> possibly_selected_unit)
+            {
+                if (possibly_selected_unit.has_a_Value(out var the_selected_unit) && the_selected_unit == the_unit)
+                {
+                    the_outline.Shows();
+                }
+                else
+                {
+                    the_outline.Hides();
+                }
+            }
         }
-
-        private void it_builds_the_mesh()
-        {
-            var the_mesh = its_parents_mesh_filter.sharedMesh;
-            if (the_mesh == its_parents_last_mesh)
-                return;
-            
-            its_mesh_filter.sharedMesh = MeshSimplifier.Removes_Duplicate_Vertices_From(the_mesh);
-            its_parents_last_mesh = the_mesh;
-        }
-
-        private void it_updates()
-        {
-            it_is_initialized.Must_Be_True_Otherwise_Throw("The OOutliner must be initialized before the first update");
-            
-            it_builds_the_mesh();
-            
-            its_transform.rotation = its_parents_transform.rotation;
-            its_transform.position = its_parents_transform.position + Quaternion.Euler(-45, 0, 0) * Vector3.up * Offset;
-        }
-
-        private bool it_is_initialized;
-        private Transform its_transform;
-        private Transform its_parents_transform;
-        private MeshFilter its_parents_mesh_filter;
-        private MeshFilter its_mesh_filter;
         
-        private Mesh its_parents_last_mesh;
-
+        public void Destructs() => its_wire?.Invoke();
+        
+        private readonly Action its_wire;
     }
 }

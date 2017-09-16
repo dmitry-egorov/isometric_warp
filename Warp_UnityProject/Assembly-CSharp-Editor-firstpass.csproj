@@ -60,6 +60,7 @@
     <None Include="Assets\Materials\Shaders\Circle.shader" />
     <None Include="Assets\Materials\Shaders\Opaque.shader" />
     <None Include="Assets\Materials\Shaders\Isometric.shader" />
+    <None Include="Assets\Scripts\C5.xml" />
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
@@ -140,6 +141,9 @@
     </Reference>
     <Reference Include="WarpSpace.Editors">
       <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Editor/WarpSpace.Editors.dll</HintPath>
+    </Reference>
+    <Reference Include="C5">
+      <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Scripts/C5.dll</HintPath>
     </Reference>
     <Reference Include="Lanski.Behaviours">
       <HintPath>C:/dev/games/Warp/Warp_UnityProject/Assets/Scripts/Lanski.Behaviours.dll</HintPath>

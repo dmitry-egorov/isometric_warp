@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="C5, Version=2.5.0.0, Culture=neutral, PublicKeyToken=282361b99ded7e8e">
+      <HintPath>..\packages\C5.2.5.3\lib\net45\C5.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -47,6 +50,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Behaviours\Outline.cs" />
+    <Compile Include="Common\Behaviours\UnitMeshPresenter.cs" />
     <Compile Include="Common\Direction2DEx.cs" />
     <Compile Include="Common\Direction2DExtensions.cs" />
     <Compile Include="Common\Index2DData.cs" />
@@ -65,8 +70,9 @@
     <Compile Include="Game\Battle\Tile\WUnitSlot.cs" />
     <Compile Include="Game\Battle\Tile\WWater.cs" />
     <Compile Include="Game\Battle\Tile\WHighlight.cs" />
+    <Compile Include="Game\Battle\Unit\WMovementQueue.cs" />
     <Compile Include="Game\Battle\Unit\WOutliner.cs" />
-    <Compile Include="Game\Battle\Unit\WLimbo.cs" />
+    <Compile Include="Game\Battle\WLimbo.cs" />
     <Compile Include="Game\WGame.cs" />
     <Compile Include="Overlay\OBoard.cs" />
     <Compile Include="Overlay\Units\OPixelPerfectPanel.cs" />
@@ -77,7 +83,6 @@
     <Compile Include="Services\UnityRandom.cs" />
     <Compile Include="Game\Battle\Board\WBoard.cs" />
     <Compile Include="Game\Battle\Board\TileCreationHelper.cs" />
-    <Compile Include="Game\Battle\Unit\UnitMesh.cs" />
     <Compile Include="Game\Battle\Unit\WMover.cs" />
     <Compile Include="Game\Battle\Unit\WUnit.cs" />
     <Compile Include="Settings\ChassisTypeSettings.cs" />
@@ -150,6 +155,9 @@
       <Project>{ba651769-958c-4def-b0ec-15c7a154f76b}</Project>
       <Name>WarpSpace.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

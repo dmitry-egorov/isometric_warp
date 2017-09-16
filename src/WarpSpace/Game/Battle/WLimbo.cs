@@ -1,7 +1,7 @@
 ﻿using Lanski.UnityExtensions;
 using UnityEngine;
 
-namespace WarpSpace.Game.Battle.Unit
+namespace WarpSpace.Game.Battle
 {
     public class WLimbo: MonoBehaviour
     {
