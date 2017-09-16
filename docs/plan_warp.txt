@@ -1,6 +1,7 @@
 Plan
-- move several tiles at a time
 - the units wait for each other for docking and undocking
+- remove unit placeholder
+- move several tiles at a time
 - longer weapon ranges
 - highlight the movement in fill and not stripes
 - on mouse down show the path for movement and affected units for attacking (design it for mobile?)

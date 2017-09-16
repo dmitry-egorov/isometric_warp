@@ -18,7 +18,7 @@ namespace WarpSpace.Models.Game.Battle.Player
             its_faction = the_its_faction;
 
             its_selections_cell = new GuardedCell<Possible<Selection>>(Possible.Empty<Selection>(), the_signal_guard);
-            its_performed_an_action_stream = new GuardedStream<TheVoid>(the_signal_guard);
+            it_performed_an_action = new GuardedStream<TheVoid>(the_signal_guard);
             
             its_selected_units_cell = its_selections_cell.Select(x => x.Select(s => s.s_Unit));
         }
@@ -26,7 +26,7 @@ namespace WarpSpace.Models.Game.Battle.Player
         public Possible<Selection> s_Selection => its_possible_selection;
         public ICell<Possible<MUnit>> s_Selected_Units_Cell => its_selected_units_cell;
         public ICell<Possible<Selection>> s_Selections_Cell => its_selections_cell;
-        public IStream<TheVoid> s_Performed_an_Action_Stream => its_performed_an_action_stream;
+        public IStream<TheVoid> Performed_an_Action => it_performed_an_action;
 
         public bool s_Selected_Unit_is_At(MTile the_tile) => it_has_a_unit_selected(out var the_selected_unit) && the_selected_unit.is_At(the_tile);
         public bool has_a_Command_At(MTile the_tile, out UnitCommand the_command) => it_has_a_command_at(the_tile, out the_command);
@@ -57,7 +57,7 @@ namespace WarpSpace.Models.Game.Battle.Player
             if (it_has_a_selected_unit(out var the_unit) && the_unit.s_Location.is_a_Bay(out var the_bay))
                 its_selected_unit_becomes(the_bay.s_Owner);
 
-            its_performed_an_action_stream.Next();                
+            it_performed_an_action.Next();                
         }
 
         public void Toggles_the_Selected_Action_With(DUnitAction the_action_desc)
@@ -80,7 +80,7 @@ namespace WarpSpace.Models.Game.Battle.Player
                     its_selected_action_becomes(the_action);
                 }
             
-                its_performed_an_action_stream.Next();
+                it_performed_an_action.Next();
             }
         }
 
@@ -92,7 +92,7 @@ namespace WarpSpace.Models.Game.Battle.Player
             its_selection_becomes_empty();
             it_is_suspended = true;
             
-            its_performed_an_action_stream.Next();                
+            it_performed_an_action.Next();                
         }
         
         public void Ends_the_Turn_and_Resumes()
@@ -106,7 +106,7 @@ namespace WarpSpace.Models.Game.Battle.Player
                 its_selection_becomes(its_selection_before_suspending);
                 it_is_suspended = false;
             
-                its_performed_an_action_stream.Next();
+                it_performed_an_action.Next();
             }
         }
         
@@ -146,7 +146,7 @@ namespace WarpSpace.Models.Game.Battle.Player
         private readonly SignalGuard the_signal_guard;
 
         private readonly ICell<Possible<MUnit>> its_selected_units_cell;
-        private readonly GuardedStream<TheVoid> its_performed_an_action_stream;
+        private readonly GuardedStream<TheVoid> it_performed_an_action;
         private readonly MFaction its_faction;
         private bool it_is_suspended;
         private Possible<Selection> its_selection_before_suspending;

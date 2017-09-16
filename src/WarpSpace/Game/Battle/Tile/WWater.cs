@@ -31,7 +31,7 @@ namespace WarpSpace.Game.Battle.Tile
 
             Mesh SelectMesh() => Settings.Meshes.SelectBy(the_position);
             Vector3 GetScale() => TileCreationHelper.GetMirror(the_position) ? new Vector3(-1, 1, 1) : Vector3.one;
-            Quaternion GetRotation() => TileHelper.GetOrientation(the_position).To_Rotation();
+            Quaternion GetRotation() => TileHelper.GetOrientation(the_position).s_Rotation();
         }
         
         [Serializable]

@@ -1,0 +1,17 @@
+move
+materialize
+hide
+WaitForPositionAndOrientationOf
+WaitForPosition
+
+dock:
+Mothership rotates towards the unit
+Unit waits for the mothership to rotate
+Unit moves
+Mothership waits for the unit to move
+
+undock:
+Mothership rotates towards the target
+Unit waits for the mothership to rotate
+Unit moves
+Mothership waits for the unit to move

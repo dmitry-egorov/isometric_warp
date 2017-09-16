@@ -37,7 +37,7 @@ namespace WarpSpace.Game.Battle.Tile
             
             it_builds_the_mesh_if_neccessary();
             it_is_up_to_date = false;
-            the_player.s_Performed_an_Action_Stream.Subscribe(x => it_is_up_to_date = false);
+            the_player.Performed_an_Action.Subscribe(x => it_is_up_to_date = false);
 
             it_is_initialized = true;
         }

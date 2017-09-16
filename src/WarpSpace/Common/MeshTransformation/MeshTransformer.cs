@@ -22,7 +22,7 @@ namespace WarpSpace.Common.MeshTransformation
 
         private static IEnumerable<Vector3> Rotate(IEnumerable<Vector3> vs, Direction2D orientation)
         {
-            var rotation = orientation.To_Rotation();
+            var rotation = orientation.s_Rotation();
 
             return vs.Select(v => rotation * v );
         }

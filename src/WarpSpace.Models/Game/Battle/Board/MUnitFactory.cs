@@ -7,14 +7,14 @@ namespace WarpSpace.Models.Game.Battle.Board
 {
     public class MUnitFactory
     {
-        public IStream<MUnit> s_Unit_Creations_Stream => its_unit_creations_stream;
+        public IStream<MUnit> Created_a_Unit => it_created_a_unit;
 
         public MUnitFactory(MBoard the_owner, MGame the_game, SignalGuard the_signal_guard)
         {
             this.the_signal_guard = the_signal_guard;
             this.the_game = the_game;
             its_owner = the_owner;
-            its_unit_creations_stream = new GuardedStream<MUnit>(the_signal_guard);
+            it_created_a_unit = new GuardedStream<MUnit>(the_signal_guard);
         }
 
         public void Creates_a_Unit(DUnit desc, MUnitLocation initial_location)
@@ -44,13 +44,13 @@ namespace WarpSpace.Models.Game.Battle.Board
             {
                 var possible_unit_in_the_bay = the_bay_units[i];
                 if (possible_unit_in_the_bay.has_a_Value(out var unit_in_the_bay))
-                    Creates_a_Unit(unit_in_the_bay, bay[i].must_have_a_Value());
+                    Creates_a_Unit(unit_in_the_bay, bay[i]);
             }
         }
         
-        void it_signals_the_creation(MUnit unit) => its_unit_creations_stream.Next(unit);
+        void it_signals_the_creation(MUnit unit) => it_created_a_unit.Next(unit);
 
-        private readonly GuardedStream<MUnit> its_unit_creations_stream;
+        private readonly GuardedStream<MUnit> it_created_a_unit;
         private readonly MBoard its_owner;
         private readonly MGame the_game;
         private readonly SignalGuard the_signal_guard;

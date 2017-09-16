@@ -20,6 +20,9 @@ namespace WarpSpace.Common.Behaviours
 
         private void it_inits()
         {
+            if (it_is_initialized)
+                return;
+            
             its_transform = GetComponent<Transform>();
             its_targets_transform = transform.parent;
             its_mesh_filter = GetComponent<MeshFilter>();
@@ -41,7 +44,7 @@ namespace WarpSpace.Common.Behaviours
 
         private void it_updates()
         {
-            it_is_initialized.Must_Be_True_Otherwise_Throw("The OOutliner must be initialized before the first update");
+            it_inits();
             
             it_builds_the_mesh();
             

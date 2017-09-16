@@ -9,10 +9,10 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public MDestructor(MUnit owner, SignalGuard the_signal_guard)
         {
             its_owner = owner;
-            its_destruction_signal = new GuardedStream<TheVoid>(the_signal_guard);
+            it_destructed = new GuardedStream<TheVoid>(the_signal_guard);
         }
 
-        public IStream<TheVoid> s_Destruction_Signal => its_destruction_signal;
+        public IStream<TheVoid> Destructed => it_destructed;
 
         internal void Destructs()
         {
@@ -27,9 +27,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             this.sends_the_destruction_signal();
         }
 
-        private void sends_the_destruction_signal() => its_destruction_signal.Next();
+        private void sends_the_destruction_signal() => it_destructed.Next();
 
         private readonly MUnit its_owner;
-        private readonly GuardedStream<TheVoid> its_destruction_signal;
+        private readonly GuardedStream<TheVoid> it_destructed;
     }
 }

@@ -20,7 +20,7 @@ namespace Lanski.Geometry
             return new Vector2(v.x, v.y);
         }
 
-        public static float DistanceTo(this Vector3 v1, Vector3 v2)
+        public static float s_Distance_To(this Vector3 v1, Vector3 v2)
         {
             return (v2 - v1).magnitude;
         }

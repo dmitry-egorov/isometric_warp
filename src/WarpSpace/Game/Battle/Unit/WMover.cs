@@ -1,4 +1,5 @@
-﻿using Lanski.Geometry;
+﻿using System;
+using Lanski.Geometry;
 using Lanski.Reactive;
 using Lanski.Structures;
 using UnityEngine;
@@ -9,18 +10,19 @@ namespace WarpSpace.Game.Battle.Unit
 {
     public class WMover
     {
-        public WMover(WAgenda the_queue, MovementSettings the_settings, float the_its_boost_speed_multiplier, Transform the_transform)
+        public WMover(WAgenda the_agenda, MovementSettings the_settings, float the_its_boost_speed_multiplier, Transform the_transform, Transform the_limbo)
         {
-            this.the_queue = the_queue;
+            this.the_agenda = the_agenda;
             its_settings = the_settings;
             its_transform = the_transform;
-            its_boost_speed_multiplier = the_its_boost_speed_multiplier;
+            this.the_limbo = the_limbo;
+            its_boost_time_multiplier = the_its_boost_speed_multiplier;
             its_movements = new Stream<TheVoid>();
 
             its_acceleration = the_acceleration_from(its_settings.MaxSpeed, its_settings.MinSpeed, its_settings.AccelerationDistance);
             its_angular_acceleration = the_acceleration_from(its_settings.MaxAngularSpeed, its_settings.MinAngularSpeed, its_settings.AnglularAccelerationDistance);
 
-            its_transform.localRotation = Direction2D.Left.To_Rotation();
+            its_transform.localRotation = Direction2D.Left.s_Rotation();
             
             float the_acceleration_from(float max_speed, float min_speed, float acceleration_distance)
             {
@@ -39,129 +41,132 @@ namespace WarpSpace.Game.Battle.Unit
 
         public void Updates() => it_updates();
 
+        private float the_elapsed_time() => (it_is_fast_forwarding ? its_boost_time_multiplier : 1f) * Time.deltaTime;
+
         private void it_updates()
         {
-            var the_possible_target = the_queue.Gives_the_Next_Target();
-            if (the_possible_target.Does_Not_Have_a_Value(out var the_target))
+            if (!the_agenda.s_Next_Task(out var the_task))
                 return;
 
-            if (the_target.is_Teleportation)
+            if (the_task.is_to_Hide())
             {
-                it_teleports_to(the_target);
+                it_teleports_to(the_limbo, Quaternion.identity);
+            }
+            else if (the_task.is_to_Show_At(out var the_parent, out var the_orientation))
+            {
+                it_teleports_to(the_parent, the_orientation.s_Rotation());
+            }
+            else if (the_task.is_to_Wait_For(out var the_task_container))
+            {
+                it_waits_for(the_task_container);
+            }
+            else if (the_task.is_to_Move_To(out the_parent))
+            {
+                it_moves_to(the_parent);
+            }
+            else if (the_task.is_to_Rotate_To(out the_orientation))
+            {
+                it_rotates_to(the_orientation.s_Rotation());
             }
             else
             {
-                it_moves_to(the_target);
+                throw new InvalidOperationException("Unknown task");
             }
 
             its_movements.Next();
         }
 
-        private void it_moves_to(WAgenda.TargetLocation the_target)
+        private void it_waits_for(WAgenda.TaskContainer the_task_container)
         {
-            var parent = the_target.s_Parent;
-            var dt = Time.deltaTime;
-            var tr = the_target.s_Rotation;
-            var tp = Vector3.zero;
-            var boost = it_is_fast_forwarding ? its_boost_speed_multiplier : 1f;
-
-            updates_the_parent();
-                
-            var r = its_transform.localRotation;
-            var p = its_transform.localPosition;
-
-            updates_objects_rotation();
-            updates_objects_position();
-            checks_if_target_Is_reached();
-
-            void updates_the_parent()
-            {
-                if (its_transform.parent == parent) 
-                    return;
-                
-                its_transform.parent = parent;
-            }
-
-            void updates_objects_rotation()
-            {
-                var dr = remaining_angle();
-
-                if (dr == 0f)
-                    return;
-
-                var s = its_angular_speed;
-                var a = its_angular_acceleration;
-                var maxs = its_settings.MaxAngularSpeed;
-                var mins = its_settings.MinAngularSpeed;
-                var maxdr = its_settings.AnglularAccelerationDistance;
-                    
-                var ts = the_target_speed();
-                its_angular_speed = s = new_rotation_speed();
-                its_transform.localRotation = r = new_rotation();
-
-                float the_target_speed() => dr > maxdr ? maxs : mins;
-                float new_rotation_speed() => Mathf.MoveTowards(s, ts, a * dt);
-                Quaternion new_rotation() => Quaternion.RotateTowards(r, tr, boost * s * dt);
-            }
-
-            void updates_objects_position()
-            {
-                var dr = remaining_angle();
-                var dp = remaining_distance();
-                    
-                if (dr != 0.0f) 
-                    return;
-                if (dp == 0.0f) 
-                    return;
-                    
-                var s = its_speed;
-                var a = its_acceleration;
-                var maxs = its_settings.MaxSpeed;
-                var mins = its_settings.MinSpeed;
-                var maxdp = its_settings.AccelerationDistance;
-
-                var ts = the_target_speed();
-                its_speed = s = new_speed();
-                its_transform.localPosition = p = new_position();
-
-                float the_target_speed() => dp > maxdp ? maxs : mins; 
-                float new_speed() => Mathf.MoveTowards(s, ts, a * dt);
-                Vector3 new_position() => Vector3.MoveTowards(p, tp, boost * s * dt);
-            }
-
-            void checks_if_target_Is_reached()
-            {
-                var dr = remaining_angle();
-                var dp = remaining_distance();
-                    
-                if (dp != 0f) 
-                    return;
-                if (dr != 0f) 
-                    return;
-                    
-                the_queue.Removes_the_Current_Target();
-                Updates();
-            }
-
-            float remaining_angle() => Quaternion.Angle(r, tr);
-            float remaining_distance() => p.DistanceTo(tp);
+            if (!the_task_container.is_Complete) 
+                return;
+            
+            the_agenda.Completes_the_Current_Task();
         }
 
-        private void it_teleports_to(WAgenda.TargetLocation the_target)
+        private void it_rotates_to(Quaternion the_rotation)
+        {
+            var dt = the_elapsed_time();
+            var r = its_transform.localRotation;
+            var tr = the_rotation;
+            var dr = remaining_angle();
+
+            if (dr == 0f)
+                return;
+
+            var s = its_angular_speed;
+            var a = its_angular_acceleration;
+            var maxs = its_settings.MaxAngularSpeed;
+            var mins = its_settings.MinAngularSpeed;
+            var maxdr = its_settings.AnglularAccelerationDistance;
+                    
+            var ts = the_target_speed();
+            s = its_angular_speed = new_rotation_speed();
+            r = its_transform.localRotation = new_rotation();
+            
+            if (remaining_angle() == 0f)
+                the_agenda.Completes_the_Current_Task();
+
+            float the_target_speed() => dr > maxdr ? maxs : mins;
+            float new_rotation_speed() => it_is_fast_forwarding ? maxs : Mathf.MoveTowards(s, ts, a * dt);
+            Quaternion new_rotation() => Quaternion.RotateTowards(r, tr, s * dt);
+            float remaining_angle() => Quaternion.Angle(r, tr);
+        }
+
+        private void it_moves_to(Transform the_parent)
+        {
+            it_updates_the_parent();
+            
+            var dt = the_elapsed_time();
+            var p = its_transform.localPosition;
+            var tp = Vector3.zero;
+            var dp = remaining_distance();
+                    
+            if (dp == 0.0f) 
+                return;
+                    
+            var s = its_speed;
+            var a = its_acceleration;
+            var maxs = its_settings.MaxSpeed;
+            var mins = its_settings.MinSpeed;
+            var maxdp = its_settings.AccelerationDistance;
+
+            var ts = the_target_speed();
+            its_speed = s = new_speed();
+            its_transform.localPosition = p = new_position();
+            
+            if (remaining_distance() == 0f)
+                the_agenda.Completes_the_Current_Task();
+
+            float the_target_speed() => dp > maxdp ? maxs : mins; 
+            float new_speed() => it_is_fast_forwarding ? maxs : Mathf.MoveTowards(s, ts, a * dt);
+            Vector3 new_position() => Vector3.MoveTowards(p, tp, s * dt);
+            float remaining_distance() => p.s_Distance_To(tp);
+
+            void it_updates_the_parent()
+            {
+                if (its_transform.parent == the_parent) 
+                    return;
+                its_transform.parent = the_parent;
+            }
+        }
+
+        private void it_teleports_to(Transform the_parent, Quaternion the_orientation)
         {
             its_speed = 0;
             its_angular_speed = 0;
-            its_transform.parent = the_target.s_Parent;
+            its_transform.parent = the_parent;
             its_transform.localPosition = Vector3.zero;
-            its_transform.localRotation = the_target.s_Rotation;
+            its_transform.localRotation = the_orientation;
             
-            the_queue.Removes_the_Current_Target();
+            the_agenda.Completes_the_Current_Task();
         }
 
-        private readonly WAgenda the_queue;
+        private readonly WAgenda the_agenda;
         private readonly MovementSettings its_settings;
-        private readonly float its_boost_speed_multiplier;
+        private readonly float its_boost_time_multiplier;
         private readonly Transform its_transform;
+        private readonly Transform the_limbo;
 
         private readonly float its_acceleration;
         private readonly float its_angular_acceleration;

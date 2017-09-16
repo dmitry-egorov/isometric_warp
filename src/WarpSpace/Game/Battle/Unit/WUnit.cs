@@ -15,9 +15,10 @@ namespace WarpSpace.Game.Battle.Unit
         public MeshRenderer UnitMeshRenderer;
 
         public MUnit s_Unit => its_unit;
+        public WAgenda s_Agenda => its_agenda;
         public Transform s_Tarnsform => its_transform;
         
-        public bool is_Moving => its_agenda.has_a_Target;
+        public bool is_Moving => its_agenda.has_a_Task;
         public IStream<WAgenda.Change> s_Agenda_Changed => its_agenda.s_Changes_Stream;
         public IStream<TheVoid> s_Movements => its_mover.s_Movements;
         public IStream<TheVoid> s_Destruction_Signal => its_destruction_signal;
@@ -51,8 +52,8 @@ namespace WarpSpace.Game.Battle.Unit
             its_unit = the_unit;
             its_transform = transform;
             its_outliner = new WOutliner(this, the_game);
-            its_agenda = new WAgenda(this, the_limbo, the_board);
-            its_mover = new WMover(its_agenda, UnitTypeSettings.Of(the_unit.s_Type).Movement, BoostSpeedMultiplier, its_transform);
+            its_agenda = new WAgenda(this, the_board);
+            its_mover = new WMover(its_agenda, UnitTypeSettings.Of(the_unit.s_Type).Movement, BoostSpeedMultiplier, its_transform, the_limbo);
             its_mesh_presenter = new UnitMeshPresenter(UnitMeshRenderer);
             
             its_destruction_signal = new Stream<TheVoid>();
@@ -70,15 +71,15 @@ namespace WarpSpace.Game.Battle.Unit
             its_agenda.s_Changes_Stream
                 .Subscribe(e =>
                 {
-                    if (e.is_Teleported_To(out var the_parent) && the_parent == the_limbo)
+                    if (e.is_Completed_a_Task(out var the_task) && the_task.is_to_Hide())
                         gameObject.Hides();
-                    if (e.is_Enqueued_a_Target(out var the_target) && the_target.s_Parent != the_limbo && its_transform.parent == the_limbo)
+                    if (e.is_Enqueued_a_Task(out the_task) && the_task.is_to_Show()) //Works, unless you can schedule showing before hiding (not possible now)
                         gameObject.Shows();
                 });
         }
 
         void it_destroys_itself_on_destruction_of_the_unit() => 
-            its_unit.s_Destruction_Signal
+            its_unit.Destructed
                 .First()
                 .Subscribe(isAlive => Destroy(gameObject))
         ;

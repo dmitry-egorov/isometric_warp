@@ -37,6 +37,11 @@ namespace Lanski.Reactive
             return new WhereStream<T>(inStream, filter);
         }
 
+        public static IStream<T> Merge<T>(this IEnumerable<IStream<T>> streams)
+        {
+            return streams.Aggregate((IStream<T>) new Stream<T>(), (a, i) => a.Merge(i));
+        }
+        
         public static IStream<T> Merge<T>(this IStream<T> firstStream, IStream<T> secondStream)
         {
             if (firstStream == null)

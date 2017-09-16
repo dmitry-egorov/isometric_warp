@@ -25,13 +25,13 @@ namespace WarpSpace.Overlay.Units
             it_wires_the_destruction_signal();
 
             Action it_wires_the_docked_events() => 
-                the_unit.s_Dock_States_Stream
+                the_unit.s_Is_Docked_Cell
                 .Subscribe(is_docked => gameObject.SetActive(!is_docked))
             ;
 
             void it_wires_the_destruction_signal()
             {
-                the_unit.s_Destruction_Signal
+                the_unit.Destructed
                     .Subscribe(_ => Destroy(gameObject));
             }
         }

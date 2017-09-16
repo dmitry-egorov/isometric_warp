@@ -24,7 +24,7 @@ MonoBehaviour:
     SerializationSymbol: 77
   Movement:
     MaxAngularSpeed: 45
-    MinAngularSpeed: 5
+    MinAngularSpeed: 10
     AnglularAccelerationDistance: 15
     MaxSpeed: 0.45
     MinSpeed: 0.02

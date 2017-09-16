@@ -25,7 +25,7 @@ namespace WarpSpace.Game.Battle.Tile
 
                 var description = structure.s_Description;
                 var prefab = GetPrefab(description);
-                var rotation = description.s_Orientation.To_Rotation();
+                var rotation = description.s_Orientation.s_Rotation();
 
                 var structure_component = Instantiate(prefab, its_transform);
                 structure_component.transform.localRotation = rotation;

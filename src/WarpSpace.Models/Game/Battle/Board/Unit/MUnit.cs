@@ -46,14 +46,14 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public Possible<DStuff> s_Loot => its_type.s_Loot; 
 
         public ICell<HealthState> s_Health_States_Cell => its_health.s_States_Cell;
-        public ICell<bool> s_can_Move_Cell => its_mover.s_can_Move_Cell;
+        public ICell<bool> s_can_Move_Cell => its_mover.s_Can_Move_Cell;
         public ICell<bool> s_can_Fire_Cell => its_weapon.s_Can_Fire_Cell; 
-
         public ICell<Possible<DStuff>> s_Inventory_Contents_Cell => its_inventory.s_Stuffs_Cell;
-        public IStream<Movement> s_Movements_Stream => its_mover.s_Movements_Stream;
-        public IStream<bool> s_Dock_States_Stream => its_mover.s_Dock_States_Stream;
-        public IStream<TheVoid> s_Destruction_Signal => its_destructor.s_Destruction_Signal;
         public ICell<int> s_Moves_Left_Cell => its_mover.s_Moves_Left_Cell;
+        public ICell<bool> s_Is_Docked_Cell => its_mover.s_Is_Docked_Cell;
+        public IStream<Movement> Moved => its_mover.Moved;
+        public IStream<TheVoid> Destructed => its_destructor.Destructed;
+        public IStream<BaysDockedUnitChanged> s_Docked_Unit_Changed => its_possible_bay.Select_Stream_Or_Empty(the_bay => the_bay.s_Docked_Unit_Changed);
 
         public Possible<MUnitAction> s_possible_Action_For(DUnitAction the_action_desc) => its_actions_container.s_possible_Action_For(the_action_desc);
         public Possible<UnitCommand> s_Regular_Command_At(MTile the_tile) => its_actions_container.s_Regular_Command_At(the_tile);

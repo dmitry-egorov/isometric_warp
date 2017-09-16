@@ -11,11 +11,8 @@ namespace WarpSpace.Models.Game.Battle.Board
     public class MBoard
     {
         public MTile[,] s_Tiles => its_tiles;
-        public IReadOnlyList<MUnit> s_Units => its_units_list;
 
-        public IStream<MUnit> s_Stream_Of_Unit_Creations => its_unit_factory.s_Unit_Creations_Stream;
-        public IStream<MUnit> s_Unit_Destructions_Stream => its_unit_destructions_stream;
-        public IStream<TheVoid> s_Turn_Ends_Stream => its_turn_ends_stream;
+        public IStream<MUnit> Created_a_Unit => its_unit_factory.Created_a_Unit;
 
         public MBoard(DBoard the_description, DUnit the_mothership_desc, SignalGuard the_signal_guard, MGame the_game)
         {
@@ -77,7 +74,7 @@ namespace WarpSpace.Models.Game.Battle.Board
 
             void wires_the_units_destruction()
             {
-                the_unit.s_Destruction_Signal
+                the_unit.Destructed
                     .Subscribe(destroyed =>
                     {
                         its_units_hashset.Remove(the_unit);

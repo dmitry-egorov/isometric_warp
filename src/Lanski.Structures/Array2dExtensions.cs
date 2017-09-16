@@ -426,6 +426,26 @@ namespace Lanski.Structures
             }
         }
     }
+
+    public static class Direction2DExtensions
+    {
+        public static Direction2D s_Opposite(this Direction2D the_direction)
+        {
+            switch (the_direction)
+            {
+                case Direction2D.Left:
+                    return Direction2D.Right;
+                case Direction2D.Up:
+                    return Direction2D.Down;
+                case Direction2D.Right:
+                    return Direction2D.Left;
+                case Direction2D.Down:
+                    return Direction2D.Up;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(the_direction), the_direction, null);
+            }
+        }
+    }
     
     public enum Direction2D
     {

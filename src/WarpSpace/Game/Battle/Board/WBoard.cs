@@ -24,7 +24,8 @@ namespace WarpSpace.Game.Battle.Board
         public bool s_Units_Are_Moving => its_units.SAny(unit => unit.is_Moving);
 
         public WTile this[MTile the_tile] => its_tiles.Get(the_tile.s_Position);
-        
+        public WUnit s_Unit_For(MUnit the_source_unit) => its_units_map[the_source_unit];
+
         public IEnumerator Ends_the_Turn()
         {
             var the_player = its_game.s_Player;
@@ -46,11 +47,17 @@ namespace WarpSpace.Game.Battle.Board
             its_transform = transform;
             its_game = GetComponentInParent<WGame>();
             its_units = new List<WUnit>();
+            its_units_map = new Dictionary<MUnit, WUnit>();
 
             its_created_units_stream.Subscribe(wunit =>
             {
                 its_units.Add(wunit);//Note: use a better structure for performance
-                wunit.s_Destruction_Signal.Subscribe(_ => its_units.Remove(wunit));
+                its_units_map.Add(wunit.s_Unit, wunit);
+                wunit.s_Destruction_Signal.Subscribe(_ =>
+                {
+                    its_units.Remove(wunit);
+                    its_units_map.Remove(wunit.s_Unit);
+                });
             });
         }
 
@@ -61,7 +68,7 @@ namespace WarpSpace.Game.Battle.Board
             ;
             
             its_game.s_Battles_Cell
-                .SelectMany_Or_Empty(the_battle => the_battle.s_Board.s_Stream_Of_Unit_Creations)
+                .SelectMany_Or_Empty(the_battle => the_battle.s_Board.Created_a_Unit)
                 .Subscribe(the_unit => it_creates_a_unit_from(the_unit))
             ;
         }
@@ -71,6 +78,7 @@ namespace WarpSpace.Game.Battle.Board
             gameObject.DestroyChildren();
             its_limbo.Destroys_All_Children();
             its_units.Clear();
+            its_units_map.Clear();
             
             its_new_Battle_stream.Next(the_possible_battle);
 
@@ -100,6 +108,7 @@ namespace WarpSpace.Game.Battle.Board
         private RepeatAllStream<WUnit> its_created_units_stream;
         private RepeatAllStream<Possible<MBattle>> its_new_Battle_stream;
         private List<WUnit> its_units;
+        private Dictionary<MUnit, WUnit> its_units_map;
         private WTile[,] its_tiles;
         private WLimbo its_limbo;
         private Transform its_transform;

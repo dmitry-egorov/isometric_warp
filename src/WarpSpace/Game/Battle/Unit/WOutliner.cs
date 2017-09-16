@@ -34,6 +34,7 @@ namespace WarpSpace.Game.Battle.Unit
                 if (possibly_selected_unit.has_a_Value(out var the_selected_unit) && the_selected_unit == the_unit)
                 {
                     the_outline.Shows();
+                    the_outline.Update();
                 }
                 else
                 {
