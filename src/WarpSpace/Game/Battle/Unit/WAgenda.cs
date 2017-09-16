@@ -10,14 +10,14 @@ using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Game.Battle.Unit
 {
-    public class WMovementQueue
+    public class WAgenda
     {
-        public WMovementQueue(WUnit the_owner, Transform the_limbo, WBoard the_board)
+        public WAgenda(WUnit the_owner, Transform the_limbo, WBoard the_board)
         {
             this.the_board = the_board;
             this.the_limbo = the_limbo;
             its_queue = new CircularQueue<TargetLocation>(16, MemoryType.Strict);
-            its_movement_events_stream = new Stream<MovementEvent>();
+            its_movement_events_stream = new Stream<Change>();
 
             its_wiring = it_wires_the_movements();
 
@@ -25,7 +25,7 @@ namespace WarpSpace.Game.Battle.Unit
         }
         
         public bool has_a_Target => it_has_a_target();
-        public IStream<MovementEvent> s_Movement_Events_Stream => its_movement_events_stream;
+        public IStream<Change> s_Changes_Stream => its_movement_events_stream;
 
         public void Destructs() => it_destructs();
 
@@ -67,7 +67,7 @@ namespace WarpSpace.Game.Battle.Unit
         private void it_enqueues_a_target(TargetLocation the_target_location) 
         {
             its_queue.Enqueue(the_target_location);
-            its_movement_events_stream.Next(MovementEvent.Create.MovingTowards(the_target_location));
+            its_movement_events_stream.Next(Change.Create.Enqueued(the_target_location));
         }
 
         private void it_updates_the_queue()
@@ -89,13 +89,13 @@ namespace WarpSpace.Game.Battle.Unit
         private void it_discards_the_current_target()
         {
             var the_target = its_queue.Dequeue();
-            its_movement_events_stream.Next(MovementEvent.Create.Discarded(the_target));
+            its_movement_events_stream.Next(Change.Create.Discarded(the_target));
         }
         
         private void it_removes_the_current_target()
         {
             var the_target = its_queue.Dequeue();
-            its_movement_events_stream.Next(MovementEvent.Create.Reched(the_target));
+            its_movement_events_stream.Next(Change.Create.Reached(the_target));
         }
 
         private bool it_doesnt_have_a_target(out TargetLocation current_target) => !it_has_a_target(out current_target);
@@ -118,7 +118,7 @@ namespace WarpSpace.Game.Battle.Unit
         private readonly Transform the_limbo;
         private readonly Action its_wiring;
         private readonly CircularQueue<TargetLocation> its_queue;
-        private readonly Stream<MovementEvent> its_movement_events_stream;
+        private readonly Stream<Change> its_movement_events_stream;
 
         public struct TargetLocation
         {
@@ -139,20 +139,20 @@ namespace WarpSpace.Game.Battle.Unit
             ;
         }
 
-        public struct MovementEvent
+        public struct Change
         {
             public static class Create
             {
-                public static MovementEvent MovingTowards(TargetLocation the_target) => new MovementEvent(new Enqued {Target = the_target});
-                public static MovementEvent Reched(TargetLocation the_target) => new MovementEvent(new Reached {Target = the_target});
-                public static MovementEvent Discarded(TargetLocation the_target) => new MovementEvent(new Discarded {Target = the_target});
+                public static Change Enqueued(TargetLocation the_target) => new Change(new Enqueued {Target = the_target});
+                public static Change Reached(TargetLocation the_target) => new Change(new Reached {Target = the_target});
+                public static Change Discarded(TargetLocation the_target) => new Change(new Discarded {Target = the_target});
             }
             
-            private struct Enqued { public TargetLocation Target; }
+            private struct Enqueued { public TargetLocation Target; }
             private struct Reached { public TargetLocation Target; }
             private struct Discarded { public TargetLocation Target; }
 
-            private MovementEvent(Or<Enqued, Reached, Discarded> the_its_variant) => its_variant = the_its_variant;
+            private Change(Or<Enqueued, Reached, Discarded> the_its_variant) => its_variant = the_its_variant;
             
             public bool is_Teleported_To(out Transform the_parent_object)
             {
@@ -165,12 +165,16 @@ namespace WarpSpace.Game.Battle.Unit
                 the_parent_object = null;
                 return false;
             }
+            
+            public bool is_Enqueued_a_Target() => its_variant.is_a_T1();
+            public bool is_Reached_a_Target() => its_variant.is_a_T2();
+            public bool is_Discarded_a_Target() => its_variant.is_a_T3();
 
             public bool is_Enqueued_a_Target(out TargetLocation the_target) => its_variant.as_a_T1().Select(x => x.Target).has_a_Value(out the_target);
             public bool is_Reached_a_Target(out TargetLocation the_target) => its_variant.as_a_T2().Select(x => x.Target).has_a_Value(out the_target);
             public bool is_Discarded_a_Target(out TargetLocation the_target) => its_variant.as_a_T3().Select(x => x.Target).has_a_Value(out the_target);
 
-            private readonly Or<Enqued, Reached, Discarded> its_variant;
+            private readonly Or<Enqueued, Reached, Discarded> its_variant;
         }
     }
 }

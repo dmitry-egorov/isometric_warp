@@ -32,23 +32,6 @@ namespace WarpSpace.Models.Game.Battle.Player
         public bool has_a_Command_At(MTile the_tile, out UnitCommand the_command) => it_has_a_command_at(the_tile, out the_command);
         public bool Owns(MUnit the_unit) => it_owns(the_unit);
 
-        public void Suspends()
-        {
-            (!it_is_suspended).Must_Be_True();
-            
-            its_selection_before_suspending = its_possible_selection;
-            its_selection_becomes_empty();
-            it_is_suspended = true;
-        }
-
-        public void Resumes()
-        {
-            it_is_suspended.Must_Be_True();
-            
-            its_selection_becomes(its_selection_before_suspending);
-            it_is_suspended = false;
-        }
-
         public void Executes_a_Command_At(MTile the_tile)
         {
             if (it_is_suspended)
@@ -58,7 +41,7 @@ namespace WarpSpace.Models.Game.Battle.Player
             {
                 if (it_has_a_command_at(the_tile, out var the_command))
                 {
-                    the_command.Executes_With();
+                    the_command.Executes();
                 }
                 else if (it_owns_a_unit_at(the_tile, out var the_target_unit))
                 {
@@ -66,7 +49,7 @@ namespace WarpSpace.Models.Game.Battle.Player
                 }
             }
             
-            //TODO: the selected unit is destroyed??
+            //TODO: the selected unit is destroyed?
 
             if (it_has_a_selected_action(out var the_action) && the_action.is_Not_Available())
                 its_selected_action_becomes_empty();
@@ -100,16 +83,29 @@ namespace WarpSpace.Models.Game.Battle.Player
                 its_performed_an_action_stream.Next();
             }
         }
-        
-        public void Ends_the_Turn()
+
+        public void Suspends_Until_the_Turns_End()
         {
-            if (it_is_suspended)
-                return;
+            (!it_is_suspended).Must_Be_True();
+            
+            its_selection_before_suspending = its_possible_selection;
+            its_selection_becomes_empty();
+            it_is_suspended = true;
+            
+            its_performed_an_action_stream.Next();                
+        }
+        
+        public void Ends_the_Turn_and_Resumes()
+        {
+            it_is_suspended.Must_Be_True();
             
             using (the_signal_guard.Holds_All_Events())
             {
                 the_game.must_have_a_Battle().Ends_the_Turn();
-
+                
+                its_selection_becomes(its_selection_before_suspending);
+                it_is_suspended = false;
+            
                 its_performed_an_action_stream.Next();
             }
         }

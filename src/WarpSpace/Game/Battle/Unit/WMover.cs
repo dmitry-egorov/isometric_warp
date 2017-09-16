@@ -1,4 +1,5 @@
 ﻿using Lanski.Geometry;
+using Lanski.Reactive;
 using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common;
@@ -8,12 +9,13 @@ namespace WarpSpace.Game.Battle.Unit
 {
     public class WMover
     {
-        public WMover(WMovementQueue the_queue, MovementSettings the_settings, float the_its_boost_speed_multiplier, Transform the_transform)
+        public WMover(WAgenda the_queue, MovementSettings the_settings, float the_its_boost_speed_multiplier, Transform the_transform)
         {
             this.the_queue = the_queue;
             its_settings = the_settings;
             its_transform = the_transform;
             its_boost_speed_multiplier = the_its_boost_speed_multiplier;
+            its_movements = new Stream<TheVoid>();
 
             its_acceleration = the_acceleration_from(its_settings.MaxSpeed, its_settings.MinSpeed, its_settings.AccelerationDistance);
             its_angular_acceleration = the_acceleration_from(its_settings.MaxAngularSpeed, its_settings.MinAngularSpeed, its_settings.AnglularAccelerationDistance);
@@ -29,6 +31,8 @@ namespace WarpSpace.Game.Battle.Unit
                 return Mathf.Abs((v1 * v1 - v0 * v0) / (2f * d));
             }
         }
+
+        public IStream<TheVoid> s_Movements => its_movements;
 
         public void Fast_Forwards() => it_is_fast_forwarding = true;
         public void Resumes_Normal_Speed() => it_is_fast_forwarding = false;
@@ -49,9 +53,11 @@ namespace WarpSpace.Game.Battle.Unit
             {
                 it_moves_to(the_target);
             }
+
+            its_movements.Next();
         }
 
-        private void it_moves_to(WMovementQueue.TargetLocation the_target)
+        private void it_moves_to(WAgenda.TargetLocation the_target)
         {
             var parent = the_target.s_Parent;
             var dt = Time.deltaTime;
@@ -141,7 +147,7 @@ namespace WarpSpace.Game.Battle.Unit
             float remaining_distance() => p.DistanceTo(tp);
         }
 
-        private void it_teleports_to(WMovementQueue.TargetLocation the_target)
+        private void it_teleports_to(WAgenda.TargetLocation the_target)
         {
             its_speed = 0;
             its_angular_speed = 0;
@@ -152,13 +158,14 @@ namespace WarpSpace.Game.Battle.Unit
             the_queue.Removes_the_Current_Target();
         }
 
-        private readonly WMovementQueue the_queue;
+        private readonly WAgenda the_queue;
         private readonly MovementSettings its_settings;
         private readonly float its_boost_speed_multiplier;
         private readonly Transform its_transform;
 
         private readonly float its_acceleration;
         private readonly float its_angular_acceleration;
+        private readonly Stream<TheVoid> its_movements;
 
         private float its_speed;
         private float its_angular_speed;

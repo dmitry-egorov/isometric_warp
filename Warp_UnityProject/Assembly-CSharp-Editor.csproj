@@ -56,6 +56,7 @@
     <None Include="Assets\Materials\Shaders\common.cginc" />
     <None Include="Assets\Materials\Shaders\Outline.shader" />
     <None Include="Assets\Materials\Shaders\IsometricSpecular.shader" />
+    <None Include="Assets\Materials\Shaders\Transparent.shader" />
     <None Include="Assets\Materials\Shaders\Striped.shader" />
     <None Include="Assets\Materials\Shaders\Circle.shader" />
     <None Include="Assets\Materials\Shaders\Opaque.shader" />

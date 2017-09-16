@@ -63,6 +63,8 @@
     <Compile Include="Game\Battle\BoardGenerators\BoardSettings.cs" />
     <Compile Include="Game\Battle\BoardGenerators\PredefinedBoard.cs" />
     <Compile Include="Game\Battle\BoardGenerators\RandomBoard.cs" />
+    <Compile Include="Game\Battle\BoardOverlay\WAgendasOverlay.cs" />
+    <Compile Include="Game\Battle\BoardOverlay\WAgendaPresenter.cs" />
     <Compile Include="Game\Battle\Tile\WLandscape.cs" />
     <Compile Include="Game\Battle\Tile\WPlayerActionSource.cs" />
     <Compile Include="Game\Battle\Tile\StructureSlot.cs" />
@@ -70,7 +72,7 @@
     <Compile Include="Game\Battle\Tile\WUnitSlot.cs" />
     <Compile Include="Game\Battle\Tile\WWater.cs" />
     <Compile Include="Game\Battle\Tile\WHighlight.cs" />
-    <Compile Include="Game\Battle\Unit\WMovementQueue.cs" />
+    <Compile Include="Game\Battle\Unit\WAgenda.cs" />
     <Compile Include="Game\Battle\Unit\WOutliner.cs" />
     <Compile Include="Game\Battle\WLimbo.cs" />
     <Compile Include="Game\WGame.cs" />

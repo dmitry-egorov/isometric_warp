@@ -1,8 +1,7 @@
 Plan
-- draw movement queue lines
-- the units wait for each other for docking and undocking
-- longer weapon range
 - move several tiles at a time
+- the units wait for each other for docking and undocking
+- longer weapon ranges
 - highlight the movement in fill and not stripes
 - on mouse down show the path for movement and affected units for attacking (design it for mobile?)
 - enemy ai
@@ -11,6 +10,7 @@ Plan
 - weapon models
 - fire weapon animation
 - the units wait for each other if their path is crossed
+- speedup movements as a separate button
 
 - select enemy to see its info
 - highlight end turn when no more actions are available
@@ -44,6 +44,7 @@ Plan
 
 
 done
++ draw agenda lines
 + end turn speeds up movement greatly
   + end turn waits for the mover
   + end turn increses speed of all movers

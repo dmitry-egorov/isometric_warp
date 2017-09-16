@@ -67,7 +67,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             return false;
         }
         
-        public void Executes_With()
+        public void Executes()
         {
             if (this.is_a_Fire_Command(out var the_weapon, out var the_target_unit))
             {

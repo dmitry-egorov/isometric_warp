@@ -28,15 +28,14 @@ namespace WarpSpace.Game.Battle.Board
         public IEnumerator Ends_the_Turn()
         {
             var the_player = its_game.s_Player;
-            the_player.Suspends();
+            the_player.Suspends_Until_the_Turns_End();
 
             it_fast_forwards_all_movements();
             while (s_Units_Are_Moving)
                 yield return null;
             resumes_all_movements_to_normal_speed();
 
-            the_player.Resumes();
-            the_player.Ends_the_Turn();
+            the_player.Ends_the_Turn_and_Resumes();
         }
 
         void Awake()
