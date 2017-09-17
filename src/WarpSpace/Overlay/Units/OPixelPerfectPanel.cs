@@ -7,9 +7,6 @@ namespace WarpSpace.Overlay.Units
     [RequireComponent(typeof(RectTransform))]
     public class OPixelPerfectPanel : MonoBehaviour
     {
-        private RectTransform _rect_transform;
-        private Action _wiring;
-
         void Awake()
         {
             _rect_transform = GetComponent<RectTransform>();
@@ -26,5 +23,8 @@ namespace WarpSpace.Overlay.Units
         {
             _wiring();
         }
+        
+        private RectTransform _rect_transform;
+        private Action _wiring;
     }
 }

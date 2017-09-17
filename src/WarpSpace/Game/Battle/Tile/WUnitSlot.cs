@@ -1,15 +1,21 @@
-﻿using UnityEngine;
+﻿using Lanski.Structures;
+using UnityEngine;
+using WarpSpace.Game.Battle.Unit;
 
 namespace WarpSpace.Game.Battle.Tile
 {
     public class WUnitSlot: MonoBehaviour
     {
-        //Only used as a placeholder for now
-        public Transform Transform { get; private set; }
+        public Vector3 s_Position => its_transform.position;
+        public Transform s_Transform => its_transform;
 
         public void Awake()
         {
-            Transform = transform;
+            its_transform = transform;
         }
+        
+        private Transform its_transform;
+
+        
     }
 }

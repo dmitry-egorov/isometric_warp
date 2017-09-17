@@ -8,8 +8,9 @@ namespace WarpSpace.Game.Battle.Tile
 {
     public class WTile : MonoBehaviour
     {
-        public WUnitSlot s_UnitSlot => its_unit_slot;
+        public WUnitSlot s_Unit_Slot => its_unit_slot;
         public MTile s_Tile_Model => its_tile_model;
+        public WTasksHolder s_Tasks_Holder => its_tasks_holder;
 
         public static WTile Create(WTile prefab, Transform parent, MTile tile, Dimensions2D dimensions, MPlayer player)
         {
@@ -21,6 +22,7 @@ namespace WarpSpace.Game.Battle.Tile
         private void Init(MTile tile, Dimensions2D dimensions, MPlayer player)
         {
             its_tile_model = tile;
+            its_tasks_holder = new WTasksHolder();
             var position = tile.s_Position;
 
             transform.localPosition = GetPosition(position, dimensions);
@@ -47,5 +49,6 @@ namespace WarpSpace.Game.Battle.Tile
         
         private MTile its_tile_model;
         private WUnitSlot its_unit_slot;
+        private WTasksHolder its_tasks_holder;
     }
 }

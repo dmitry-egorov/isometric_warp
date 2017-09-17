@@ -21,7 +21,8 @@ namespace WarpSpace.Models.Game.Battle.Board
         {
             initial_location.is_Empty().Otherwise_Throw("Can't create a unit, since it's initial location is not emoty");
 
-            var the_new_unit = new MUnit(desc, initial_location, the_game, the_signal_guard);
+            var the_new_unit = new MUnit(its_last_id, desc, initial_location, the_game, the_signal_guard);
+            its_last_id++;
 
             initial_location.s_Occupant_Becomes(the_new_unit);
 
@@ -54,5 +55,6 @@ namespace WarpSpace.Models.Game.Battle.Board
         private readonly MBoard its_owner;
         private readonly MGame the_game;
         private readonly SignalGuard the_signal_guard;
+        private int its_last_id;
     }
 }

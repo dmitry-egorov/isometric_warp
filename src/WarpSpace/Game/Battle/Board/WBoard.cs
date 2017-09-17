@@ -21,22 +21,28 @@ namespace WarpSpace.Game.Battle.Board
         
         public IStream<Possible<MBattle>> s_New_Battles_Stream => its_new_Battle_stream;
         public IStream<WUnit> s_Created_Units_Stream => its_created_units_stream;
-        public bool s_Units_Are_Moving => its_units.SAny(unit => unit.is_Moving);
 
-        public WTile this[MTile the_tile] => its_tiles.Get(the_tile.s_Position);
+        public WTile this[Index2D the_position] => its_tiles.Get(the_position);
+        public WTile this[MTile the_tile] => this[the_tile.s_Position];
         public WUnit s_Unit_For(MUnit the_source_unit) => its_units_map[the_source_unit];
+        public WUnitSlot s_Slot_Of(Index2D the_position) => this[the_position].s_Unit_Slot;
 
         public IEnumerator Ends_the_Turn()
         {
             var the_player = its_game.s_Player;
             the_player.Suspends_Until_the_Turns_End();
 
-            it_fast_forwards_all_movements();
-            while (s_Units_Are_Moving)
-                yield return null;
-            resumes_all_movements_to_normal_speed();
+            yield return this.Fast_Forwards_All_Movements();
 
             the_player.Ends_the_Turn_and_Resumes();
+        }
+
+        public IEnumerator Fast_Forwards_All_Movements()
+        {
+            it_bosts_all_movements();
+            while (its_units_are_moveng)
+                yield return null;
+            resumes_all_movements_to_normal_speed();
         }
 
         void Awake()
@@ -72,6 +78,8 @@ namespace WarpSpace.Game.Battle.Board
                 .Subscribe(the_unit => it_creates_a_unit_from(the_unit))
             ;
         }
+        
+        private bool its_units_are_moveng => its_units.SAny(unit => unit.is_Moving);
 
         private void it_handles_a_new_battle(Possible<MBattle> the_possible_battle)
         {
@@ -102,7 +110,7 @@ namespace WarpSpace.Game.Battle.Board
             its_created_units_stream.Next(world_unit);
         }
         
-        private void it_fast_forwards_all_movements() => its_units.SForEach(the_unit =>the_unit.Fast_Forwards_the_Movement());
+        private void it_bosts_all_movements() => its_units.SForEach(the_unit =>the_unit.Fast_Forwards_the_Movement());
         private void resumes_all_movements_to_normal_speed() => its_units.SForEach(the_unit =>the_unit.Resumes_the_Movement_To_Normal_Speed());
 
         private RepeatAllStream<WUnit> its_created_units_stream;

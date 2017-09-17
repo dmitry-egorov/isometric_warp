@@ -1,6 +1,4 @@
 Plan
-- the units wait for each other for docking and undocking
-- remove unit placeholder
 - move several tiles at a time
 - longer weapon ranges
 - highlight the movement in fill and not stripes
@@ -45,6 +43,8 @@ Plan
 
 
 done
++ remove unit placeholder
++ the units wait for each other for docking and undocking
 + draw agenda lines
 + end turn speeds up movement greatly
   + end turn waits for the mover

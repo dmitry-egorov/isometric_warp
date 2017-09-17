@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security;
 using Lanski.Structures;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 
@@ -7,6 +8,7 @@ namespace WarpSpace.Settings
     [Serializable]
     public struct UnitTypeModelSettings
     {
+        public string Name;
         public int TotalHitPoints;
         public int TotalMoves;
         public int BaySize;
@@ -19,6 +21,7 @@ namespace WarpSpace.Settings
         public char SerializationSymbol;
 
         public MUnitType s_Description() => new MUnitType(
+            Name,
             TotalHitPoints,
             TotalMoves,
             BaySize,

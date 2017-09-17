@@ -22,6 +22,8 @@ namespace Lanski.Structures
             return true;
         }
 
+        public static bool @as<T>(this T value, out T other) { other = value; return true; }
+
         public static bool @is<T>(this T value, T other) where T : IEquatable<T> => value.Equals(other);
         public static bool is_not<T>(this T value, T other) where T : IEquatable<T> => !value.Equals(other);
     }

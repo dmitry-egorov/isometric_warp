@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Name: Tank
   m_EditorClassIdentifier: 
   Model:
+    Name: Tank
     TotalHitPoints: 2
     TotalMoves: 3
     BaySize: 0

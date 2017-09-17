@@ -1,14 +1,13 @@
-﻿using System.Collections;
+using System.Collections;
 using Lanski.Structures;
 using UnityEngine;
-using WarpSpace.Game;
 using WarpSpace.Game.Battle.Board;
 using WarpSpace.UI.Common;
 
 namespace WarpSpace.UI.Gameplay.EndTurn
 {
     [RequireComponent(typeof(UIButton))]
-    public class EndTurnButton : MonoBehaviour
+    public class FastForwardButton : MonoBehaviour
     {
         void Start()
         {
@@ -26,7 +25,7 @@ namespace WarpSpace.UI.Gameplay.EndTurn
         {
             its_button.Becomes_Disabled();
 
-            yield return StartCoroutine(the_world_board.Ends_the_Turn());
+            yield return the_world_board.Fast_Forwards_All_Movements();
 
             its_button.Becomes_Normal();
         }

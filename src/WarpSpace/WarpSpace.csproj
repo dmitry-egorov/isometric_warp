@@ -68,12 +68,15 @@
     <Compile Include="Game\Battle\Tile\WLandscape.cs" />
     <Compile Include="Game\Battle\Tile\WPlayerActionSource.cs" />
     <Compile Include="Game\Battle\Tile\StructureSlot.cs" />
+    <Compile Include="Game\Battle\Tile\WTasksHolder.cs" />
     <Compile Include="Game\Battle\Tile\WTile.cs" />
     <Compile Include="Game\Battle\Tile\WUnitSlot.cs" />
     <Compile Include="Game\Battle\Tile\WWater.cs" />
     <Compile Include="Game\Battle\Tile\WHighlight.cs" />
     <Compile Include="Game\Battle\Unit\WAgenda.cs" />
     <Compile Include="Game\Battle\Unit\WOutliner.cs" />
+    <Compile Include="Game\Battle\Unit\WScheduler.cs" />
+    <Compile Include="Game\Battle\Unit\WSpacial.cs" />
     <Compile Include="Game\Battle\WLimbo.cs" />
     <Compile Include="Game\WGame.cs" />
     <Compile Include="Overlay\OBoard.cs" />
@@ -85,7 +88,7 @@
     <Compile Include="Services\UnityRandom.cs" />
     <Compile Include="Game\Battle\Board\WBoard.cs" />
     <Compile Include="Game\Battle\Board\TileCreationHelper.cs" />
-    <Compile Include="Game\Battle\Unit\WMover.cs" />
+    <Compile Include="Game\Battle\Unit\WExecutor.cs" />
     <Compile Include="Game\Battle\Unit\WUnit.cs" />
     <Compile Include="Settings\ChassisTypeSettings.cs" />
     <Compile Include="Settings\InventoryHelper.cs" />
@@ -109,6 +112,7 @@
     <Compile Include="UI\Gameplay\Bay\UIBay.cs" />
     <Compile Include="UI\Gameplay\Bay\UIBayButtonMesh.cs" />
     <Compile Include="UI\Gameplay\EndTurn\EndTurnButton.cs" />
+    <Compile Include="UI\Gameplay\EndTurn\FastForwardButton.cs" />
     <Compile Include="UI\Gameplay\Inventory\InventoryPresenter.cs" />
     <Compile Include="UI\Gameplay\ShowWhenUnitSelected.cs" />
   </ItemGroup>

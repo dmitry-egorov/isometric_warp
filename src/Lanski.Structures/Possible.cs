@@ -34,7 +34,7 @@ namespace Lanski.Structures
 
         [Pure]public bool Does_Not_Have_a_Value(out T o) => !has_a_Value(out o);
 
-        public void Do(Action<T> action)
+        public void Does(Action<T> action)
         {
             if (has_a_Value(out var value))
                 action(value);
@@ -52,11 +52,13 @@ namespace Lanski.Structures
         [Pure] public Possible<TResult> map<TResult>(Func<T, TResult> selector) => Select(selector);
         [Pure] public Possible<TResult> fmap<TResult>(Func<T, Possible<TResult>> selector) => SelectMany(selector);
         [Pure] public Possible<TResult> SelectMany<TResult>(Func<T, Possible<TResult>> selector) => has_a_Value(out var value) ? selector(value) : default(Possible<TResult>);
+        [Pure] public Possible<TResult> Converted_With<TResult>(Func<T, TResult> selector) => Select(selector);
         [Pure] public Possible<TResult> Select<TResult>(Func<T, TResult> selector) => has_a_Value(out var value) ? new Possible<TResult>(true, selector(value)) : default(Possible<TResult>);
         
         public T s_Value_Or(T defaultValue) => has_a_Value(out var value) ? value : defaultValue;
         
         public bool Equals(Possible<T> other) => _has_a_value == other._has_a_value && (!_has_a_value || EqualityComparer<T>.Default.Equals(_obj, other._obj));
+        public override string ToString() => has_a_Value(out var the_value) ? the_value.ToString() : "Empty";
 
         public static implicit operator Possible<T>(T value) => new Possible<T>(true, value);
     }

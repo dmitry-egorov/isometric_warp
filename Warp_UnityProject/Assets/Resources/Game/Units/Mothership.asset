@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Name: Mothership
   m_EditorClassIdentifier: 
   Model:
+    Name: Mothership
     TotalHitPoints: 5
     TotalMoves: 2
     BaySize: 4

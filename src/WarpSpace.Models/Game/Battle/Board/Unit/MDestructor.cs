@@ -24,10 +24,10 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             if (its_owner.is_At_a_Bay(out var the_bay))
                 the_bay.s_Owner.Takes(the_loot);
 
-            this.sends_the_destruction_signal();
+            it_sends_the_destruction_signal();
         }
 
-        private void sends_the_destruction_signal() => it_destructed.Next();
+        private void it_sends_the_destruction_signal() => it_destructed.Next();
 
         private readonly MUnit its_owner;
         private readonly GuardedStream<TheVoid> it_destructed;

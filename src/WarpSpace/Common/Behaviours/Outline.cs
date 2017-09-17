@@ -13,7 +13,7 @@ namespace WarpSpace.Common.Behaviours
         public MeshFilter Target;
 
         public void Start() => it_inits();
-        public void Update() => it_updates();
+        public void LateUpdate() => it_updates();
 
         public void Shows() => gameObject.Shows();
         public void Hides() => gameObject.Hides();

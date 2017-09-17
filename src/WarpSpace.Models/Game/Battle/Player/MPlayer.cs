@@ -5,7 +5,6 @@ using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using static Lanski.Structures.Semantics;
-using static WarpSpace.Models.Game.MFaction;
 
 namespace WarpSpace.Models.Game.Battle.Player
 {
@@ -23,12 +22,10 @@ namespace WarpSpace.Models.Game.Battle.Player
             its_selected_units_cell = its_selections_cell.Select(x => x.Select(s => s.s_Unit));
         }
 
-        public Possible<Selection> s_Selection => its_possible_selection;
         public ICell<Possible<MUnit>> s_Selected_Units_Cell => its_selected_units_cell;
         public ICell<Possible<Selection>> s_Selections_Cell => its_selections_cell;
         public IStream<TheVoid> Performed_an_Action => it_performed_an_action;
 
-        public bool s_Selected_Unit_is_At(MTile the_tile) => it_has_a_unit_selected(out var the_selected_unit) && the_selected_unit.is_At(the_tile);
         public bool has_a_Command_At(MTile the_tile, out UnitCommand the_command) => it_has_a_command_at(the_tile, out the_command);
         public bool Owns(MUnit the_unit) => it_owns(the_unit);
 
@@ -125,7 +122,6 @@ namespace WarpSpace.Models.Game.Battle.Player
             the_selection.has_an_action(out the_action)
         ;
         private bool it_has_a_selection(out Selection the_selection) => its_possible_selection.has_a_Value(out the_selection);
-        private bool it_has_a_unit_selected(out MUnit the_selected_unit) => its_possible_selected_unit.has_a_Value(out the_selected_unit);
 
         private bool it_owns_a_unit_at(MTile the_tile, out MUnit the_target_unit) => the_tile.has_a_Unit(out the_target_unit) && it_owns(the_target_unit);
         private bool it_owns(MUnit the_unit) => the_unit.Belongs_To(its_faction);
@@ -153,7 +149,6 @@ namespace WarpSpace.Models.Game.Battle.Player
 
         public struct Selection: IEquatable<Selection> //Maybe add a class, move some mutation methods there?
         {
-            public Selection(MUnit unit) : this(unit, Possible.Empty<MUnitAction>()) {}
             public Selection(MUnit unit, Possible<MUnitAction> the_possible_action): this()
             {
                 its_unit = unit;

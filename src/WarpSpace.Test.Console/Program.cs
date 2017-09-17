@@ -27,8 +27,8 @@ namespace WarpSpace.Test.Console
             var a_missale_launcher = new MWeaponType(2, new DDamage(1));
             var a_cannon = new MWeaponType(1, new DDamage(2));
             
-            var tank_type = new MUnitType(2, 3, 0, a_cannon, a_track, new DStuff(10), Possible.Empty<DStuff>(), true, false, 'T');
-            var mothership_type = new MUnitType(5, 2, 4, a_missale_launcher, a_hower_pad, new DStuff(50), Possible.Empty<DStuff>(), false, true, 'M');
+            var tank_type = new MUnitType("Tank", 2, 3, 0, a_cannon, a_track, new DStuff(10), Possible.Empty<DStuff>(), true, false, 'T');
+            var mothership_type = new MUnitType("Mothership", 5, 2, 4, a_missale_launcher, a_hower_pad, new DStuff(50), Possible.Empty<DStuff>(), false, true, 'M');
             var the_unit_types = new [] {tank_type, mothership_type};
 
             var the_players_faction = new MFaction();

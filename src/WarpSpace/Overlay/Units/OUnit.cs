@@ -1,6 +1,5 @@
 ﻿using System;
 using Lanski.Geometry;
-using Lanski.UnityExtensions;
 using UnityEngine;
 using WarpSpace.Game.Battle.Unit;
 using WarpSpace.Models.Game.Battle.Board.Unit;

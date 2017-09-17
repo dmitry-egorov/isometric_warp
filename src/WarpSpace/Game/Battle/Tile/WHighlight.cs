@@ -10,7 +10,6 @@ namespace WarpSpace.Game.Battle.Tile
     public class WHighlight: MonoBehaviour
     {
         public Material MoveHighlight;
-        public Material UnitHighlight;
         public Material InteractionHighlight;
         public Material UseWeaponHighlight;
 
@@ -18,8 +17,7 @@ namespace WarpSpace.Game.Battle.Tile
         public void Update() => it_updates();
 
         Possible<Material> its_current_material() =>
-                  the_player.s_Selected_Unit_is_At(its_tile)              ? UnitHighlight
-                : !the_player.has_a_Command_At(its_tile, out var command) ? Possible.Empty<Material>()  
+                  !the_player.has_a_Command_At(its_tile, out var command) ? Possible.Empty<Material>()  
                 : command.is_a_Fire_Command()                             ? UseWeaponHighlight
                 : command.is_a_Tile_Move_Command()                        ? MoveHighlight 
                 : command.is_a_Dock_Command()                             ? InteractionHighlight

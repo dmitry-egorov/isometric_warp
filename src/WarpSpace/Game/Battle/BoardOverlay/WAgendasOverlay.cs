@@ -21,20 +21,20 @@ namespace WarpSpace.Game.Battle.BoardOverlay
         {
             var the_world_board = FindObjectOfType<WBoard>();
 
-            the_world_board.s_New_Battles_Stream.Subscribe(it_destroys_the_children);
-            the_world_board.s_Created_Units_Stream.Subscribe(it_create_an_agend_presenter);
+            the_world_board.s_New_Battles_Stream.Subscribe(it_destroys_its_children);
+            the_world_board.s_Created_Units_Stream.Subscribe(the_unit => it_create_an_agend_presenter(the_unit, the_world_board));
         }
 
-        private void it_destroys_the_children(Possible<MBattle> the_obj)
+        private void it_destroys_its_children(Possible<MBattle> the_obj)
         {
             its_units.Clear();
             gameObject.DestroyChildren();
         }
 
-        private void it_create_an_agend_presenter(WUnit the_world_unit)
+        private void it_create_an_agend_presenter(WUnit the_world_unit, WBoard the_world_board)
         {
             var obj = Instantiate(UnitPrefab, transform);
-            var the_unit = new WAgendaPresenter(obj, the_world_unit);
+            var the_unit = new WAgendaPresenter(the_world_unit, obj, the_world_board);
             its_units.Add(the_unit);
             the_world_unit.s_Destruction_Signal.Subscribe(_ =>
             {
