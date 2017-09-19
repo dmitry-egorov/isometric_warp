@@ -27,7 +27,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public ICell<Possible<MUnit>> s_Possible_Units_Cell => its_possible_units_cell;
         public MTile s_Tile => its_tile;
 
-        public Passability s_Passability_With(MChassisType the_chassis_type) => this.is_a_Bay() ? Passability.Penalty : this.must_be_a_Tile().s_Passability_With(the_chassis_type); 
+        public Passability s_Passability_With(MChassisType the_chassis_type) => this.is_a_Bay() ? Passability.All_Moves : this.must_be_a_Tile().s_Passability_With(the_chassis_type); 
         public bool is_Passable_By(MChassisType the_chassis_type) => this.is_a_Bay() || this.is_a_Tile(out var the_tile) && the_tile.is_Passable_By(the_chassis_type); 
         public bool is_Accessible_From(MUnitLocation the_other_location) => its_tile.is_Adjacent_To(the_other_location.s_Tile);
         public bool is_Adjacent_To(MStructure structure) => is_a_Tile(out var own_tile) && own_tile.is_Adjacent_To(structure.s_Location);

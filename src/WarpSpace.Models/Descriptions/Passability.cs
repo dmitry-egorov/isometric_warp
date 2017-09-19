@@ -2,8 +2,8 @@
 {
     public enum Passability
     {
-        None,
-        Penalty,
-        Free
+        Unavailable,
+        All_Moves,
+        Single_Move
     }
 }

@@ -56,11 +56,11 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             this.can_Move_To(the_destination).Otherwise_Throw("Can't move the unit to the destination");
 
             var the_old_location = its_location;
-            this.s_location_becomes(the_destination);
+            its_location_becomes(the_destination);
             the_old_location.Becomes_Empty();
             the_destination.s_Occupant_Becomes(its_owner);
             
-            if (the_destination.s_Passability_With(its_chassis_type) == Free)
+            if (the_destination.s_Passability_With(its_chassis_type) == Single_Move)
             {
                 its_uses_Limiter.Spends_a_Use();
             }
@@ -72,7 +72,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         internal void Finishes_the_Turn() => its_uses_Limiter.Restores_the_Uses();
 
-        private void s_location_becomes(MUnitLocation the_new_location) => its_cell_of_locations.s_Value = the_new_location;
+        private void its_location_becomes(MUnitLocation the_new_location) => its_cell_of_locations.s_Value = the_new_location;
 
         private MUnitLocation its_location => its_cell_of_locations.s_Value;
 
