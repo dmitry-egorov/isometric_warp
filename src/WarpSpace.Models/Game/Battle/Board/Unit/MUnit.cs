@@ -60,7 +60,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public ICell<bool> s_Is_Docked_Cell => its_mover.s_Is_Docked_Cell;
         public IStream<Movement> Moved => its_mover.Moved;
         public IStream<TheVoid> Destructed => its_destructor.Destructed;
-        public IStream<BaysDockedUnitChanged> s_Docked_Unit_Changed => its_possible_bay.Select_Stream_Or_Empty(the_bay => the_bay.s_Docked_Unit_Changed);
 
         public Possible<MUnitAction> s_possible_Action_For(DUnitAction the_action_desc) => its_actions_container.s_possible_Action_For(the_action_desc);
         public Possible<UnitCommand> s_Regular_Command_At(MTile the_tile) => its_actions_container.s_Regular_Command_At(the_tile);
@@ -94,7 +93,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool can_Perform_Special_Actions() => this.has_a_Docker(); 
         public bool has_a_Docker() => its_possible_docker.has_a_Value();
 
-        
         public bool can_Dock_At(MTile the_tile, out MUnitLocation the_dock_location) =>
             semantic_resets(out the_dock_location) &&
             this.it_has_a_docker(out var the_docker) && 
@@ -114,7 +112,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         }
         
         private bool it_has_a_docker(out MDocker the_docker) => its_possible_docker.has_a_Value(out the_docker);
-        private Possible<MUnit> its_possible_docked_unit_at(int the_bay_slot_index) => this.has_a_Bay(out var the_bay) ? the_bay.s_possible_unit_at(the_bay_slot_index) : Possible.Empty<MUnit>();
+        private Possible<MUnit> its_possible_docked_unit_at(int the_bay_slot_index) => this.has_a_Bay(out var the_bay) ? the_bay.s_possible_Unit_At(the_bay_slot_index) : Possible.Empty<MUnit>();
 
         private readonly int its_id;
         private readonly string its_name;

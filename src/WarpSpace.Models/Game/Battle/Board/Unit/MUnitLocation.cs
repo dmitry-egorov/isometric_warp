@@ -35,7 +35,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool is_Empty() => its_possible_unit.Has_Nothing();
 
         public Possible<MTile> as_a_Tile() => its_owner.as_a_T1();
-        public bool @is(MTile tile) => this.is_a_Tile(out var own_tile) && own_tile == tile;
         public bool is_a_Tile() => its_owner.is_a_T1();
         public bool is_a_Tile(out MTile tile) => its_owner.is_a_T1(out tile);
         public bool is_a_Bay() => its_owner.is_a_T2();
