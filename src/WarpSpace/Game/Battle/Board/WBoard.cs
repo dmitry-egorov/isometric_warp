@@ -17,8 +17,11 @@ namespace WarpSpace.Game.Battle.Board
     public class WBoard : MonoBehaviour
     {
         public WTile TilePrefab;
-        public WUnit UnitPrefab;
-        
+        public CUnit UnitPrefab;
+        public float BoostSpeedMultiplier;
+
+        public WGameTime s_Time => its_time;
+
         public IStream<Possible<MBattle>> s_New_Battles_Stream => its_new_Battle_stream;
         public IStream<WUnit> s_Created_Units_Stream => its_created_units_stream;
 
@@ -39,10 +42,10 @@ namespace WarpSpace.Game.Battle.Board
 
         public IEnumerator Fast_Forwards_All_Movements()
         {
-            it_bosts_all_movements();
+            its_time.Starts_to_Flow_at_Fast_Forwards_Speed();
             while (its_units_are_moveng)
                 yield return null;
-            resumes_all_movements_to_normal_speed();
+            its_time.Resumes_to_Normal();
         }
 
         void Awake()
@@ -54,6 +57,7 @@ namespace WarpSpace.Game.Battle.Board
             its_game = GetComponentInParent<WGame>();
             its_units = new List<WUnit>();
             its_units_map = new Dictionary<MUnit, WUnit>();
+            its_time = new WGameTime(BoostSpeedMultiplier);
 
             its_created_units_stream.Subscribe(wunit =>
             {
@@ -105,13 +109,10 @@ namespace WarpSpace.Game.Battle.Board
 
         private void it_creates_a_unit_from(MUnit the_model_unit)
         {
-            var world_unit = WUnit.Is_Created_From(UnitPrefab, the_model_unit);
+            var world_unit = CUnit.Is_Created_From(UnitPrefab, the_model_unit);
                 
-            its_created_units_stream.Next(world_unit);
+            its_created_units_stream.Next(world_unit.s_World_Unit);
         }
-        
-        private void it_bosts_all_movements() => its_units.SForEach(the_unit =>the_unit.Fast_Forwards_the_Movement());
-        private void resumes_all_movements_to_normal_speed() => its_units.SForEach(the_unit =>the_unit.Resumes_the_Movement_To_Normal_Speed());
 
         private RepeatAllStream<WUnit> its_created_units_stream;
         private RepeatAllStream<Possible<MBattle>> its_new_Battle_stream;
@@ -121,5 +122,6 @@ namespace WarpSpace.Game.Battle.Board
         private WLimbo its_limbo;
         private Transform its_transform;
         private WGame its_game;
+        private WGameTime its_time;
     }
 }

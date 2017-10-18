@@ -3,6 +3,8 @@ using Lanski.UnityExtensions;
 using UnityEngine;
 using WarpSpace.Game.Battle.Board;
 using WarpSpace.Game.Battle.Unit;
+using WarpSpace.Game.Battle.Unit.Tasks;
+using WarpSpace.Game.Tasks;
 
 namespace WarpSpace.Game.Battle.BoardOverlay
 {
@@ -32,26 +34,29 @@ namespace WarpSpace.Game.Battle.BoardOverlay
         {
             if (change.is_a_Task_Scheduling(out var the_task))
             {
-                if (the_task.is_to_Move_To(out var the_position))
+                if (the_task.is_a(out MovementTo the_movement))
                 {
-                    its_points_list.Add(the_board.s_Slot_Of(the_position).s_Position);
+                    var the_target_position = the_movement.s_Target_Position;
+                    var the_slots_position = the_board.s_Slot_Of(the_target_position).s_Position;
+                    its_points_list.Add(the_slots_position);
                     it_updates_all_points();
                 }
-                else if (the_task.is_to_Show_Up_At(out the_position, out var _))
+                else if (the_task.is_a(out ShowingUpAt the_showing_up))
                 {
                     its_game_object.Shows();
-                    it_updates_the_first_point(the_board.s_Slot_Of(the_position).s_Position);
+                    var the_target_position = the_showing_up.s_Target_Position;
+                    it_updates_the_first_point(the_board.s_Slot_Of(the_target_position).s_Position);
                 }
             }
 
             if (change.is_a_Task_Completion(out the_task))
             {
-                if (the_task.is_to_Move())
+                if (the_task.is_a(out MovementTo _))
                 {
                     its_points_list.RemoveAt(1);
                     it_updates_all_points();
                 }
-                else if(the_task.is_to_Hide())
+                else if (the_task.is_a(out Hiding _))
                 {
                     its_game_object.Hides();
                 }
@@ -60,7 +65,7 @@ namespace WarpSpace.Game.Battle.BoardOverlay
 
         private void it_updates_the_first_point()
         {
-            var current_position = the_world_unit.s_Tarnsform.position;
+            var current_position = the_world_unit.s_Transform.position;
             it_updates_the_first_point(current_position);
         }
 

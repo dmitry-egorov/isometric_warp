@@ -17,7 +17,7 @@ namespace WarpSpace.Models.Game.Battle.Board
             it_created_a_unit = new GuardedStream<MUnit>(the_signal_guard);
         }
 
-        public void Creates_a_Unit(DUnit desc, MUnitLocation initial_location)
+        public MUnit Creates_a_Unit(DUnit desc, MUnitLocation initial_location)
         {
             initial_location.is_Empty().Otherwise_Throw("Can't create a unit, since it's initial location is not emoty");
 
@@ -31,6 +31,8 @@ namespace WarpSpace.Models.Game.Battle.Board
             its_owner.Adds_a_Unit(the_new_unit);
             
             it_signals_the_creation(the_new_unit);
+
+            return the_new_unit;
         }
 
         private void it_creates_the_units_in_the_bay(DUnit desc, MUnit unit)

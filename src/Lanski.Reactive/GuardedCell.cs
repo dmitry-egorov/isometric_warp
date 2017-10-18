@@ -16,10 +16,6 @@ namespace Lanski.Reactive
             the_guard = the_signal_guard;
             
             the_source = new Cell<T>(initial_value);
-            the_last_held_value = initial_value;
-            
-            the_guard.s_Releases_Stream()
-                .Subscribe(Processes_the_Guard_Release);
         }
 
         public T s_Value
@@ -30,28 +26,42 @@ namespace Lanski.Reactive
 
         public void Next(T value)
         {
-            the_last_held_value = value;
-
-            if (the_guard.is_Letting_Events_Through())
-            {
-                the_source.s_Value = value;
-            }
+            the_source.s_Value = value;
         }
         
         public Action Subscribe(Action<T> the_action)
         {
-            return the_source.Subscribe(the_action);
-        }
+            var signal_the_value_on_release = false;
+            var subs = the_source.Subscribe(v =>
+            {
+                if (the_guard.is_Letting_Events_Through())
+                {
+                    the_action(v);
+                }
+                else
+                {
+                    signal_the_value_on_release = true;
+                }
+            });
+            
+            var releases_subs = the_guard.s_Releases_Stream()
+                .Subscribe(value =>
+                {
+                    if (!signal_the_value_on_release) 
+                        return;
+                    
+                    the_action(the_source.s_Value);
+                    signal_the_value_on_release = false;
+                });
 
-        private void Processes_the_Guard_Release(TheVoid _)
-        {
-            the_source.s_Value = the_last_held_value;
+            return () =>
+            {
+                subs();
+                releases_subs();
+            };
         }
 
         private readonly Cell<T> the_source;
         private readonly SignalGuard the_guard;
-
-        private T the_last_held_value;
-        private Action the_subscription;
     }
 }

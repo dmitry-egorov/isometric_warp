@@ -42,7 +42,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             var it = its_regular_actions.s_New_Iterator();
             while (it.has_a_Value(out var the_regular_action))
             {
-                if (the_regular_action.s_possible_Command_at(the_tile).has_a_Value(out var the_command))
+                if (the_regular_action.has_a_Command_at(the_tile, out var the_command))
                     return the_command;
             }
 

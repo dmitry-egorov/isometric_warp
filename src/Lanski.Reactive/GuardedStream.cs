@@ -14,6 +14,7 @@ namespace Lanski.Reactive
             the_queue_of_delayed_events = new Queue<T>();
         }
 
+        public void Happends_With(T value) => Next(value);
         public void Next(T value)
         {
             if (this.the_guard.is_Letting_Events_Through())

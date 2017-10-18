@@ -1,6 +1,8 @@
 ﻿using C5;
 using Lanski.Structures;
 using WarpSpace.Game.Battle.Unit;
+using WarpSpace.Game.Battle.Unit.Tasks;
+using WarpSpace.Game.Tasks;
 
 namespace WarpSpace.Game.Battle.Tile
 {
@@ -8,27 +10,22 @@ namespace WarpSpace.Game.Battle.Tile
     {
         public WTasksHolder()
         {
-            its_queued_tasks = new CircularQueue<WAgenda.Task>();
+            its_queued_tasks = new CircularQueue<ITask>();
         }
 
-        public Possible<WAgenda.Task> s_Last_Task => 
+        public Possible<ITask> s_Last_Task => 
             its_queued_tasks.Count > 0 ? 
-                its_queued_tasks[its_queued_tasks.Count - 1] : 
-                Possible.Empty<WAgenda.Task>()
+                its_queued_tasks[its_queued_tasks.Count - 1].as_a_Possible() : 
+                Possible.Empty<ITask>()
         ;
 
-        public void Completes(WAgenda.Task the_task)
-        {
-            var the_completed_task = its_queued_tasks.Dequeue();
-            
-            (the_task == the_completed_task).Must_Be_True();
-        }
+        public ITask Removes_a_Task() => its_queued_tasks.Dequeue();
 
-        public void Adds(WAgenda.Task the_task)
+        public void Adds(ITask the_task)
         {
             its_queued_tasks.Enqueue(the_task);
         }
 
-        private readonly CircularQueue<WAgenda.Task> its_queued_tasks;
+        private readonly CircularQueue<ITask> its_queued_tasks;
     }
 }

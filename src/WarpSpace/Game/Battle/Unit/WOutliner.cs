@@ -7,13 +7,9 @@ namespace WarpSpace.Game.Battle.Unit
 {
     public class WOutliner
     {
-        public WOutliner(WUnit the_world_unit, WGame the_game)
+        public WOutliner(WGame the_game, MUnit the_unit, Outline the_outline)
         {
-            var the_outline = the_world_unit.GetComponentInChildren<Outline>();
-            var the_unit = the_world_unit.s_Unit;
-            var the_player = the_game.s_Player;
-            
-            if (the_player.Owns(the_unit))
+            if (the_game.s_Player.Owns(the_unit))
             {
                 its_wire = it_wires_the_selected_unit();
             }

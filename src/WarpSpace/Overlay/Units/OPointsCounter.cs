@@ -104,11 +104,8 @@ namespace WarpSpace.Overlay.Units
 
         private Action it_wires_the_health()
         {
-            return its_unit.s_Health_States_Cell.Subscribe(state =>
-            {
-                Current = state.s_Current_Hit_Points;
-                Total = state.s_Total_Hit_Points;
-            });
+            Total = its_unit.s_Total_Hit_Points;
+            return its_unit.s_Current_Hitpoints_Cell.Subscribe(state => Current = state);
         }
 
         private void it_updates_its_children()

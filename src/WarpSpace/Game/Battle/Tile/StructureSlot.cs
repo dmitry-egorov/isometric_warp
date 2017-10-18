@@ -16,7 +16,7 @@ namespace WarpSpace.Game.Battle.Tile
             var its_transform = transform;
             tile.s_Sites_Cell.Subscribe(CreateStructure);
             
-            void CreateStructure(TileSite the_tiles_site)
+            void CreateStructure(MTileOccupant the_tiles_site)
             {
                 gameObject.DestroyChildren();
             

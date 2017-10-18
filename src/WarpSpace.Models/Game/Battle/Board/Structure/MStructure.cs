@@ -18,7 +18,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Structure
         public bool is_a_Debris() => its_description.is_a_Debris();
         public DStructure.Debris must_be_a_Debris() => its_description.must_be_a_Debris();
         
-        public void Destructs() => its_location.Removes_its_Structure();
+        public void Destructs() => its_location.s_Occupant_Becomes(MTileOccupant.Empty);
         
         private readonly MTile its_location;
         private readonly DStructure its_description;

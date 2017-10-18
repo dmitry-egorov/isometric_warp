@@ -54,7 +54,7 @@ namespace WarpSpace.Game.Battle.BoardGenerators
                 arg.Select(type => new DUnit(type, the_native_faction, type.s_Initial_Inventory_Content, new List<Possible<DUnit>>()))
             ; 
             
-            DTileSite SelectContent(Index2D i)
+            DTileOccupant SelectContent(Index2D i)
             {
                 if (i == entrance.Position)
                     return DStructure.Create.Entrance(entrance.Orientation);
@@ -62,7 +62,7 @@ namespace WarpSpace.Game.Battle.BoardGenerators
                     return DStructure.Create.Exit(exit.Orientation);
 
                 return units.Get(i).has_a_Value(out var unit) 
-                    ? (DTileSite) unit 
+                    ? (DTileOccupant) unit 
                     : TheVoid.Instance;
             }
             

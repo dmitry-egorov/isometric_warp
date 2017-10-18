@@ -37,7 +37,7 @@ namespace WarpSpace.Overlay.Units
 
         public void LateUpdate()
         {
-            var the_transform_position = its_world_unit.transform.position;
+            var the_transform_position = its_world_unit.s_Transform.position;
             var the_screen_position = the_camera.WorldToScreenPoint(the_transform_position).XY();
 
             its_rect_transform.anchoredPosition = the_screen_position.Floor();

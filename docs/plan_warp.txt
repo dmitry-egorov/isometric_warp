@@ -1,4 +1,5 @@
 Plan
+- fire missile animation
 - move several tiles at a time
 - longer weapon ranges
 - highlight the movement in fill and not stripes
@@ -7,9 +8,9 @@ Plan
 - weapons can fire at empty tiles
 - more weapon types
 - weapon models
-- fire weapon animation
 - the units wait for each other if their path is crossed
 - speedup movements as a separate button
+- destructable terrain
 
 - select enemy to see its info
 - highlight end turn when no more actions are available

@@ -27,7 +27,7 @@ namespace WarpSpace.UI.Gameplay.Bay
                 if
                 (
                     the_possible_selection.has_a_Value(out var the_selection) &&
-                    the_selection.s_Unit.has_a_docked_unit_at(index, out var the_docked_unit)
+                    the_selection.s_Unit.has_a_Docked_Unit_at(index, out var the_docked_unit)
                 )
                 {
                     mesh_presenter.Presents(the_docked_unit);

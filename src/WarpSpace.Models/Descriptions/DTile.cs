@@ -2,13 +2,13 @@
 {
     public struct DTile
     {
-        public readonly MLandscapeType Type;
-        public readonly DTileSite Initial_Site;
+        public readonly MLandscapeType s_Type;
+        public readonly DTileOccupant s_Initial_Occupant;
 
-        public DTile(MLandscapeType type, DTileSite initial_site)
+        public DTile(MLandscapeType type, DTileOccupant initial_occupant)
         {
-            Type = type;
-            Initial_Site = initial_site;
+            s_Type = type;
+            s_Initial_Occupant = initial_occupant;
         }
     }
 }

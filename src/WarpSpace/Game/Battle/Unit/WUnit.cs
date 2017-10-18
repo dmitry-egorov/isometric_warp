@@ -3,115 +3,101 @@ using Lanski.Structures;
 using UnityEngine;
 using WarpSpace.Common.Behaviours;
 using WarpSpace.Game.Battle.Board;
+using WarpSpace.Game.Tasks;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Settings;
 
 namespace WarpSpace.Game.Battle.Unit
 {
-    public class WUnit : MonoBehaviour
+    public class WUnit
     {
-        public float BoostSpeedMultiplier;
-        public MeshRenderer UnitMeshRenderer;
-
         public MUnit s_Unit => its_unit;
-        public WAgenda s_Agenda => its_agenda;
-        public Transform s_Tarnsform => its_transform;
+        public WScheduler s_Scheduler => its_scheduler;
+        public Transform s_Transform => its_transform;
 
         public bool is_Moving => its_agenda.has_a_Task;
 
         public Possible<Direction2D> s_Orientation => its_spacial.s_Orientation;
         public Possible<Index2D> s_Position => its_spacial.s_Position;
         public IStream<WAgenda.Change> s_Agenda_Changed => its_agenda.Changed;
-        public IStream<TheVoid> s_Movements => its_executor.s_Movements;
+        public IStream<TheVoid> s_Movements => its_mover.s_Movements;
         public IStream<TheVoid> s_Destruction_Signal => its_destruction_signal;
 
-        public static WUnit Is_Created_From(WUnit the_prefab, MUnit the_unit) => it_is_created_from(the_prefab, the_unit);
-        public void Fast_Forwards_the_Movement() => its_executor.Fast_Forwards();
-        public void Resumes_the_Movement_To_Normal_Speed() => its_executor.Resumes_Normal_Speed();
+        public void Updates() => its_agenda.Updates();
+        public void Destructs() => it_destructs();
 
-        public void Update() => its_executor.Updates();
-        public void OnDestroy() => it_destructs();
-        
-        private static WUnit it_is_created_from(WUnit prefab, MUnit unit)
+        public bool Moves_To(Index2D the_target_position) => its_mover.Moves_To(the_target_position);
+        public bool Rotates_To(Direction2D the_orientation) => its_rotator.Rotates_To(the_orientation);
+        public void Hides()
         {
-            var limbo = FindObjectOfType<WLimbo>().s_Transform;
-            var board = FindObjectOfType<WBoard>();
-            var parent = unit.is_At_a_Tile(out var tile) ? board[tile].s_Unit_Slot.s_Transform : limbo;
-
-            var obj = Instantiate(prefab, parent);
-
-            obj.inits(unit);
-
-            return obj;
+            its_teleporter.Teleports_To(Possible.Empty<Index2D>(), Direction2D.Left);
+            its_visibility.Hides();
         }
 
-        private void inits(MUnit the_unit)
+        public void Shows_Up_At(Index2D the_position, Direction2D the_orientation)
         {
-            the_game = FindObjectOfType<WGame>();
-            the_limbo = FindObjectOfType<WLimbo>().s_Transform;
-            the_board = FindObjectOfType<WBoard>();
+            its_teleporter.Teleports_To(the_position, the_orientation);
+            its_visibility.Shows();
+        }
+
+        public WUnit
+        (
+            MUnit the_unit, 
+            WGame the_game, 
+            Transform the_limbo, 
+            WBoard the_board, 
+            Transform the_transform, 
+            MeshRenderer the_unit_mesh_renderer, 
+            GameObject the_game_object, 
+            Outline the_outline
+        )
+        {
+            var the_time = the_board.s_Time;
             
             its_unit = the_unit;
-            its_transform = transform;
-            its_outliner = new WOutliner(this, the_game);
+            its_transform = the_transform;
+            its_game_object = the_game_object;
+            its_outliner = new WOutliner(the_game, the_unit, the_outline);
             its_spacial = new WSpacial(the_unit.s_Position, its_transform, the_limbo, the_board);
-            its_agenda = new WAgenda(this, the_board);
-            its_scheduler = new WScheduler(this, its_agenda);
-            its_executor = new WExecutor(its_agenda, UnitTypeSettings.Of(the_unit.s_Type).Movement, BoostSpeedMultiplier, its_spacial);
-            its_mesh_presenter = new UnitMeshPresenter(UnitMeshRenderer);
+            its_agenda = new WAgenda();
+            var the_mesh_presenter = new UnitMeshPresenter(the_unit_mesh_renderer);
+            its_visibility = new WVisibility(the_unit, the_mesh_presenter);
             
+            its_scheduler = new WScheduler(this, its_agenda, the_board);
+
+            var the_movement_settings = UnitTypeSettings.Of(the_unit.s_Type).Movement;
+            its_mover = new WMover(the_movement_settings, the_time, its_spacial);
+            its_rotator = new WRotator(the_movement_settings, the_time, its_spacial);
+            its_teleporter = new WTeleporter(its_spacial, its_mover, its_rotator);
+
             its_destruction_signal = new Stream<TheVoid>();
+            
+            its_agenda.Changed.Subscribe(e => 
+                Debug.Log($"{the_unit.s_Name} {e}. " + 
+                          $"Remaining: {its_agenda.s_Tasks_Count}. " + 
+                          $"Next task: {its_agenda.s_Possible_Next_Task}")
+            );
 
             it_inits_the_mesh();
             it_destroys_itself_on_destruction_of_the_unit();
-            it_hides_rendering_upon_hiding_and_resumes_it_upon_showing();
         }
 
-        void it_inits_the_mesh()
+        private void it_inits_the_mesh()
         {
             if (its_unit.is_Docked)
             {
-                it_hides();
+                its_visibility.Hides();
             }
             else
             {
-                it_shows();
+                its_visibility.Shows();
             }
         }
 
-        private void it_shows()
-        {
-            its_mesh_presenter.Presents(its_unit);
-        }
-
-        private void it_hides()
-        {
-            its_mesh_presenter.Hides();
-        }
-
-        void it_hides_rendering_upon_hiding_and_resumes_it_upon_showing()
-        {
-            its_agenda.Changed
-                .Subscribe(the_change =>
-                {
-                    if (!the_change.is_a_Task_Completion(out var the_task)) 
-                        return;
-                    
-                    if (the_task.is_to_Hide())
-                    {
-                        its_mesh_presenter.Hides();
-                    }
-                    else if (the_task.is_to_Show_Up())
-                    {
-                        its_mesh_presenter.Presents(its_unit);
-                    }
-                });
-        }
-
-        void it_destroys_itself_on_destruction_of_the_unit() => 
+        private void it_destroys_itself_on_destruction_of_the_unit() => 
             its_unit.Destructed
                 .First()
-                .Subscribe(isAlive => Destroy(gameObject))
+                .Subscribe(_ => Object.Destroy(its_game_object))
         ;
 
         private void it_destructs()
@@ -121,17 +107,17 @@ namespace WarpSpace.Game.Battle.Unit
             its_destruction_signal.Next();
         }
 
-        private WSpacial its_spacial;
-        private MUnit its_unit;
-        private WScheduler its_scheduler;
-        private WAgenda its_agenda;
-        private WExecutor its_executor;
-        private WOutliner its_outliner;
-        private UnitMeshPresenter its_mesh_presenter;
-        private Stream<TheVoid> its_destruction_signal;
-        private Transform its_transform;
-        private WGame the_game;
-        private WBoard the_board;
-        private Transform the_limbo;
+        private readonly WSpacial its_spacial;
+        private readonly MUnit its_unit;
+        private readonly WScheduler its_scheduler;
+        private readonly WAgenda its_agenda;
+        private readonly WOutliner its_outliner;
+        private readonly Stream<TheVoid> its_destruction_signal;
+        private readonly Transform its_transform;
+        private readonly WVisibility its_visibility;
+        private readonly WMover its_mover;
+        private readonly WRotator its_rotator;
+        private readonly WTeleporter its_teleporter;
+        private readonly GameObject its_game_object;
     }
 }

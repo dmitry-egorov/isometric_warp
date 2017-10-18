@@ -54,7 +54,7 @@
     <Compile Include="Option.cs" />
     <Compile Include="Or.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Semantics.cs" />
+    <Compile Include="Flow.cs" />
     <Compile Include="SingleValueFuncCache.cs" />
     <Compile Include="Possible.cs" />
     <Compile Include="TheVoid.cs" />

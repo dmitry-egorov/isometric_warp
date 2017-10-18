@@ -37,6 +37,10 @@ Planet Types:
 
 
 Ideas
+- the player was allowed to travel through the gates to become the administrator of the galaxy
+- the first stage of invasion was to cut off all interstellar gates
+- the enemy is enslaving the civilizations
+- two phases of evil invasion for each planet (in progress/finished)
 - each civ has guaranteed vendors/quests/tech etc.
 - boost speed
 - traders

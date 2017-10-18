@@ -45,7 +45,7 @@ namespace WarpSpace.Models.Game.Battle
                 .ToArray()
             ;
 
-            DTileSite SelectContent(Index2D i)
+            DTileOccupant SelectContent(Index2D i)
             {
                 if (i == entranceSpacial.Position) 
                     return entranceStructure;

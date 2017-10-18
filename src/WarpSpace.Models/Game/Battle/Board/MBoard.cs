@@ -3,6 +3,7 @@ using Lanski.Reactive;
 using Lanski.Structures;
 using Lanski.SwiftLinq;
 using WarpSpace.Models.Descriptions;
+using WarpSpace.Models.Game.Battle.Board.Structure;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 
@@ -17,9 +18,7 @@ namespace WarpSpace.Models.Game.Battle.Board
         public MBoard(DBoard the_description, DUnit the_mothership_desc, SignalGuard the_signal_guard, MGame the_game)
         {
             this.the_mothership_desc = the_mothership_desc;
-            this.the_signal_guard = the_signal_guard;
             its_entrances_spacial = the_description.EntranceSpacial;
-            its_unit_destructions_stream = new GuardedStream<MUnit>(the_signal_guard);
             its_turn_ends_stream = new GuardedStream<TheVoid>(the_signal_guard);
             its_unit_factory = new MUnitFactory(this, the_game, the_signal_guard);
 
@@ -27,18 +26,32 @@ namespace WarpSpace.Models.Game.Battle.Board
 
             MTile[,] creates_the_tiles()
             {
-                var tiles = the_description.Tiles.Map((tile_desc, position) => CreateTile(position, tile_desc));
+                var tiles = the_description.Tiles.Map((tile_desc, position) => it_creates_a_tile(position, tile_desc));
                 foreach (var i in tiles.EnumerateIndex())
                 {
-                    var adjacent = tiles.GetAdjacent(i);
                     var neighbours = tiles.GetFitNeighbours(i);
                     tiles.Get(i).Init(neighbours);
                 }
                 return tiles;
 
-                MTile CreateTile(Index2D position, DTile desc) =>
-                    new MTile(position, desc, its_unit_factory, the_signal_guard)
-                ;
+                MTile it_creates_a_tile(Index2D position, DTile desc)
+                {
+                    var the_tile = new MTile(position, desc, the_signal_guard);
+                    the_tile.s_Occupant_Becomes(it_creates_the_occupant(desc.s_Initial_Occupant, the_tile));
+                    return the_tile;
+                }
+
+                MTileOccupant it_creates_the_occupant(DTileOccupant site, MTile the_tile)
+                {
+                    if (site.is_a_Structure(out var structure_description))
+                        return new MStructure(structure_description, the_tile);
+
+                    if (site.is_Empty())
+                        return MTileOccupant.Empty;
+
+                    var unit_desc = site.must_be_a_Unit();
+                    return its_unit_factory.Creates_a_Unit(unit_desc, the_tile);
+                }
             }
         }
 
@@ -46,11 +59,6 @@ namespace WarpSpace.Models.Game.Battle.Board
         {
             var position = its_entrances_spacial.Position;
             var orientation = its_entrances_spacial.Orientation;
-
-//            var tank1 = new DUnitType(UnitType.a_Tank, Faction.the_Player_Faction, Possible.Empty<DStuff>(), Possible.Empty<IReadOnlyList<Possible<DUnitType>>>());
-//            var tank2 = new DUnitType(UnitType.a_Tank, Faction.the_Player_Faction, Possible.Empty<DStuff>(), Possible.Empty<IReadOnlyList<Possible<DUnitType>>>());
-//            var bay_units = new List<Possible<DUnitType>> {tank1, tank2};
-//            var desc = new DUnitType(UnitType.a_Mothership, Faction.the_Player_Faction, Possible.Empty<DStuff>(), bay_units);
 
             creates_a_unit(the_mothership_desc, position + orientation);
         }
@@ -75,20 +83,20 @@ namespace WarpSpace.Models.Game.Battle.Board
             void wires_the_units_destruction()
             {
                 the_unit.Destructed
-                    .Subscribe(destroyed =>
+                    .Subscribe(destructed =>
                     {
                         its_units_hashset.Remove(the_unit);
                         its_units_list.Remove(the_unit);
-                        its_unit_destructions_stream.Next(the_unit);
                     });
             }
         }
 
         private void creates_a_unit(DUnit desc, Index2D position)
         {
-            its_tiles.Get(position).has_a_Location(out var location).Otherwise_Throw("Can't add a unit to a tile occupied by a structure");
+            var the_tile = its_tiles.Get(position);
+            the_tile.is_Empty().Otherwise_Throw("Can't add a unit to an occupied tile");
 
-            its_unit_factory.Creates_a_Unit(desc, location);
+            its_unit_factory.Creates_a_Unit(desc, the_tile);
         }
 
         private void signals_the_turns_end()
@@ -97,11 +105,9 @@ namespace WarpSpace.Models.Game.Battle.Board
         }
 
         private readonly GuardedStream<TheVoid> its_turn_ends_stream;
-        private readonly GuardedStream<MUnit> its_unit_destructions_stream;
         private readonly Spacial2D its_entrances_spacial;
         private readonly MUnitFactory its_unit_factory;
         private readonly DUnit the_mothership_desc;
-        private readonly SignalGuard the_signal_guard;
         
         private readonly MTile[,] its_tiles;
         private readonly HashSet<MUnit> its_units_hashset = new HashSet<MUnit>();

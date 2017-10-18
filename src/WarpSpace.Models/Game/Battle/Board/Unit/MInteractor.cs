@@ -32,7 +32,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             }
             else
             {
-                throw new InvalidOperationException("Can't interact");
+                throw new InvalidOperationException("Unknown structure type");//should be unreachable
             }
         }
         

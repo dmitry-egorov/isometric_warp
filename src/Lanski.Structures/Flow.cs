@@ -2,12 +2,12 @@
 
 namespace Lanski.Structures
 {
-    public static class Semantics
+    public static class Flow
     {
         /// <summary>
         /// Used for assigning initial value to an out parameter in a conditional statement.  
         /// </summary>
-        public static bool semantic_resets<T>(out T v)
+        public static bool default_as<T>(out T v)
         {
             v = default(T);
             return true;
@@ -15,7 +15,7 @@ namespace Lanski.Structures
         /// <summary>
         /// Used for assigning initial value to an out parameter in a conditional statement.  
         /// </summary>
-        public static bool semantic_resets<T1, T2>(out T1 v1, out T2 v2)
+        public static bool default_as<T1, T2>(out T1 v1, out T2 v2)
         {
             v1 = default(T1);
             v2 = default(T2);

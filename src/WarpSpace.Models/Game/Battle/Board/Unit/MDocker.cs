@@ -16,12 +16,21 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             its_owner = the_owner;
         }
 
-        public bool can_Dock_At(MTile the_tile, out MUnitLocation the_target_location) =>
-            Semantics.semantic_resets(out the_target_location) &&
-            the_tile.has_a_unit_with_an_empty_bay_slot(out the_target_location) && 
-            its_owner.can_Move_To(the_target_location)
+        public bool can_Dock_At(MTile the_tile, out MBaySlot the_bay_slot) =>
+            Flow.default_as(out the_bay_slot) &&
+            the_tile.has_a_Unit_With_an_Empty_Bay_Slot(out the_bay_slot) && 
+            its_owner.can_Move_To(the_bay_slot)
         ;
         
         private readonly MUnit its_owner;
+    }
+
+    public static class MDockerExtensions
+    {
+        public static bool can_Dock_At(this Possible<MDocker> the_possible_docker, MTile the_tile, out MBaySlot the_bay_slot) =>
+            Flow.default_as(out the_bay_slot) &&
+            the_possible_docker.has_a_Value(out var the_docker) &&
+            the_docker.can_Dock_At(the_tile, out the_bay_slot)
+        ;
     }
 }

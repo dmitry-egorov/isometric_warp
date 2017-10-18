@@ -4,7 +4,7 @@ using Lanski.Structures;
 using WarpSpace.Models.Descriptions;
 using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Unit;
-using static Lanski.Structures.Semantics;
+using static Lanski.Structures.Flow;
 
 namespace WarpSpace.Models.Game.Battle.Player
 {
@@ -117,7 +117,7 @@ namespace WarpSpace.Models.Game.Battle.Player
 
         private bool it_has_a_selected_unit(out MUnit the_unit) => its_possible_selected_unit.has_a_Value(out the_unit); 
         private bool it_has_a_selected_action(out MUnitAction the_action) =>
-            semantic_resets(out the_action) &&
+            default_as(out the_action) &&
             its_possible_selection.has_a_Value(out var the_selection) && 
             the_selection.has_an_action(out the_action)
         ;
@@ -171,9 +171,9 @@ namespace WarpSpace.Models.Game.Battle.Player
             public bool Equals(Selection other) => Equals(s_Unit, other.s_Unit) && its_possible_action.Equals(other.its_possible_action);
 
             private bool has_a_special_command_At(MTile the_tile, out UnitCommand the_command) =>
-                semantic_resets(out the_command) &&
+                default_as(out the_command) &&
                 it_has_an_action(out var the_action) && 
-                the_action.s_possible_Command_at(the_tile).has_a_Value(out the_command)
+                the_action.has_a_Command_at(the_tile, out the_command)
             ;
 
             private bool it_has_an_action(out MUnitAction the_action) => its_possible_action.has_a_Value(out the_action);

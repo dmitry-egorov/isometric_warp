@@ -17,7 +17,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         }
 
         public ICell<bool> s_Availability_Cell => its_avalability_cell;
-        public Possible<UnitCommand> s_possible_Command_at(MTile the_tile) => its_possible_command_at(the_tile);
+        public bool has_a_Command_at(MTile the_tile, out UnitCommand the_command) => its_possible_command_at(the_tile).has_a_Value(out the_command);
         public bool @is(DUnitAction the_desc) => the_desc.Equals(its_desc);
         public bool is_Not_Available() => !s_Availability_Cell.s_Value; 
 
@@ -51,19 +51,18 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             }
             else if (its_desc.is_a_Deploy_Action(out var the_deploy))
             {
-                if (its_owner.can_Deploy(the_deploy.s_bay_slot_index, the_tile, out var the_docked_unit,
-                    out var the_target_location))
-                    return UnitCommand.Create.Move(the_docked_unit, the_target_location);
+                if (its_owner.can_Deploy_a_Unit_At(the_deploy.s_bay_slot_index, the_tile, out var the_docked_unit))
+                    return UnitCommand.Create.Move(the_docked_unit, the_tile);
             }
             else if (its_desc.is_a_Dock_Action())
             {
-                if (its_owner.can_Dock_At(the_tile, out var the_target_location))
-                    return UnitCommand.Create.Move(its_owner, the_target_location);
+                if (its_owner.can_Dock_At(the_tile, out var the_target_bay_slot))
+                    return UnitCommand.Create.Dock(its_owner, the_target_bay_slot);
             }
             else if (its_desc.is_a_Move_Action())
             {
-                if (its_owner.can_Move_To(the_tile, out var the_tiles_location))
-                    return UnitCommand.Create.Move(its_owner, the_tiles_location);
+                if (its_owner.can_Move_To(the_tile))
+                    return UnitCommand.Create.Move(its_owner, the_tile);
             }
             else if (its_desc.is_an_Interact_Action())
             {

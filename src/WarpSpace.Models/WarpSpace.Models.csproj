@@ -52,14 +52,15 @@
     <Compile Include="Descriptions\MLandscapeType.cs" />
     <Compile Include="Descriptions\Spacial2D.cs" />
     <Compile Include="Descriptions\DStructure.cs" />
-    <Compile Include="Descriptions\DTileSite.cs" />
+    <Compile Include="Descriptions\DTileOccupant.cs" />
     <Compile Include="Descriptions\DTile.cs" />
     <Compile Include="Descriptions\DUnit.cs" />
     <Compile Include="Descriptions\MWeaponType.cs" />
     <Compile Include="Game\Battle\Board\MUnitFactory.cs" />
+    <Compile Include="Game\Battle\Board\Tile\Firing.cs" />
     <Compile Include="Game\Battle\Board\Tile\TileHelper.cs" />
-    <Compile Include="Game\Battle\Board\Unit\HealthState.cs" />
     <Compile Include="Game\Battle\Board\Unit\MActionsContainer.cs" />
+    <Compile Include="Game\Battle\Board\Unit\MBaySlot.cs" />
     <Compile Include="Game\Battle\Board\Unit\MDestructor.cs" />
     <Compile Include="Game\Battle\Board\Unit\MDocker.cs" />
     <Compile Include="Game\Battle\Board\Unit\MInteractor.cs" />
@@ -75,7 +76,7 @@
     <Compile Include="Game\Battle\Board\Structure\MStructure.cs" />
     <Compile Include="Game\Battle\Board\Tile\MLandscape.cs" />
     <Compile Include="Game\Battle\Board\Tile\MTile.cs" />
-    <Compile Include="Game\Battle\Board\Tile\TileSite.cs" />
+    <Compile Include="Game\Battle\Board\Tile\MTileOccupant.cs" />
     <Compile Include="Game\Battle\Board\Tile\Movement.cs" />
     <Compile Include="Game\Battle\Board\Unit\MBay.cs" />
     <Compile Include="Game\Battle\Board\Unit\MMover.cs" />
