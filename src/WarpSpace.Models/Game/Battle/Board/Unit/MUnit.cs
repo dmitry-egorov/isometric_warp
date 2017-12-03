@@ -59,7 +59,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public static int s_Total_Hit_Points(this MUnit the_unit) => the_unit.s_Type.s_Total_Hit_Points;
         public static int s_Bay_Size(this MUnit the_unit) => the_unit.s_Type.s_Bay_Size;
         public static MChassisType s_Chassis_Type(this MUnit the_unit) => the_unit.s_Type.s_Chassis_Type;
-        public static Possible<DStuff> s_Remains(this MUnit the_unit) => the_unit.s_Type.s_Remains;
+        public static DStuff s_Remains(this MUnit the_unit) => the_unit.s_Type.s_Remains;
         public static bool can_Exit(this MUnit the_unit) => the_unit.s_Type.can_Exit;
         public static bool can_Dock(this MUnit the_unit) => the_unit.s_Type.can_Dock;
         
@@ -68,13 +68,13 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public static bool is_Docked(this MUnit the_unit) => the_unit.s_Locator.s_Is_Docked;
         public static bool is_Adjacent_To(this MUnit the_unit, MTile the_tile) => the_unit.s_Locator.is_Adjacent_To(the_tile);
         public static Possible<Index2D> s_Possible_Position(this MUnit the_unit) => the_unit.s_Locator.s_Possible_Position;
-        public static Possible<DStuff> s_Loot(this MUnit the_unit) => the_unit.s_Inventory_Content().and(the_unit.s_Remains());
-        public static Possible<DStuff> s_Inventory_Content(this MUnit the_unit) => the_unit.s_Inventory.s_Content;
+        public static DStuff s_Loot(this MUnit the_unit) => the_unit.s_Inventory_Content().and(the_unit.s_Remains());
+        public static DStuff s_Inventory_Content(this MUnit the_unit) => the_unit.s_Inventory.s_Content;
         
         public static ICell<int> s_Cell_of_Current_Hitpoints(this MUnit the_unit) => the_unit.s_Health.s_Current_Hitpoints_Cell;
         public static ICell<bool> s_Cell_of_can_Move(this MUnit the_unit) => the_unit.s_Locator.s_Can_Move_Cell;
         public static ICell<bool> s_Cell_of_can_Fire(this MUnit the_unit) => the_unit.s_Weapon.s_Can_Fire_Cell;
-        public static ICell<Possible<DStuff>> s_Cell_of_Inventory_Contents(this MUnit the_unit) => the_unit.s_Inventory.s_Stuffs_Cell;
+        public static ICell<DStuff> s_Cell_of_Inventory_Contents(this MUnit the_unit) => the_unit.s_Inventory.s_Stuffs_Cell;
         public static ICell<int> s_Cell_of_Moves_Left(this MUnit the_unit) => the_unit.s_Locator.s_Moves_Left_Cell;
         public static ICell<bool> s_Cell_of_Is_Docked(this MUnit the_unit) => the_unit.s_Locator.s_Is_Docked_Cell;
         public static ICell<bool> s_Cell_of_can_Deploy(this MUnit the_unit, int the_bay_slot_index) => the_unit.s_Possible_Bay.s_can_Deploy_Cell(the_bay_slot_index);
@@ -112,7 +112,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         internal static void Interacts_With(this MUnit the_unit, MStructure the_structure) => the_unit.s_Interactor.Interacts_With(the_structure);
         internal static void Takes(this MUnit the_unit, DDamage the_damage) => the_unit.s_Health.Takes(the_damage);
         internal static void Destructs(this MUnit the_unit) => the_unit.s_Destructor.Destructs();
-        internal static void Takes(this MUnit the_unit, Possible<DStuff> the_loot) => the_unit.s_Inventory.Adds(the_loot);
+        internal static void Takes(this MUnit the_unit, DStuff the_loot) => the_unit.s_Inventory.Adds(the_loot);
         internal static void Loots(this MUnit the_unit, MStructure the_structure) => the_unit.s_Looter.Loots(the_structure);
     }
 }

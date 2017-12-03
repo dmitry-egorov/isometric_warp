@@ -27,14 +27,14 @@ namespace WarpSpace.Test.Console
             var a_missale_launcher = new MWeaponType("Missile Launcher", 2, new DDamage(1));
             var a_cannon = new MWeaponType("Cannon", 1, new DDamage(2));
             
-            var tank_type = new MUnitType("Tank", 2, 3, 0, a_cannon, a_track, new DStuff(10), Possible.Empty<DStuff>(), true, false, 'T');
-            var mothership_type = new MUnitType("Mothership", 5, 2, 4, a_missale_launcher, a_hower_pad, new DStuff(50), Possible.Empty<DStuff>(), false, true, 'M');
+            var tank_type = new MUnitType("Tank", 2, 3, 0, a_cannon, a_track, new DStuff(10), DStuff.Empty(), true, false, 'T');
+            var mothership_type = new MUnitType("Mothership", 5, 2, 4, a_missale_launcher, a_hower_pad, new DStuff(50), DStuff.Empty(), false, true, 'M');
             var the_unit_types = new [] {tank_type, mothership_type};
 
             var the_players_faction = new MFaction();
             var the_natives_faction = new MFaction();
             var tank = new DUnit(tank_type, the_players_faction).as_a_Possible();
-            var the_mothership = new DUnit(mothership_type, the_players_faction, Possible.Empty<DStuff>(), new[] {tank, tank});
+            var the_mothership = new DUnit(mothership_type, the_players_faction, DStuff.Empty(), new[] {tank, tank});
 
             var board = new PredefinedBoard
             {

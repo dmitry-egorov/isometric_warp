@@ -43,7 +43,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 
         internal void s_Occupant_Becomes(MTileOccupant the_new_occupant) => its_occupant = the_new_occupant;
 
-        internal void Creates_a_Debris_With(Possible<DStuff> inventory_content)
+        internal void Creates_a_Debris_With(DStuff inventory_content)
         {
             var the_debris_desc = DStructure.Create.Debris(TileHelper.GetOrientation(its_position), inventory_content);
             var the_structure = new MStructure(the_debris_desc, this);

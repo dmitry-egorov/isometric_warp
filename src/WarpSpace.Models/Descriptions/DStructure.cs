@@ -11,7 +11,7 @@ namespace WarpSpace.Models.Descriptions
         {
             public static DStructure Entrance(Direction2D orientation) => new DStructure(orientation) { the_variant = new Entrance() };
             public static DStructure Exit(Direction2D orientation) => new DStructure(orientation) { the_variant = new Exit() };
-            public static DStructure Debris(Direction2D orientation, Possible<DStuff> loot) => new DStructure(orientation) { the_variant = new Debris(loot) };            
+            public static DStructure Debris(Direction2D orientation, DStuff loot) => new DStructure(orientation) { the_variant = new Debris(loot) };            
         }
         
         private DStructure(Direction2D orientation): this() => s_Orientation = orientation;
@@ -31,13 +31,13 @@ namespace WarpSpace.Models.Descriptions
 
         public struct Debris
         {
-            public Possible<DStuff> s_Loot => the_loot;
+            public DStuff s_Loot => the_loot;
 
-            public Debris(Possible<DStuff> possible_loot) => the_loot = possible_loot;
+            public Debris(DStuff possible_loot) => the_loot = possible_loot;
             
             public override string ToString() => "Debris"; 
 
-            private readonly Possible<DStuff> the_loot;
+            private readonly DStuff the_loot;
         }
     }
 }

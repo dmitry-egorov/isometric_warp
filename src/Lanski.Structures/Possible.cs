@@ -52,6 +52,10 @@ namespace Lanski.Structures
         [Pure] public static Possible<TResult> Select<TResult, T>(this Possible<T> the_possible, Func<T, TResult> selector) => the_possible.has_a_Value(out var value) ? new Possible<TResult>(true, selector(value)) : default(Possible<TResult>);
         [Pure] public static T must_have_a_Value<T>(this Possible<T> the_possible) => the_possible.has_a_Value(out var value) ? value : throw new InvalidOperationException("Must have a value");
         [Pure] public static T s_Value_Or<T>(this Possible<T> the_possible, T defaultValue) => the_possible.has_a_Value(out var value) ? value : defaultValue;
+
+        [Pure] public static bool has<T1, T2>(this T1 root, Func<T1, Possible<T2>> selector, out T2 value) => selector(root).has_a_Value(out value);
+        [Pure] public static bool has<T1, T2>(this T1 root, Func<T1, Possible<T2>> selector) => selector(root).has_a_Value();
+        [Pure] public static T2 must_have<T1, T2>(this T1 root, Func<T1, Possible<T2>> selector) => selector(root).must_have_a_Value();
     }
     
 }

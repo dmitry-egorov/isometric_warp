@@ -19,11 +19,12 @@ namespace WarpSpace.UI.Gameplay.Inventory
             FindObjectOfType<WGame>()
                 .s_Players_Selected_Units_Cell
                 .SelectMany(pu => pu.Select(u => u.s_Cell_of_Inventory_Contents()).Cell_Or_Single_Default())
-                .Subscribe(possible_content =>
+                .Subscribe(content =>
                 {
+                    var the_amount_of_matter = content.s_Amount_of_Matter;
                     text.text = 
-                        possible_content.has_a_Value(out var content)  
-                            ? $"{cache.GetText(content.Matter)} matter"
+                        the_amount_of_matter != 0  
+                            ? $"{cache.GetText(the_amount_of_matter)} matter"
                             : "No matter";
                 });
         }
