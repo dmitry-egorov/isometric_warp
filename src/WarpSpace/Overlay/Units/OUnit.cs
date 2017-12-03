@@ -19,14 +19,7 @@ namespace WarpSpace.Overlay.Units
 
             var the_unit = the_world_unit.s_Unit;
 
-            its_wirings = it_wires_the_docked_events();
-            
             it_wires_the_destruction_signal();
-
-            Action it_wires_the_docked_events() => 
-                the_unit.s_Cell_of_Is_Docked()
-                .Subscribe(is_docked => gameObject.SetActive(!is_docked))
-            ;
 
             void it_wires_the_destruction_signal()
             {
@@ -43,15 +36,8 @@ namespace WarpSpace.Overlay.Units
             its_rect_transform.anchoredPosition = the_screen_position.Floor();
         }
 
-        public void OnDestroy()
-        {
-            its_wirings();
-        }
-        
         private Camera the_camera;
         private RectTransform its_rect_transform;
         private WUnit its_world_unit;
-
-        private Action its_wirings;
     }
 }

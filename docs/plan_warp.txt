@@ -1,11 +1,7 @@
 Plan
-- remove docking
+- add a cannon animation
 - add initial unit placement
-- add a tank with a cannon
 
-
-
-- fire missile animation
 - move several tiles at a time
 - longer weapon ranges
 - highlight the movement in fill and not stripes
@@ -50,6 +46,7 @@ Plan
 
 
 done
++ remove docking
 + remove unit placeholder
 + the units wait for each other for docking and undocking
 + draw agenda lines

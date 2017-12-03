@@ -26,5 +26,8 @@ namespace Lanski.Structures
 
         public static bool @is<T>(this T value, T other) where T : IEquatable<T> => value.Equals(other);
         public static bool is_not<T>(this T value, T other) where T : IEquatable<T> => !value.Equals(other);
+        
+        public static bool let<T>(out T other, T value) { other = value; return true; }
+
     }
 }

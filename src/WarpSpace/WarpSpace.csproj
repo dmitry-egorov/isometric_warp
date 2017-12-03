@@ -128,8 +128,6 @@
     <Compile Include="UI\Gameplay\Actions\UIActionButtonType.cs" />
     <Compile Include="UI\Gameplay\Actions\UISpecialActionsPanel.cs" />
     <Compile Include="UI\Gameplay\Actions\UIUnitActionButton.cs" />
-    <Compile Include="UI\Gameplay\Bay\UIBay.cs" />
-    <Compile Include="UI\Gameplay\Bay\UIBayButtonMesh.cs" />
     <Compile Include="UI\Gameplay\EndTurn\EndTurnButton.cs" />
     <Compile Include="UI\Gameplay\EndTurn\FastForwardButton.cs" />
     <Compile Include="UI\Gameplay\Inventory\InventoryPresenter.cs" />

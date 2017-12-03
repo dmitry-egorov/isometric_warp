@@ -379,7 +379,7 @@ namespace Lanski.Structures
             return new Index2D(v.Item1, v.Item2);
         }
 
-        [Pure] public bool Is_Adjacent_To(Index2D other)
+        [Pure] public bool is_Adjacent_To(Index2D other)
         {
             var dr = Mathe.Abs(Row - other.Row);
             var dc = Mathe.Abs(Column - other.Column);

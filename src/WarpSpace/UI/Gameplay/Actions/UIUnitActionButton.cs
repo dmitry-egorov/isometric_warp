@@ -18,8 +18,7 @@ namespace WarpSpace.UI.Gameplay.Actions
         
         public void Start()
         {
-            var index = transform.GetSiblingIndex();
-            var the_action_desc = Type.as_a_description(index);
+            var the_action_desc = Type.as_a_description();
         
             var the_battle_component = FindObjectOfType<WGame>();
             var the_button = GetComponent<UIButton>();
@@ -27,7 +26,8 @@ namespace WarpSpace.UI.Gameplay.Actions
             the_battle_component.s_Players_Selections_Cell
                 .SelectMany(ps => 
                     ps.SelectMany(the_selection => 
-                            MUnitReadExtensions.s_possible_Action_For(the_selection.s_Unit, the_action_desc).Select(the_action => CellExtensions.Select<bool, (bool, bool)>(the_action.s_Availability_Cell, is_available => (is_available, the_selection.s_action_is(the_action_desc)))))
+                            the_selection.s_Unit.s_possible_Action_For(the_action_desc)
+                                .Select(the_action => the_action.s_Availability_Cell.Select(is_available => (is_available, the_selection.s_action_is(the_action_desc)))))
                     .Cell_Or_Single_Empty()
                 )
                 .Subscribe(it_updates_the_button);

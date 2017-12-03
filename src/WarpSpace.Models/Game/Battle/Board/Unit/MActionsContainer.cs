@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Lanski.Structures;
 using Lanski.SwiftLinq;
 using WarpSpace.Models.Descriptions;
@@ -13,8 +12,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public MActionsContainer(MUnit the_owner)
         {
             its_fire = new MUnitAction(the_owner, DUnitAction.Create.Fire());
-            its_deploy_actions = it_creates_the_deploy_actions(the_owner);
-            its_dock = the_owner.has_a_Docker().as_a_Possible().Select(_ => new MUnitAction(the_owner, DUnitAction.Create.Dock()));
             its_move = new MUnitAction(the_owner, DUnitAction.Create.Move());
             its_interact = new MUnitAction(the_owner, DUnitAction.Create.Interact());
 
@@ -25,10 +22,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         {
             if (the_action_desc.is_a_Fire_Action())
                 return its_fire;
-            if (the_action_desc.is_a_Deploy_Action(out var the_deploy))
-                return its_deploy_actions.s_possible_Value_At(the_deploy.s_bay_slot_index);
-            if (the_action_desc.is_a_Dock_Action())
-                return its_dock;
             if (the_action_desc.is_a_Move_Action())
                 return its_move;
             if (the_action_desc.is_an_Interact_Action())
@@ -48,17 +41,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
             return Possible.Empty<UnitCommand>();
         }
-            
-        private static IReadOnlyList<MUnitAction> it_creates_the_deploy_actions(MUnit the_owner) => 
-            the_owner.s_Bay_Size()
-                .counted()
-                .Select(the_bay_slot_index => new MUnitAction(the_owner, DUnitAction.Create.Deploy(the_bay_slot_index)))
-                .ToArray()
-        ;
 
         private readonly MUnitAction its_fire;
-        private readonly IReadOnlyList<MUnitAction> its_deploy_actions;
-        private readonly Possible<MUnitAction> its_dock;
         private readonly MUnitAction its_move;
         private readonly MUnitAction its_interact;
         private readonly IReadOnlyList<MUnitAction> its_regular_actions;

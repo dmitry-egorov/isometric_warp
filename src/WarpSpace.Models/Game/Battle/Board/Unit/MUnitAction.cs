@@ -26,12 +26,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             if (its_desc.is_a_Fire_Action())
                 return its_owner.s_Weapon.s_Can_Fire_Cell;
 
-            if (its_desc.is_a_Deploy_Action(out var the_deploy))
-                return its_owner.s_Cell_of_can_Deploy(the_deploy.s_bay_slot_index);
-
-            if (its_desc.is_a_Dock_Action())
-                return its_owner.s_Cell_of_can_Move();
-
             if (its_desc.is_a_Move_Action())
                 return its_owner.s_Cell_of_can_Move();
 
@@ -46,18 +40,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             if (its_desc.is_a_Fire_Action())
             {
                 var the_owners_weapon = its_owner.s_Weapon;
-                if (the_owners_weapon.can_Fire_At_a_Unit_At(the_tile, out var the_target_unit))
-                    return UnitCommand.Create.Fire(the_owners_weapon, the_target_unit);
-            }
-            else if (its_desc.is_a_Deploy_Action(out var the_deploy))
-            {
-                if (its_owner.can_Deploy_a_Unit_At(the_deploy.s_bay_slot_index, the_tile, out var the_docked_unit))
-                    return UnitCommand.Create.Move(the_docked_unit, the_tile);
-            }
-            else if (its_desc.is_a_Dock_Action())
-            {
-                if (its_owner.can_Dock_At(the_tile, out var the_target_bay_slot))
-                    return UnitCommand.Create.Dock(its_owner, the_target_bay_slot);
+                if (the_owners_weapon.can_Fire_At(the_tile))
+                    return UnitCommand.Create.Fire(the_owners_weapon, the_tile);
             }
             else if (its_desc.is_a_Move_Action())
             {
@@ -72,10 +56,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
             return Possible.Empty<UnitCommand>();
         }
-        
+
         private readonly MUnit its_owner;
         private readonly DUnitAction its_desc;
         private readonly ICell<bool> its_avalability_cell;
-
     }
 }

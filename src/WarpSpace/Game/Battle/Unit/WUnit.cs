@@ -12,7 +12,6 @@ namespace WarpSpace.Game.Battle.Unit
     public class WUnit
     {
         public MUnit s_Unit => its_unit;
-        public WScheduler s_Scheduler => its_scheduler;
         public Transform s_Transform => its_transform;
 
         public bool is_Moving => its_agenda.has_a_Task;
@@ -84,14 +83,7 @@ namespace WarpSpace.Game.Battle.Unit
 
         private void it_inits_the_mesh()
         {
-            if (its_unit.is_Docked())
-            {
-                its_visibility.Hides();
-            }
-            else
-            {
-                its_visibility.Shows();
-            }
+            its_visibility.Shows();//TODO: check if visibility is needed at all, or the unit is always visible
         }
 
         private void it_destroys_itself_on_destruction_of_the_unit() => 

@@ -4,6 +4,7 @@ using WarpSpace.Game.Battle.Board;
 using WarpSpace.Game.Battle.Tile;
 using WarpSpace.Game.Battle.Unit.Tasks;
 using WarpSpace.Game.Tasks;
+using WarpSpace.Models.Game.Battle.Board.Tile;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Board.Weapon;
 
@@ -22,64 +23,21 @@ namespace WarpSpace.Game.Battle.Unit
         public void Destructs() => it_destructs();
         
         private Action it_wires_units_movements() => its_owner.s_Unit.Moved().Subscribe(x => it_schedules_a_move(x.s_Source, x.s_Destination));
-        private Action it_wires_weapon_firings() => its_owner.s_Unit.Fired().Subscribe(x => it_schedules_a_weapon_fire(x.Source, x.Target));
+        private Action it_wires_weapon_firings() => its_owner.s_Unit.Fired().Subscribe(x => it_schedules_a_weapon_fire(x.s_Weapon, x.s_Target_Tile));
         private void it_destructs() => its_wiring();
 
-        private void it_schedules_a_weapon_fire(MWeapon the_weapon, MUnit the_target)
+        private void it_schedules_a_weapon_fire(MWeapon the_weapon, MTile the_target)
         {
             
         }
 
-        private void it_schedules_a_move(MLocation the_source, MLocation the_target)
+        private void it_schedules_a_move(MTile the_source_tile, MTile the_target_tile)
         {
-            var the_source_tile = the_source.s_Tile;
-            var the_target_tile = the_target.s_Tile;
-
             var the_orientation = the_source_tile.s_Direction_To(the_target_tile);
-            var the_source_position = the_source_tile.s_Position;
             var the_target_position = the_target_tile.s_Position;
-            
-            if (the_source.is_a_Bay(out var the_source_bay))
-            {
-                it_undocks_from(the_source_bay);
-            }
-            else if (the_target.is_a_Bay(out var the_target_bay))
-            {
-                it_docks_to(the_target_bay);
-            }
-            else
-            {
-                it_moves();
-            }
 
-            void it_undocks_from(MBay the_bay)
-            {
-                var the_owner = the_board.s_Unit_For(the_bay.s_Owner).s_Scheduler;
-
-                var the_owners_rotation = the_owner.it_rotates_to(the_orientation);
-                it_waits_for(the_owners_rotation);
-                it_shows_up_at(the_source_position, the_orientation);
-                var the_movement = it_moves_to(the_target_position);
-                the_owner.it_waits_for(the_movement);
-            }
-
-            void it_docks_to(MBay the_bay)
-            {
-                var the_owner = the_board.s_Unit_For(the_bay.s_Owner).s_Scheduler;
-
-                var the_owners_rotation = the_owner.it_rotates_to(the_orientation.s_Opposite());
-                it_rotates_to(the_orientation);
-                it_waits_for(the_owners_rotation);
-                it_moves_to(the_target_position);
-                var the_hiding = it_hides();
-                the_owner.it_waits_for(the_hiding.as_a_Possible());
-            }
-
-            void it_moves()
-            {
-                it_rotates_to(the_orientation);
-                it_moves_to(the_target_position);
-            }
+            it_rotates_to(the_orientation);
+            it_moves_to(the_target_position);
         }
 
         private Possible<ITask> it_moves_to(Index2D the_target_position)
@@ -100,8 +58,6 @@ namespace WarpSpace.Game.Battle.Unit
                 it_schedules_a_task(new WaitingForTask<WUnit>(the_task)).as_a_Possible() : 
                 Possible.Empty<ITask>()
         ;
-        private ITask it_hides() => it_schedules_a_task(new Hiding());
-        private ITask it_shows_up_at(Index2D the_target_position, Direction2D the_target_rotation) => it_schedules_a_task(new ShowingUpAt(the_target_position, the_target_rotation));
         private ITask it_schedules_a_task(ITaskVariant<WUnit> the_variant)
         {
             var the_possible_tile_tasks_holder = 

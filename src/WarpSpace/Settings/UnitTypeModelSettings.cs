@@ -11,7 +11,6 @@ namespace WarpSpace.Settings
         public string Name;
         public int TotalHitPoints;
         public int TotalMoves;
-        public int BaySize;
         public WeaponTypeSettings WeaponType;
         public ChassisTypeSettings ChassisType;
         public int Loot;
@@ -24,7 +23,6 @@ namespace WarpSpace.Settings
             Name,
             TotalHitPoints,
             TotalMoves,
-            BaySize,
             WeaponTypeSettings.s_Model_Of(WeaponType),
             ChassisTypeSettings.s_Model_Of(ChassisType),
             InventoryHelper.Possible_Stuff_From(Loot),

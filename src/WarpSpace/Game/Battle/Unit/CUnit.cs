@@ -13,9 +13,8 @@ namespace WarpSpace.Game.Battle.Unit
 
         public static CUnit Is_Created_From(CUnit the_prefab, MUnit the_unit)
         {
-            var limbo = FindObjectOfType<WLimbo>().s_Transform;
             var board = FindObjectOfType<WBoard>();
-            var parent = the_unit.is_At_a_Tile(out var tile) ? board[tile].s_Unit_Slot.s_Transform : limbo;
+            var parent = board[the_unit.s_Location()].s_Unit_Slot.s_Transform;
 
             var obj = Instantiate(the_prefab, parent);
 

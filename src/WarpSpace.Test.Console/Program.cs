@@ -27,14 +27,13 @@ namespace WarpSpace.Test.Console
             var a_missale_launcher = new MWeaponType("Missile Launcher", 2, new DDamage(1));
             var a_cannon = new MWeaponType("Cannon", 1, new DDamage(2));
             
-            var tank_type = new MUnitType("Tank", 2, 3, 0, a_cannon, a_track, new DStuff(10), DStuff.Empty(), true, false, 'T');
-            var mothership_type = new MUnitType("Mothership", 5, 2, 4, a_missale_launcher, a_hower_pad, new DStuff(50), DStuff.Empty(), false, true, 'M');
+            var tank_type = new MUnitType("Tank", 2, 3, a_cannon, a_track, new DStuff(10), DStuff.Empty(), true, false, 'T');
+            var mothership_type = new MUnitType("Mothership", 5, 2, a_missale_launcher, a_hower_pad, new DStuff(50), DStuff.Empty(), false, true, 'M');
             var the_unit_types = new [] {tank_type, mothership_type};
 
             var the_players_faction = new MFaction();
             var the_natives_faction = new MFaction();
-            var tank = new DUnit(tank_type, the_players_faction).as_a_Possible();
-            var the_mothership = new DUnit(mothership_type, the_players_faction, DStuff.Empty(), new[] {tank, tank});
+            var the_mothership = new DUnit(mothership_type, the_players_faction, DStuff.Empty());
 
             var board = new PredefinedBoard
             {
@@ -89,16 +88,10 @@ namespace WarpSpace.Test.Console
 
             var tiles = the_battle.s_Board.s_Tiles;
 
-            var ms_tile = tiles[3, 2];
-            the_player.Executes_a_Command_At(ms_tile);
-            the_player.Toggles_the_Selected_Action_With(DUnitAction.Create.Deploy(0));
-
-            var tank_tile = tiles[4, 2];
-            the_player.Executes_a_Command_At(tank_tile);
-
-            the_player.Executes_a_Command_At(tank_tile);
-            the_player.Toggles_the_Selected_Action_With(DUnitAction.Create.Dock());
-            the_player.Executes_a_Command_At(ms_tile);
+            var mothership_tile = tiles[3, 2];
+            var move_to_tile = tiles[3, 3];
+            the_player.Executes_a_Command_At(mothership_tile);
+            the_player.Executes_a_Command_At(move_to_tile);
         }
     }
 }

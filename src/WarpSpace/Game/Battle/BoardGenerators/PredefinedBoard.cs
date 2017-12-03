@@ -51,7 +51,7 @@ namespace WarpSpace.Game.Battle.BoardGenerators
 
             //TODO: generate random loot from settings?
             Possible<DUnit> CreateUnitDescritpion(Possible<MUnitType> arg) => 
-                arg.Select(type => new DUnit(type, the_native_faction, type.s_Initial_Inventory_Content, new List<Possible<DUnit>>()))
+                arg.Select(type => new DUnit(type, the_native_faction, type.s_Initial_Inventory_Content))
             ; 
             
             DTileOccupant SelectContent(Index2D i)

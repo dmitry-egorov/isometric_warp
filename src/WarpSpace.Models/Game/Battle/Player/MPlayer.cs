@@ -51,9 +51,6 @@ namespace WarpSpace.Models.Game.Battle.Player
 
             if (it_has_a_selected_action(out var the_action) && the_action.is_Not_Available())
                 its_selected_action_becomes_empty();
-            
-            if (it_has_a_selected_unit(out var the_unit) && the_unit.is_At_a_Bay(out var the_bay))
-                its_selected_unit_becomes(the_bay.s_Owner);
 
             it_performed_an_action.Next();                
         }

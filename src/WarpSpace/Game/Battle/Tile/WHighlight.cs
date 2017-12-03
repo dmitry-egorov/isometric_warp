@@ -20,7 +20,6 @@ namespace WarpSpace.Game.Battle.Tile
                   !the_player.has_a_Command_At(its_tile, out var command) ? Possible.Empty<Material>()  
                 : command.is_a_Fire_Command()                             ? UseWeaponHighlight
                 : command.is_a_Move_Command()                             ? MoveHighlight 
-                : command.is_a_Dock_Command()                             ? InteractionHighlight
                 : command.is_an_Interact_Command()                        ? InteractionHighlight
                                                                           : Possible.Empty<Material>()
         ;
