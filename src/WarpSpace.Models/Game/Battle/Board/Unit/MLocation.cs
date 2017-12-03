@@ -6,14 +6,14 @@ using WarpSpace.Models.Game.Battle.Board.Tile;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
-    public struct MUnitLocation: IEquatable<MUnitLocation>
+    public struct MLocation: IEquatable<MLocation>
     {
-        public static implicit operator MUnitLocation(MTile the_tile) => new MUnitLocation(the_tile);
-        public static implicit operator MUnitLocation(MBaySlot the_bay_slot) => new MUnitLocation(the_bay_slot);
+        public static implicit operator MLocation(MTile the_tile) => new MLocation(the_tile);
+        public static implicit operator MLocation(MBaySlot the_bay_slot) => new MLocation(the_bay_slot);
         
-        public MUnitLocation(Or<MTile, MBaySlot> the_variant) => its_variant = the_variant;
+        public MLocation(Or<MTile, MBaySlot> the_variant) => its_variant = the_variant;
 
-        public bool is_Adjacent_To(MUnitLocation the_other) => 
+        public bool is_Adjacent_To(MLocation the_other) => 
             this.is_a_Tile(out var the_tile) 
             && the_other.is_a_Tile(out var the_others_tile) 
             && the_tile.is_Adjacent_To(the_others_tile)
@@ -22,12 +22,9 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public MTile s_Tile => its_tile;
 
         public Passability s_Passability_With(MChassisType the_chassis_type) => this.is_a_Bay_Slot() ? Passability.All_Moves : this.must_be_a_Tile().s_Passability_With(the_chassis_type); 
-        public bool is_Passable_By(MChassisType the_chassis_type) => this.is_a_Bay_Slot() || this.is_a_Tile(out var the_tile) && the_tile.is_Passable_By(the_chassis_type); 
-        public bool is_Accessible_From(MUnitLocation the_other_location) => its_tile.is_Adjacent_To(the_other_location.s_Tile);
         public bool is_Adjacent_To(MStructure structure) => is_a_Tile(out var own_tile) && own_tile.is_Adjacent_To(structure.s_Location);
         
         public Possible<Index2D> s_Possible_Position => its_variant.as_a_T1().Select(x => x.s_Position);
-        public bool is_a_Tile() => its_variant.is_a_T1();
         public bool is_a_Tile(out MTile tile) => its_variant.is_a_T1(out tile);
         public bool is_a_Bay_Slot() => its_variant.is_a_T2();
         public bool is_a_Bay_Slot(out MBaySlot the_bay_slot) => its_variant.is_a_T2(out the_bay_slot);
@@ -36,7 +33,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public MBaySlot must_be_a_Bay_Slot() => its_variant.must_be_a_T2();
         public MBay must_be_a_Bay() => this.must_be_a_Bay_Slot().s_Bay;
 
-        public bool Equals(MUnitLocation other) => its_variant.Equals(other.its_variant);
+        public bool Equals(MLocation other) => its_variant.Equals(other.its_variant);
 
         public bool is_Empty() => 
             is_a_Tile(out var the_tile) && the_tile.is_Empty() ||

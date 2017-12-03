@@ -30,7 +30,7 @@ namespace WarpSpace.Models.Descriptions
         public struct Deploy { public int s_bay_slot_index; }
         public struct Dock {}
         public struct Move {}
-        public struct Interact {} 
+        public struct Interact {}
         
         private readonly Or<Fire, Deploy, Dock, Move, Interact> its_variant;
 

@@ -26,40 +26,32 @@ namespace Lanski.Structures
             _has_a_value = has_a_value;
             _obj = obj;
         }
-
-
-        [Pure]public bool Does_Not_Have_a_Value() => Has_Nothing();
-        [Pure]public bool Has_Nothing() => !has_a_Value();
-        [Pure]public bool has_a_Value() => _has_a_value;
-
-        [Pure]public bool Does_Not_Have_a_Value(out T o) => !has_a_Value(out o);
-
-        public void Does(Action<T> action)
-        {
-            if (has_a_Value(out var value))
-                action(value);
-        }
         
         [Pure]public bool has_a_Value(out T o)
         {
             o = _obj;
-            return has_a_Value();
+            return _has_a_value;
         }
-        
-        [Pure] public T must_have_a_Value() => has_a_Value(out var value) ? value : throw new InvalidOperationException("Must have a value");
 
-        [Pure] public bool @is(Func<T, bool> selector) => this.has_a_Value(out var the_value) && selector(the_value);
-        [Pure] public Possible<TResult> map<TResult>(Func<T, TResult> selector) => Select(selector);
-        [Pure] public Possible<TResult> fmap<TResult>(Func<T, Possible<TResult>> selector) => SelectMany(selector);
-        [Pure] public Possible<TResult> SelectMany<TResult>(Func<T, Possible<TResult>> selector) => has_a_Value(out var value) ? selector(value) : default(Possible<TResult>);
-        [Pure] public Possible<TResult> Converted_With<TResult>(Func<T, TResult> selector) => Select(selector);
-        [Pure] public Possible<TResult> Select<TResult>(Func<T, TResult> selector) => has_a_Value(out var value) ? new Possible<TResult>(true, selector(value)) : default(Possible<TResult>);
-        
-        public T s_Value_Or(T defaultValue) => has_a_Value(out var value) ? value : defaultValue;
-        
         public bool Equals(Possible<T> other) => _has_a_value == other._has_a_value && (!_has_a_value || EqualityComparer<T>.Default.Equals(_obj, other._obj));
         public override string ToString() => has_a_Value(out var the_value) ? the_value.ToString() : "Empty";
 
         public static implicit operator Possible<T>(T value) => new Possible<T>(true, value);
     }
+
+    public static class PossibleSemanticExtensions
+    {
+        public static bool exists<T>(this Possible<T> p) => p.has_a_Value();
+        [Pure]public static bool has_a_Value<T>(this Possible<T> the_possible) => the_possible.has_a_Value(out var _);
+        [Pure]public static bool has_Nothing<T>(this Possible<T> the_possible) => !the_possible.has_a_Value();
+        [Pure] public static bool @is<T>(this Possible<T> the_possible, Func<T, bool> selector) => the_possible.has_a_Value(out var the_value) && selector(the_value);
+        [Pure] public static Possible<TResult> map<TResult, T>(this Possible<T> the_possible, Func<T, TResult> selector) => the_possible.Select(selector);
+        [Pure] public static Possible<TResult> fmap<TResult, T>(this Possible<T> the_possible, Func<T, Possible<TResult>> selector) => the_possible.SelectMany(selector);
+        [Pure] public static Possible<TResult> SelectMany<TResult, T>(this Possible<T> the_possible, Func<T, Possible<TResult>> selector) => the_possible.has_a_Value(out var value) ? selector(value) : default(Possible<TResult>);
+        [Pure] public static Possible<TResult> Converted_With<TResult, T>(this Possible<T> the_possible, Func<T, TResult> selector) => the_possible.Select(selector);
+        [Pure] public static Possible<TResult> Select<TResult, T>(this Possible<T> the_possible, Func<T, TResult> selector) => the_possible.has_a_Value(out var value) ? new Possible<TResult>(true, selector(value)) : default(Possible<TResult>);
+        [Pure] public static T must_have_a_Value<T>(this Possible<T> the_possible) => the_possible.has_a_Value(out var value) ? value : throw new InvalidOperationException("Must have a value");
+        [Pure] public static T s_Value_Or<T>(this Possible<T> the_possible, T defaultValue) => the_possible.has_a_Value(out var value) ? value : defaultValue;
+    }
+    
 }

@@ -38,9 +38,10 @@ namespace WarpSpace.Models.Game.Battle.Player
             {
                 if (it_has_a_command_at(the_tile, out var the_command))
                 {
+                    Debug.Log($"Executing {the_command}");
                     the_command.Executes();
                 }
-                else if (it_owns_a_unit_at(the_tile, out var the_target_unit))
+                else if (it_has_a_selectable_unit_at(the_tile, out var the_target_unit))
                 {
                     its_selected_unit_becomes(the_target_unit);
                 }
@@ -51,7 +52,7 @@ namespace WarpSpace.Models.Game.Battle.Player
             if (it_has_a_selected_action(out var the_action) && the_action.is_Not_Available())
                 its_selected_action_becomes_empty();
             
-            if (it_has_a_selected_unit(out var the_unit) && the_unit.s_Location.is_a_Bay(out var the_bay))
+            if (it_has_a_selected_unit(out var the_unit) && the_unit.is_At_a_Bay(out var the_bay))
                 its_selected_unit_becomes(the_bay.s_Owner);
 
             it_performed_an_action.Next();                
@@ -123,7 +124,7 @@ namespace WarpSpace.Models.Game.Battle.Player
         ;
         private bool it_has_a_selection(out Selection the_selection) => its_possible_selection.has_a_Value(out the_selection);
 
-        private bool it_owns_a_unit_at(MTile the_tile, out MUnit the_target_unit) => the_tile.has_a_Unit(out the_target_unit) && it_owns(the_target_unit);
+        private bool it_has_a_selectable_unit_at(MTile the_tile, out MUnit the_target_unit) => the_tile.has_a_Unit(out the_target_unit) && it_owns(the_target_unit);
         private bool it_owns(MUnit the_unit) => the_unit.Belongs_To(its_faction);
 
         private void its_selected_unit_becomes(MUnit unit) => its_selections_cell.s_Value = new Selection(unit, Possible.Empty<MUnitAction>());

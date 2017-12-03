@@ -1,9 +1,12 @@
-﻿using Lanski.Reactive;
+﻿using System;
+using Lanski.Reactive;
 using Lanski.Structures;
 using Lanski.UnityExtensions;
 using UnityEngine;
 using WarpSpace.Game;
 using WarpSpace.Game.Battle;
+using WarpSpace.Models.Game.Battle.Board.Unit;
+using WarpSpace.Models.Game.Battle.Player;
 using WarpSpace.UI.Common;
 
 namespace WarpSpace.UI.Gameplay.Actions
@@ -24,8 +27,7 @@ namespace WarpSpace.UI.Gameplay.Actions
             the_battle_component.s_Players_Selections_Cell
                 .SelectMany(ps => 
                     ps.SelectMany(the_selection => 
-                        the_selection.s_Unit.s_possible_Action_For(the_action_desc)
-                        .Select(the_action => the_action.s_Availability_Cell.Select(is_available => (is_available, the_selection.s_action_is(the_action_desc)))))
+                            MUnitReadExtensions.s_possible_Action_For(the_selection.s_Unit, the_action_desc).Select(the_action => CellExtensions.Select<bool, (bool, bool)>(the_action.s_Availability_Cell, is_available => (is_available, the_selection.s_action_is(the_action_desc)))))
                     .Cell_Or_Single_Empty()
                 )
                 .Subscribe(it_updates_the_button);

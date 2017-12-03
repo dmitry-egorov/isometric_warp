@@ -9,9 +9,7 @@ namespace WarpSpace.Settings
         public int MaxUses;
         public DamageSettings Damage;
 
-        public MWeaponType s_Description => new MWeaponType(MaxUses, Damage.s_Model);
-        
-        
+
         [Serializable]
         public struct DamageSettings
         {

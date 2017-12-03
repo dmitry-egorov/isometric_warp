@@ -91,21 +91,21 @@ namespace WarpSpace.Overlay.Units
         private Action it_wires_the_weapon()
         {
             Total = 1;
-            return its_unit.s_can_Fire_Cell.Subscribe(moves_left => Current = moves_left ? 1 : 0);
+            return its_unit.s_Cell_of_can_Fire().Subscribe(can_fire => Current = can_fire ? 1 : 0);
         }
 
         private Action it_wires_the_moves()
         {
             var the_unit = its_unit;
 
-            Total = the_unit.s_Total_Moves;
-            return the_unit.s_Moves_Left_Cell.Subscribe(moves_left => Current = moves_left);
+            Total = the_unit.s_Total_Moves();
+            return the_unit.s_Cell_of_Moves_Left().Subscribe(moves_left => Current = moves_left);
         }
 
         private Action it_wires_the_health()
         {
-            Total = its_unit.s_Total_Hit_Points;
-            return its_unit.s_Current_Hitpoints_Cell.Subscribe(state => Current = state);
+            Total = its_unit.s_Total_Hit_Points();
+            return its_unit.s_Cell_of_Current_Hitpoints().Subscribe(current_hitpoints => Current = current_hitpoints);
         }
 
         private void it_updates_its_children()

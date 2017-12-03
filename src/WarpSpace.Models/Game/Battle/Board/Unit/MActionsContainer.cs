@@ -8,7 +8,7 @@ using WarpSpace.Models.Game.Battle.Board.Tile;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
-    internal class MActionsContainer
+    public class MActionsContainer
     {
         public MActionsContainer(MUnit the_owner)
         {
@@ -50,7 +50,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         }
             
         private static IReadOnlyList<MUnitAction> it_creates_the_deploy_actions(MUnit the_owner) => 
-            the_owner.s_Bay_Size
+            the_owner.s_Bay_Size()
                 .counted()
                 .Select(the_bay_slot_index => new MUnitAction(the_owner, DUnitAction.Create.Deploy(the_bay_slot_index)))
                 .ToArray()

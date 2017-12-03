@@ -9,7 +9,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         {
             its_owner = the_owner;
 
-            its_current_hitpoints_cell = new GuardedCell<int>(the_owner.s_Total_Hit_Points, the_signal_guard);
+            its_current_hitpoints_cell = new GuardedCell<int>(the_owner.s_Total_Hit_Points(), the_signal_guard);
         }
         
         public bool is_Dead => !this.is_Normal;

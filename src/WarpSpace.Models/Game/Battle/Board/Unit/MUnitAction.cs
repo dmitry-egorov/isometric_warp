@@ -27,13 +27,13 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
                 return its_owner.s_Weapon.s_Can_Fire_Cell;
 
             if (its_desc.is_a_Deploy_Action(out var the_deploy))
-                return its_owner.s_can_Deploy_Cell(the_deploy.s_bay_slot_index);
+                return its_owner.s_Cell_of_can_Deploy(the_deploy.s_bay_slot_index);
 
             if (its_desc.is_a_Dock_Action())
-                return its_owner.s_can_Move_Cell;
+                return its_owner.s_Cell_of_can_Move();
 
             if (its_desc.is_a_Move_Action())
-                return its_owner.s_can_Move_Cell;
+                return its_owner.s_Cell_of_can_Move();
 
             if (its_desc.is_an_Interact_Action())
                 return Cell.From(true);

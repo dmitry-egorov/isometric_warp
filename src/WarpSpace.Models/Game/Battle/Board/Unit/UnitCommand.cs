@@ -20,10 +20,10 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool is_a_Dock_Command(out Dock the_move_command)              => its_variant.is_a_T3(out the_move_command);
         public bool is_an_Interact_Command(out Interact the_interact_command) => its_variant.is_a_T4(out the_interact_command);
 
-        public bool is_a_Fire_Command()        => its_variant.is_a_T1();
-        public bool is_a_Move_Command()        => its_variant.is_a_T2();
-        public bool is_a_Dock_Command()        => its_variant.is_a_T3();
-        public bool is_an_Interact_Command()   => its_variant.is_a_T4();
+        public bool is_a_Fire_Command()      => its_variant.is_a_T1();
+        public bool is_a_Move_Command()      => its_variant.is_a_T2();
+        public bool is_a_Dock_Command()      => its_variant.is_a_T3();
+        public bool is_an_Interact_Command() => its_variant.is_a_T4();
         
         public bool is_a_Fire_Command(out MWeapon the_weapon, out MUnit the_target)
         {
@@ -40,7 +40,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             return false;
         }
 
-        public bool is_a_Move_Command(out MUnit the_unit, out MUnitLocation the_destination)
+        public bool is_a_Move_Command(out MUnit the_unit, out MTile the_destination)
         {
             if (this.is_a_Move_Command(out var move))
             {
@@ -50,7 +50,21 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             }
 
             the_unit = null;
-            the_destination = default(MUnitLocation);
+            the_destination = default(MTile);
+            return false;
+        }
+
+        public bool is_a_Dock_Command(out MUnit the_unit, out MBaySlot the_destination)
+        {
+            if (this.is_a_Dock_Command(out var dock))
+            {
+                the_unit = dock.s_Unit;
+                the_destination = dock.s_Destination;
+                return true;
+            }
+
+            the_unit = null;
+            the_destination = default(MBaySlot);
             return false;
         }
         
@@ -78,11 +92,17 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             {
                 the_unit.Moves_To(the_destination);
             }
+            else if (this.is_a_Dock_Command(out the_unit, out var the_bay_slot))
+            {
+                the_unit.Docks_To(the_bay_slot);
+            }
             else if (this.is_an_Interact_Command(out the_unit, out var the_target_structure))
             {
                 the_unit.Interacts_With(the_target_structure);
             }
         }
+
+        public override string ToString() => $"{its_variant} Command";
 
         private Or<Fire, Move, Dock, Interact> its_variant;
 
@@ -92,6 +112,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             public readonly MUnit s_Target;
 
             public Fire(MWeapon weapon, MUnit the_target) { s_Weapon = weapon; s_Target = the_target; }
+
+            public override string ToString() => $"Fire {this.s_Weapon} at {this.s_Target}";
         }
 
         public struct Move
@@ -100,6 +122,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             public readonly MTile s_Destination;
 
             public Move(MUnit unit, MTile destination) { s_Unit = unit; s_Destination = destination; }
+            
+            public override string ToString() => $"Move {this.s_Unit} to {this.s_Destination}";
         }
 
         public struct Dock
@@ -108,6 +132,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             public readonly MBaySlot s_Destination;
 
             public Dock(MUnit unit, MBaySlot destination) { s_Unit = unit; s_Destination = destination; }
+
+            public override string ToString() => $"Dock {this.s_Unit} to {this.s_Destination}";
         }
 
         public struct Interact
@@ -116,7 +142,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             public readonly MStructure s_Target;
 
             public Interact(MUnit unit, MStructure target_structure) { s_Unit = unit; s_Target = target_structure; }
+            
+            public override string ToString() => $"Make {this.s_Unit} interact with {this.s_Target}";
         }
-
     }
 }

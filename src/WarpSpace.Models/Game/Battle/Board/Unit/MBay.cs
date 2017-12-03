@@ -3,6 +3,7 @@ using System.Linq;
 using Lanski.Reactive;
 using Lanski.Structures;
 using Lanski.SwiftLinq;
+using WarpSpace.Models.Game.Battle.Board.Tile;
 using static Lanski.Structures.Flow;
 
 namespace WarpSpace.Models.Game.Battle.Board.Unit
@@ -10,8 +11,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
     public class MBay
     {
         public static Possible<MBay> From(MUnit the_owner, SignalGuard the_signal_guard) => 
-            the_owner.s_Bay_Size.as_a_possible_positive()
-                .Select(the_bay_size => new MBay(the_bay_size, the_owner, the_signal_guard))
+            the_owner.s_Bay_Size().as_a_possible_positive().Select(the_bay_size => new MBay(the_bay_size, the_owner, the_signal_guard))
         ;
 
         private MBay(int size, MUnit the_owner, SignalGuard the_signal_guard)
@@ -31,11 +31,11 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public bool has_an_Empty_Slot(out MBaySlot the_empty_slot) => its_slots.SFirst(slot => slot.is_Empty()).has_a_Value(out the_empty_slot);
         public Possible<MUnit> s_possible_Unit_At(int the_bay_slot_index) => its_slots[the_bay_slot_index].s_Possible_Unit;
         
-        private IReadOnlyList<MBaySlot> it_creates_its_slots(int size, SignalGuard the_signal_guard) => Enumerable.Range(0, size).Select(x => new MBaySlot(this, the_signal_guard)).ToList();
+        private IReadOnlyList<MBaySlot> it_creates_its_slots(int size, SignalGuard the_signal_guard) => Enumerable.Range(0, size).Select(index => new MBaySlot(index, this, the_signal_guard)).ToList();
         private ICell<bool>[] it_creates_its_can_deploy_cells() => 
             its_slots
                 .Select(location => location.s_Possible_Units_Cell)
-                .Select(x => x.SelectMany(pu => pu.Select(u => u.s_can_Move_Cell).Cell_Or_Single_Default()))
+                .Select(x => x.SelectMany(pu => pu.Select(u => MUnitReadExtensions.s_Cell_of_can_Move(u)).Cell_Or_Single_Default()))
                 .ToArray()
         ;
 
@@ -44,7 +44,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         private readonly IReadOnlyList<ICell<bool>> its_can_deploy_cells;
     }
 
-    public static class MBayExtensions
+    public static class MBayReadExtensions
     {
         public static bool has_an_Empty_Slot(this Possible<MBay> the_possible_bay, out MBaySlot the_bay_slot) =>
             default_as(out the_bay_slot) && 
@@ -55,5 +55,10 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public static Possible<MUnit> s_possible_Unit_At(this Possible<MBay> the_possible_bay, int the_bay_slot_index) =>
             the_possible_bay.has_a_Value(out var the_bay) ? the_bay.s_possible_Unit_At(the_bay_slot_index) : Possible.Empty<MUnit>()
         ;
+        
+        public static bool has_a_Docked_Unit_at(this Possible<MBay> the_possible_bay, int the_bay_slot_index, out MUnit the_bay_unit) => the_possible_bay.s_possible_Unit_At(the_bay_slot_index).has_a_Value(out the_bay_unit);
+        public static bool can_Deploy_a_Unit_At(this Possible<MBay> the_possible_bay, int the_bay_slot_index, MTile the_tile, out MUnit the_docked_unit) => the_possible_bay.has_a_Docked_Unit_at(the_bay_slot_index, out the_docked_unit) && the_docked_unit.can_Move_To(the_tile);
+
+        public static ICell<bool> s_can_Deploy_Cell(this Possible<MBay> the_possible_bay, int the_bay_slot_index) => the_possible_bay.has_a_Value(out var the_bay) ? the_bay.s_can_Deploy_Cell(the_bay_slot_index) : Cell.From(false);
     }
 }

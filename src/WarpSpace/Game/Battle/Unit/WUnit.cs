@@ -58,7 +58,7 @@ namespace WarpSpace.Game.Battle.Unit
             its_transform = the_transform;
             its_game_object = the_game_object;
             its_outliner = new WOutliner(the_game, the_unit, the_outline);
-            its_spacial = new WSpacial(the_unit.s_Position, its_transform, the_limbo, the_board);
+            its_spacial = new WSpacial(the_unit.s_Possible_Position(), its_transform, the_limbo, the_board);
             its_agenda = new WAgenda();
             var the_mesh_presenter = new UnitMeshPresenter(the_unit_mesh_renderer);
             its_visibility = new WVisibility(the_unit, the_mesh_presenter);
@@ -84,7 +84,7 @@ namespace WarpSpace.Game.Battle.Unit
 
         private void it_inits_the_mesh()
         {
-            if (its_unit.is_Docked)
+            if (its_unit.is_Docked())
             {
                 its_visibility.Hides();
             }
@@ -95,7 +95,7 @@ namespace WarpSpace.Game.Battle.Unit
         }
 
         private void it_destroys_itself_on_destruction_of_the_unit() => 
-            its_unit.Destructed
+            its_unit.Been_Destroyed()
                 .First()
                 .Subscribe(_ => Object.Destroy(its_game_object))
         ;

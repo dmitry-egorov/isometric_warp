@@ -21,8 +21,8 @@ namespace WarpSpace.Game.Battle.Unit
         
         public void Destructs() => it_destructs();
         
-        private Action it_wires_units_movements() => its_owner.s_Unit.Moved.Subscribe(x => it_schedules_a_move(x.s_Source, x.s_Destination));
-        private Action it_wires_weapon_firings() => its_owner.s_Unit.Fired.Subscribe(x => it_schedules_a_weapon_fire(x.Source, x.Target));
+        private Action it_wires_units_movements() => its_owner.s_Unit.Moved().Subscribe(x => it_schedules_a_move(x.s_Source, x.s_Destination));
+        private Action it_wires_weapon_firings() => its_owner.s_Unit.Fired().Subscribe(x => it_schedules_a_weapon_fire(x.Source, x.Target));
         private void it_destructs() => its_wiring();
 
         private void it_schedules_a_weapon_fire(MWeapon the_weapon, MUnit the_target)
@@ -30,7 +30,7 @@ namespace WarpSpace.Game.Battle.Unit
             
         }
 
-        private void it_schedules_a_move(MUnitLocation the_source, MUnitLocation the_target)
+        private void it_schedules_a_move(MLocation the_source, MLocation the_target)
         {
             var the_source_tile = the_source.s_Tile;
             var the_target_tile = the_target.s_Tile;

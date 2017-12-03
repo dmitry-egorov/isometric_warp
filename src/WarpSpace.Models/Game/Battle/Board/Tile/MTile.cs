@@ -39,6 +39,8 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
         public Direction2D s_Direction_To(MTile destination) => its_position.Direction_To(destination.its_position);
         public bool has_a_Structure(out MStructure structure) => its_occupant.is_a_Structure(out structure);
 
+        public override string ToString() => its_position.ToString();
+
         internal void s_Occupant_Becomes(MTileOccupant the_new_occupant) => its_occupant = the_new_occupant;
 
         internal void Creates_a_Debris_With(Possible<DStuff> inventory_content)

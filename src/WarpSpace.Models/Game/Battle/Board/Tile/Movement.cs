@@ -4,10 +4,10 @@ namespace WarpSpace.Models.Game.Battle.Board.Tile
 {
     public struct Movement
     {
-        public readonly MUnitLocation s_Source;
-        public readonly MUnitLocation s_Destination;
+        public readonly MLocation s_Source;
+        public readonly MLocation s_Destination;
 
-        public Movement(MUnitLocation source, MUnitLocation destination)
+        public Movement(MLocation source, MLocation destination)
         {
             s_Source = source;
             s_Destination = destination;

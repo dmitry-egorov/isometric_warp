@@ -21,20 +21,23 @@ namespace WarpSpace.Models.Descriptions
         [Pure] public bool is_a_Debris() => the_variant.is_a_T3();
         [Pure] public bool is_a_Debris(out Debris debris) => the_variant.is_a_T3(out debris);//Note: Assert the type?
         [Pure] public Debris must_be_a_Debris() => the_variant.must_be_a_T3();//Note: Assert the type?
-        
-        
-        public struct Exit {}
-        public struct Entrance {}
+
+        public override string ToString() => the_variant.ToString();
+
+        private Or<Entrance, Exit, Debris> the_variant;
+
+        public struct Exit { public override string ToString() => "Exit"; }
+        public struct Entrance { public override string ToString() => "Entrance"; }
 
         public struct Debris
         {
             public Possible<DStuff> s_Loot => the_loot;
 
             public Debris(Possible<DStuff> possible_loot) => the_loot = possible_loot;
+            
+            public override string ToString() => "Debris"; 
 
             private readonly Possible<DStuff> the_loot;
         }
-
-        private Or<Entrance, Exit, Debris> the_variant;
     }
 }

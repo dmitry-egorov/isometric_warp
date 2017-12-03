@@ -2,8 +2,7 @@
 using UnityEngine;
 using WarpSpace.Common.Behaviours;
 using WarpSpace.Game;
-using WarpSpace.Game.Battle;
-using WarpSpace.Game.Battle.Unit;
+using WarpSpace.Models.Game.Battle.Board.Unit;
 using WarpSpace.Models.Game.Battle.Player;
 using WarpSpace.UI.Common;
 

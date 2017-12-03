@@ -12,7 +12,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         }
         
         public ICell<Possible<DStuff>> s_Stuffs_Cell => its_stuffs_cell;
-        public Possible<DStuff> s_Stuff => its_stuff;
+        public Possible<DStuff> s_Content => its_stuff;
 
         internal void Adds(Possible<DStuff> the_new_stuff) => its_stuff_becomes(this.its_stuff.and(the_new_stuff));
 

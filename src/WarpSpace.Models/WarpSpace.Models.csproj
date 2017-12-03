@@ -79,12 +79,12 @@
     <Compile Include="Game\Battle\Board\Tile\MTileOccupant.cs" />
     <Compile Include="Game\Battle\Board\Tile\Movement.cs" />
     <Compile Include="Game\Battle\Board\Unit\MBay.cs" />
-    <Compile Include="Game\Battle\Board\Unit\MMover.cs" />
+    <Compile Include="Game\Battle\Board\Unit\MLocator.cs" />
     <Compile Include="Game\Battle\Board\Unit\MHealth.cs" />
     <Compile Include="Game\Battle\Board\Unit\MInventory.cs" />
     <Compile Include="Game\Battle\Board\Unit\MUnit.cs" />
     <Compile Include="Game\Battle\MBattle.cs" />
-    <Compile Include="Game\Battle\Board\Unit\MUnitLocation.cs" />
+    <Compile Include="Game\Battle\Board\Unit\MLocation.cs" />
     <Compile Include="Game\Battle\Board\Weapon\MWeapon.cs" />
     <Compile Include="Game\Battle\Player\MPlayer.cs" />
     <Compile Include="Game\Battle\RandomBoardGenerator.cs" />

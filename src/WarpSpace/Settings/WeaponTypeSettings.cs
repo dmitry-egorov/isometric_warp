@@ -8,6 +8,6 @@ namespace WarpSpace.Settings
     {
         public WeaponTypeModelSettings Model;
 
-        protected override MWeaponType Creates_a_Model() => Model.s_Description;
+        protected override MWeaponType Creates_a_Model() => new MWeaponType(name, Model.MaxUses, Model.Damage.s_Model);
     }
 }

@@ -82,7 +82,7 @@ namespace WarpSpace.Models.Game.Battle.Board
 
             void wires_the_units_destruction()
             {
-                the_unit.Destructed
+                the_unit.Been_Destroyed()
                     .Subscribe(destructed =>
                     {
                         its_units_hashset.Remove(the_unit);

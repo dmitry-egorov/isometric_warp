@@ -16,16 +16,16 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 
         internal void Destructs()
         {
-            var the_overall_loot = its_owner.s_Inventory_Content.and(its_owner.s_Remains);
+            var the_loot = its_owner.s_Loot();
 
             if (its_owner.is_At_a_Tile(out var the_tile))
             {
-                the_tile.Creates_a_Debris_With(the_overall_loot);
+                the_tile.Creates_a_Debris_With(the_loot);
             }
             else
             {
                 var the_bay = its_owner.must_be_At_a_Bay();
-                the_bay.s_Owner.Takes(the_overall_loot);
+                the_bay.s_Owner.Takes(the_loot);
             }
 
             it_destructed.Happens();
