@@ -19,7 +19,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public ICell<bool> s_Availability_Cell => its_avalability_cell;
         public bool has_a_Command_at(MTile the_tile, out UnitCommand the_command) => its_possible_command_at(the_tile).has_a_Value(out the_command);
         public bool @is(DUnitAction the_desc) => the_desc.Equals(its_desc);
-        public bool is_Not_Available() => !s_Availability_Cell.s_Value; 
+        public bool is_Not_Available() => !this.s_Availability_Cell.s_Value; 
 
         private ICell<bool> it_selects_the_availability_cell()
         {

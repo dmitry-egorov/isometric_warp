@@ -16,21 +16,21 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             s_Name = $"{s_Type.s_Name} {s_Id}";
             s_Faction = the_desc.s_Faction;
 
+            s_Health            = new MHealth(this.s_Type.s_Total_Hit_Points, this.s_Destructor, the_signal_guard);
             s_Locator           = new MLocator(this, the_initial_location, the_signal_guard);
             s_Weapon            = new MWeapon(this, the_signal_guard);
-            s_Health            = new MHealth(this, the_signal_guard);
+            s_Destructor        = new MDestructor(this, the_signal_guard);
             s_Inventory         = new MInventory(the_desc.s_Inventory_Content, the_signal_guard);
             s_Looter            = new MLooter(this);
             s_Interactor        = new MInteractor(this, the_game);
-            s_Destructor        = new MDestructor(this, the_signal_guard);
             s_Actions_Container = new MActionsContainer(this);
         }
 
-        public string            s_Name { get; }
         public int               s_Id { get; }
         public MUnitType         s_Type { get; }
-        public MHealth           s_Health { get; }
         public MFaction          s_Faction { get; }
+        
+        public MHealth           s_Health { get; }
         public MLocator          s_Locator { get; }
         public MWeapon           s_Weapon { get; }
         public MInventory        s_Inventory { get; }
@@ -38,13 +38,14 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public MDestructor       s_Destructor { get; }
         public MLooter           s_Looter { get; }
         public MActionsContainer s_Actions_Container { get; }
+        
+        public string s_Name { get; }
+        public override string ToString() => this.s_Name;
 
-        public override string ToString() => $"{s_Type} {s_Id}";
-
-        internal void Finishes_the_Turn()
+        internal void Handles_a_Turn_Ending()
         {
-            this.s_Weapon.Resets();
-            this.s_Locator.Finishes_the_Turn();
+            this.s_Weapon.Handles_a_Turn_Ending();
+            this.s_Locator.Handles_a_Turn_Ending();
         }
     }
 
@@ -58,9 +59,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public static bool can_Exit(this MUnit the_unit) => the_unit.s_Type.can_Exit;
         
         public static MTile s_Location(this MUnit the_unit) => the_unit.s_Locator.s_Location;
-        public static bool is_Alive(this MUnit the_m_unit) => the_m_unit.s_Health.is_Normal;
         public static bool can_Move(this MUnit the_unit) => the_unit.s_Locator.can_Move;
-        public static bool is_Adjacent_To(this MUnit the_unit, MTile the_tile) => the_unit.s_Locator.is_Adjacent_To(the_tile);
         public static Possible<Index2D> s_Possible_Position(this MUnit the_unit) => the_unit.s_Locator.s_Position;
         public static DStuff s_Loot(this MUnit the_unit) => the_unit.s_Inventory_Content().and(the_unit.s_Remains());
         public static DStuff s_Inventory_Content(this MUnit the_unit) => the_unit.s_Inventory.s_Content;
@@ -75,7 +74,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public static IStream<Firing> Fired(this MUnit the_unit) => the_unit.s_Weapon.Fired;
         public static IStream<TheVoid> Been_Destroyed(this MUnit the_unit) => the_unit.s_Destructor.Destructed;
         
-        public static Possible<MUnitAction> s_possible_Action_For(this MUnit the_unit, DUnitAction the_action_desc) => the_unit.s_Actions_Container.s_possible_Action_For(the_action_desc);
+        public static MUnitAction s_Action_For(this MUnit the_unit, DUnitAction the_action_desc) => the_unit.s_Actions_Container.s_Action_For(the_action_desc);
         public static Possible<UnitCommand> s_Regular_Command_At(this MUnit the_unit, MTile the_tile) => the_unit.s_Actions_Container.s_Regular_Command_At(the_tile);
         public static bool is_Adjacent_To(this MUnit the_unit, MStructure the_structure) => the_unit.s_Locator.is_Adjacent_To(the_structure);
         public static bool Belongs_To(this MUnit the_unit, MFaction the_faction) => the_unit.s_Faction == the_faction;
@@ -84,12 +83,11 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public static bool can_Perform_Special_Actions(this MUnit the_unit) => false;//TODO: investigate
     }
 
-    public static class MUnitWriteExtensions
+    public static class MUnitMutateExtensions
     {
         internal static void Moves_To(this MUnit the_unit, MTile the_destination) => the_unit.s_Locator.Moves_To(the_destination);
         internal static void Interacts_With(this MUnit the_unit, MStructure the_structure) => the_unit.s_Interactor.Interacts_With(the_structure);
         internal static void Takes(this MUnit the_unit, DDamage the_damage) => the_unit.s_Health.Takes(the_damage);
-        internal static void Destructs(this MUnit the_unit) => the_unit.s_Destructor.Destructs();
         internal static void Takes(this MUnit the_unit, DStuff the_loot) => the_unit.s_Inventory.Adds(the_loot);
         internal static void Loots(this MUnit the_unit, MStructure the_structure) => the_unit.s_Looter.Loots(the_structure);
     }

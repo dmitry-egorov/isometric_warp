@@ -39,6 +39,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Weapon
         public override string ToString() => $"{its_type} of the {its_owner}";
 
         internal void Fires_At(MTile the_target) => it_fires_at(the_target);
+        internal void Handles_a_Turn_Ending() => this.Resets();
         internal void Resets() => its_uses_limiter.Restores_the_Uses();
 
         private void it_fires_at(MTile the_target)

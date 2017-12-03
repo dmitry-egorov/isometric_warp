@@ -20,15 +20,15 @@ namespace WarpSpace.Test.Console
             var the_mountain = new MLandscapeType('M');
             var the_water    = new MLandscapeType('W');
             var the_lanscape_types = new[] { the_flatland, the_hill, the_mountain, the_water };
-            
+
             var a_track     = new MChassisType(new Dictionary<MLandscapeType, Passability> {{the_flatland, Single_Move}, {the_hill, All_Moves}, {the_mountain, Unavailable}, {the_water, Unavailable}});
             var a_hower_pad = new MChassisType(new Dictionary<MLandscapeType, Passability> {{the_flatland, Single_Move}, {the_hill, Unavailable},    {the_mountain, Unavailable}, {the_water, Unavailable}});
 
             var a_missale_launcher = new MWeaponType("Missile Launcher", 2, new DDamage(1));
             var a_cannon = new MWeaponType("Cannon", 1, new DDamage(2));
             
-            var tank_type = new MUnitType("Tank", 2, 3, a_cannon, a_track, new DStuff(10), DStuff.Empty(), true, false, 'T');
-            var mothership_type = new MUnitType("Mothership", 5, 2, a_missale_launcher, a_hower_pad, new DStuff(50), DStuff.Empty(), false, true, 'M');
+            var tank_type = new MUnitType("Tank", 2, 3, a_cannon, a_track, new DStuff(10), DStuff.Empty(), false, 'T');
+            var mothership_type = new MUnitType("Mothership", 5, 2, a_missale_launcher, a_hower_pad, new DStuff(50), DStuff.Empty(), true, 'M');
             var the_unit_types = new [] {tank_type, mothership_type};
 
             var the_players_faction = new MFaction();

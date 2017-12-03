@@ -71,7 +71,7 @@ namespace WarpSpace.Models.Game.Battle.Player
                 else
                 {
                     var the_selected_unit = the_selection.s_Unit;
-                    var the_action = the_selected_unit.s_possible_Action_For(the_action_desc).must_have_a_Value();
+                    var the_action = the_selected_unit.s_Action_For(the_action_desc);
                     its_selected_action_becomes(the_action);
                 }
             

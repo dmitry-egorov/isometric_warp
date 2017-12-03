@@ -1,4 +1,7 @@
 Plan
+- remove exit
+- refactor remaining M classes
+
 - add a cannon animation
 - add initial unit placement
 

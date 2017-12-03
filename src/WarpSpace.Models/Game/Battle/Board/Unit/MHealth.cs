@@ -5,35 +5,32 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
 {
     public class MHealth
     {
-        public MHealth(MUnit the_owner, SignalGuard the_signal_guard)
+        public MHealth(int the_total_hit_points, MDestructor the_destructor, SignalGuard the_signal_guard)
         {
-            its_owner = the_owner;
-
-            its_current_hitpoints_cell = new GuardedCell<int>(the_owner.s_Total_Hit_Points(), the_signal_guard);
+            its_destructor = the_destructor;
+            its_cell_of_current_hitpoints = new GuardedCell<int>(the_total_hit_points, the_signal_guard);
         }
-        
-        public bool is_Dead => !this.is_Normal;
-        public bool is_Normal => its_current_hit_points > 0;
 
-        public ICell<int> s_Current_Hitpoints_Cell => its_current_hitpoints_cell;
+        public ICell<int> s_Current_Hitpoints_Cell => its_cell_of_current_hitpoints;
 
         internal void Takes(DDamage the_damage)
         {
-            its_current_hit_points -= the_damage.Amount;
+            its_cell_of_current_hitpoints.s_Value -= the_damage.Amount;
 
-            if (this.is_Dead)
+            if (this.is_Dead())
             {
-                its_owner.Destructs();
+                its_destructor.Destructs();
             }
         }
 
-        private int its_current_hit_points
-        {
-            get => its_current_hitpoints_cell.s_Value;
-            set => its_current_hitpoints_cell.s_Value = value;
-        }
+        private readonly MDestructor its_destructor;
+        private readonly GuardedCell<int> its_cell_of_current_hitpoints;
+    }
 
-        private readonly MUnit its_owner;
-        private readonly GuardedCell<int> its_current_hitpoints_cell;
+    public static class MHealthReadExtensions
+    {
+        public static int s_Current_Hit_Points(this MHealth the_health) => the_health.s_Current_Hitpoints_Cell.s_Value;
+        public static bool is_Dead(this MHealth the_health) => !the_health.is_Normal();
+        public static bool is_Normal(this MHealth the_health) => the_health.s_Current_Hit_Points() > 0;
     }
 }

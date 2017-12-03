@@ -1,5 +1,4 @@
-﻿using Lanski.Structures;
-using UnityEngine;
+﻿using UnityEngine;
 using WarpSpace.Models.Game;
 
 namespace WarpSpace.Settings

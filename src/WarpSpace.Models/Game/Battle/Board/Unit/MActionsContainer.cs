@@ -18,7 +18,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             its_regular_actions = new[] { its_move, its_interact };
         }
         
-        public Possible<MUnitAction> s_possible_Action_For(DUnitAction the_action_desc)
+        public MUnitAction s_Action_For(DUnitAction the_action_desc)
         {
             if (the_action_desc.is_a_Fire_Action())
                 return its_fire;

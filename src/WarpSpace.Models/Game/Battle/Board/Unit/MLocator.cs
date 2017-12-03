@@ -29,8 +29,6 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
         public ICell<bool> s_Can_Move_Cell => its_uses_Limiter.s_Has_Uses_Left_Cell;
         public IStream<Movement> Moved => it_moved;
 
-        public bool is_Adjacent_To(MTile the_tile) => its_location.is_Adjacent_To(the_tile);
-        public bool is_Adjacent_To(MLocator the_other_locator) => its_location.is_Adjacent_To(the_other_locator.s_Location);
         public bool is_Adjacent_To(MStructure the_structure) => its_location.is_Adjacent_To(the_structure.s_Location);
 
         public bool can_Move_To(MTile the_destination) => it_can_move_to(the_destination);
@@ -42,7 +40,7 @@ namespace WarpSpace.Models.Game.Battle.Board.Unit
             it_changes_location_to(the_destination);
         }
 
-        internal void Finishes_the_Turn() => its_uses_Limiter.Restores_the_Uses();
+        internal void Handles_a_Turn_Ending() => its_uses_Limiter.Restores_the_Uses();
 
         private void it_changes_location_to(MTile the_destination)
         {

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Security;
-using Lanski.Structures;
 using WarpSpace.Models.Game.Battle.Board.Unit;
 
 namespace WarpSpace.Settings
@@ -15,7 +13,6 @@ namespace WarpSpace.Settings
         public ChassisTypeSettings ChassisType;
         public int Loot;
         public int InitialInventory;
-        public bool CanDock;
         public bool CanExit;
         public char SerializationSymbol;
 
@@ -27,7 +24,6 @@ namespace WarpSpace.Settings
             ChassisTypeSettings.s_Model_Of(ChassisType),
             InventoryHelper.Possible_Stuff_From(Loot),
             InventoryHelper.Possible_Stuff_From(InitialInventory),
-            CanDock,
             CanExit,
             SerializationSymbol
         );

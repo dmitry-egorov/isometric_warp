@@ -1,12 +1,9 @@
-﻿using System;
-using Lanski.Reactive;
+﻿using Lanski.Reactive;
 using Lanski.Structures;
 using Lanski.UnityExtensions;
 using UnityEngine;
 using WarpSpace.Game;
-using WarpSpace.Game.Battle;
 using WarpSpace.Models.Game.Battle.Board.Unit;
-using WarpSpace.Models.Game.Battle.Player;
 using WarpSpace.UI.Common;
 
 namespace WarpSpace.UI.Gameplay.Actions
@@ -15,20 +12,21 @@ namespace WarpSpace.UI.Gameplay.Actions
     public class UIUnitActionButton : MonoBehaviour
     {
         public UIActionButtonType Type;
-        
+
         public void Start()
         {
             var the_action_desc = Type.as_a_description();
-        
+
             var the_battle_component = FindObjectOfType<WGame>();
             var the_button = GetComponent<UIButton>();
 
             the_battle_component.s_Players_Selections_Cell
-                .SelectMany(ps => 
-                    ps.SelectMany(the_selection => 
-                            the_selection.s_Unit.s_possible_Action_For(the_action_desc)
-                                .Select(the_action => the_action.s_Availability_Cell.Select(is_available => (is_available, the_selection.s_action_is(the_action_desc)))))
-                    .Cell_Or_Single_Empty()
+                .SelectMany(ps =>
+                    ps.Select(the_selection =>
+                            the_selection.s_Unit.s_Action_For(the_action_desc)
+                                .s_Availability_Cell.Select(is_available =>
+                                    (is_available, the_selection.s_action_is(the_action_desc))))
+                        .Cell_Or_Single_Empty()
                 )
                 .Subscribe(it_updates_the_button);
 
@@ -38,11 +36,12 @@ namespace WarpSpace.UI.Gameplay.Actions
             {
                 if (!the_battle_component.has_a_Player(out var the_player))
                     return;
-                
+
                 the_player.Toggles_the_Selected_Action_With(the_action_desc);
             }
-            
-            void it_updates_the_button(Possible<(bool s_action_is_available, bool s_action_is_selected)> the_possible_selection)
+
+            void it_updates_the_button(
+                Possible<(bool s_action_is_available, bool s_action_is_selected)> the_possible_selection)
             {
                 if (the_possible_selection.has_a_Value(out var the_selection))
                 {
