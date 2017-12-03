@@ -1,6 +1,7 @@
 - use scriptable objects instead of types
 - move MDocker to Mover ("moves" action doesn't check for dock)
 - turn Selection into a class?
+- extra syntactic sugar as extension methods (is_a_*, has_a_* etc)
 
 done:
 - fix the outline

@@ -1,3 +1,25 @@
+THE NEW STORY
+You are on a desert planet called Lode.
+People of Lode didn't discover interstellar travel yet.
+The people of Lode were found by the Ancients and prepared for the Ascention.
+The Acention is the process of integrating a new race into the Gallactic Communities of Life. 
+They get the latest interstellar tech, and all the knowledge on the ways of Life.
+The Ancients brought a spaceship and directions on how to get to it. It's called an Ark.
+The Ancients are gone from the Galaxy, nowhere to be found.
+The spaceship was captured by the powerful modern alien race, called Rok.
+The Rok were once ascended by the Ancients.
+They spill propaganda to exploit the people of Lode. They actively prevent them from getting to space.
+They're the gods for most people of Lode, the most fanatical followers are the government of Lode.
+Some people, however, discovered the directions of the Ancients.
+They built the Phase Drive, which allows them to teleport throughout the planet and from a certain point -- to the spaceship.
+
+
+Warp MVP
+16 maps semi-random linear maps
+Defeat all enemies to warp forward
+Loot enemies for upgrades
+
+
 Warp
 
 The player commands a land-based mothership on a journey from destroyed homeplanet to the center of the galaxy. 
@@ -37,6 +59,14 @@ Planet Types:
 
 
 Ideas
+- time beacons, places on the planet where the phase drive can jump to.
+- Laputa/Zelda architecture, rising towers
+- Emotional modifiers: shocked, angry, etc.
+- the player is treated as an advanced AI, built with Ancients tech. Can travel back in time (permadeath). Adviser/Predictor. Later it's revealed that the tech is a relay for gamers of the past.
+- tesla tree
+- underground tree world
+- the planet is a desert, because it's easier to gather resources this way. It was earthlike a long time ago
+- there is a relationship between phaseship's women-pilot and one of the vehicle pilots. If the pilot dies the women pilot gets a permanent debuff (which is worse at the beginnning, then becomes positive and negative)
 - the player was allowed to travel through the gates to become the administrator of the galaxy
 - the first stage of invasion was to cut off all interstellar gates
 - the enemy is enslaving the civilizations

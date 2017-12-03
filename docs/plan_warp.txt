@@ -1,4 +1,10 @@
 Plan
+- remove docking
+- add initial unit placement
+- add a tank with a cannon
+
+
+
 - fire missile animation
 - move several tiles at a time
 - longer weapon ranges
